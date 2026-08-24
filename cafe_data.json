@@ -1,0 +1,595 @@
+{
+  "orders": [
+    {
+      "id": "ORD-891747",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        },
+        {
+          "food": {
+            "id": "food-lavash-chicken",
+            "title": {
+              "qr": "Tawıq go'shli Lavash (Kartoshka Fri menen)",
+              "uz": "Tovuqli Lavash (Fri bilan)",
+              "ru": "Лаваш с курицей и картофелем фри",
+              "en": "Crispy Chicken & Fries Lavash"
+            },
+            "description": {
+              "qr": "Jumsaq tawıq filestı, ketti qowırılǵan fri, sarımsoqlı sous hám tazalangan sabzavotlar.",
+              "uz": "Tovuq filesi, oltinrang kartoshka fri, sarimsoqli sous va yangi sabzavotlar.",
+              "ru": "Нежное куриное филе, хрустящий картофель фри, чесночный соус и свежие овощи.",
+              "en": "Tender chicken fillet, golden french fries, garlic aioli, and crunchy fresh vegetables."
+            },
+            "price": 28000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1561651823-34feb02250e4?auto=format&fit=crop&w=800&q=80",
+            "calories": 490,
+            "prepTime": 10,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Tawıq go'shi",
+                "Kartoshka fri",
+                "Lavash qamır",
+                "Sarımsoqlı sous",
+                "Qıyar"
+              ],
+              "uz": [
+                "Tovuq go'shti",
+                "Kartoshka fri",
+                "Lavash",
+                "Sarimsoqli sous",
+                "Bodring"
+              ],
+              "ru": [
+                "Куриное филе",
+                "Картофель фри",
+                "Лаваш",
+                "Чесночный соус",
+                "Огурцы"
+              ],
+              "en": [
+                "Chicken Fillet",
+                "French Fries",
+                "Lavash",
+                "Garlic Sauce",
+                "Cucumbers"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.8,
+            "ratingCount": 195,
+            "reviews": [],
+            "nutrition": {
+              "protein": 26,
+              "fat": 18,
+              "carbs": 52
+            }
+          },
+          "quantity": 1
+        },
+        {
+          "food": {
+            "id": "food-burger-set",
+            "title": {
+              "qr": "Double Cheeseburger Set (Fri + Ketchup)",
+              "uz": "Chizburger Set (Fri va Ketchup)",
+              "ru": "Двойной Чизбургер Сет с Картофелем Фри",
+              "en": "Double Cheeseburger Combo with Fries"
+            },
+            "description": {
+              "qr": "Eki qabat sotsnyy sıyır go'shi kotleti, Cheddar pishloǵı, marinadlangan qıyar hám ketti qowırılǵan fri.",
+              "uz": "Ikki qavat mol go'shti kotleti, Cheddar pishloq, bodring va fri.",
+              "ru": "Сочные две говяжьи котлеты, плавлено-тягучий сыр Чеддер, соленые огурчики и золотистый картофель фри.",
+              "en": "Two flame-grilled beef patties, doubled Cheddar cheese, pickles, and crispy golden french fries."
+            },
+            "price": 45000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+            "calories": 780,
+            "prepTime": 15,
+            "spicyLevel": 1,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi kotlet",
+                "Cheddar pishloq",
+                "Bulochka",
+                "Marinad qıyar",
+                "Fri"
+              ],
+              "uz": [
+                "Mol go'shti kotlet",
+                "Cheddar pishloq",
+                "Bulochka",
+                "Tuzlangan bodring",
+                "Fri"
+              ],
+              "ru": [
+                "Говяжьи котлеты",
+                "Сыр Чеддер",
+                "Булочка с кунжутом",
+                "Соленые огурцы",
+                "Фри"
+              ],
+              "en": [
+                "Beef Patties",
+                "Cheddar Cheese",
+                "Sesame Bun",
+                "Pickles",
+                "French Fries"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy",
+              "sesame"
+            ],
+            "rating": 4.9,
+            "ratingCount": 310,
+            "reviews": [
+              {
+                "id": "rev-b1",
+                "userName": "Sardorbek T.",
+                "rating": 5,
+                "comment": "Nukusdagı eń lezzetli burger seti!",
+                "date": "2026-07-26"
+              }
+            ],
+            "nutrition": {
+              "protein": 38,
+              "fat": 34,
+              "carbs": 64
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 105000,
+      "status": "preparing",
+      "createdAt": "16:04",
+      "paymentMethod": "cash",
+      "timestamp": 1787310272142
+    },
+    {
+      "id": "ORD-874776",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        },
+        {
+          "food": {
+            "id": "food-lavash-chicken",
+            "title": {
+              "qr": "Tawıq go'shli Lavash (Kartoshka Fri menen)",
+              "uz": "Tovuqli Lavash (Fri bilan)",
+              "ru": "Лаваш с курицей и картофелем фри",
+              "en": "Crispy Chicken & Fries Lavash"
+            },
+            "description": {
+              "qr": "Jumsaq tawıq filestı, ketti qowırılǵan fri, sarımsoqlı sous hám tazalangan sabzavotlar.",
+              "uz": "Tovuq filesi, oltinrang kartoshka fri, sarimsoqli sous va yangi sabzavotlar.",
+              "ru": "Нежное куриное филе, хрустящий картофель фри, чесночный соус и свежие овощи.",
+              "en": "Tender chicken fillet, golden french fries, garlic aioli, and crunchy fresh vegetables."
+            },
+            "price": 28000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1561651823-34feb02250e4?auto=format&fit=crop&w=800&q=80",
+            "calories": 490,
+            "prepTime": 10,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Tawıq go'shi",
+                "Kartoshka fri",
+                "Lavash qamır",
+                "Sarımsoqlı sous",
+                "Qıyar"
+              ],
+              "uz": [
+                "Tovuq go'shti",
+                "Kartoshka fri",
+                "Lavash",
+                "Sarimsoqli sous",
+                "Bodring"
+              ],
+              "ru": [
+                "Куриное филе",
+                "Картофель фри",
+                "Лаваш",
+                "Чесночный соус",
+                "Огурцы"
+              ],
+              "en": [
+                "Chicken Fillet",
+                "French Fries",
+                "Lavash",
+                "Garlic Sauce",
+                "Cucumbers"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.8,
+            "ratingCount": 195,
+            "reviews": [],
+            "nutrition": {
+              "protein": 26,
+              "fat": 18,
+              "carbs": 52
+            }
+          },
+          "quantity": 1
+        },
+        {
+          "food": {
+            "id": "food-burger-set",
+            "title": {
+              "qr": "Double Cheeseburger Set (Fri + Ketchup)",
+              "uz": "Chizburger Set (Fri va Ketchup)",
+              "ru": "Двойной Чизбургер Сет с Картофелем Фри",
+              "en": "Double Cheeseburger Combo with Fries"
+            },
+            "description": {
+              "qr": "Eki qabat sotsnyy sıyır go'shi kotleti, Cheddar pishloǵı, marinadlangan qıyar hám ketti qowırılǵan fri.",
+              "uz": "Ikki qavat mol go'shti kotleti, Cheddar pishloq, bodring va fri.",
+              "ru": "Сочные две говяжьи котлеты, плавлено-тягучий сыр Чеддер, соленые огурчики и золотистый картофель фри.",
+              "en": "Two flame-grilled beef patties, doubled Cheddar cheese, pickles, and crispy golden french fries."
+            },
+            "price": 45000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+            "calories": 780,
+            "prepTime": 15,
+            "spicyLevel": 1,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi kotlet",
+                "Cheddar pishloq",
+                "Bulochka",
+                "Marinad qıyar",
+                "Fri"
+              ],
+              "uz": [
+                "Mol go'shti kotlet",
+                "Cheddar pishloq",
+                "Bulochka",
+                "Tuzlangan bodring",
+                "Fri"
+              ],
+              "ru": [
+                "Говяжьи котлеты",
+                "Сыр Чеддер",
+                "Булочка с кунжутом",
+                "Соленые огурцы",
+                "Фри"
+              ],
+              "en": [
+                "Beef Patties",
+                "Cheddar Cheese",
+                "Sesame Bun",
+                "Pickles",
+                "French Fries"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy",
+              "sesame"
+            ],
+            "rating": 4.9,
+            "ratingCount": 310,
+            "reviews": [
+              {
+                "id": "rev-b1",
+                "userName": "Sardorbek T.",
+                "rating": 5,
+                "comment": "Nukusdagı eń lezzetli burger seti!",
+                "date": "2026-07-26"
+              }
+            ],
+            "nutrition": {
+              "protein": 38,
+              "fat": 34,
+              "carbs": 64
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 105000,
+      "status": "preparing",
+      "createdAt": "16:04",
+      "paymentMethod": "cash",
+      "timestamp": 1787310255177
+    },
+    {
+      "id": "ORD-201289",
+      "tableNumber": "1",
+      "items": [
+        {
+          "food": {
+            "id": "food-shubat",
+            "title": {
+              "qr": "Qaraqalpaq Shubat (Túye Sútı - 1 Litr)",
+              "uz": "Qoraqalpoq Shubat (Tuya suti - 1 Litr)",
+              "ru": "Шубат из верблюжьего молока (1 Л)",
+              "en": "Shubat Fermented Camel Milk (1L)"
+            },
+            "description": {
+              "qr": "Qızılqum dalalarında baǵılǵan túyeler sütinen aşıtılǵan milliy delikates ishimlik.",
+              "uz": "Qizilqum tuya sutidan tayyorlangan shifobaxsh ichimlik.",
+              "ru": "Густой лечебный напиток из парного верблюжьего молока пустыни Кызылкум.",
+              "en": "Rich creamy fermented camel milk directly from Kyzylkum desert farms."
+            },
+            "price": 28000,
+            "category": "drinks",
+            "imageUrl": "https://images.unsplash.com/photo-1528498033373-3c6c08e93d79?auto=format&fit=crop&w=800&q=80",
+            "calories": 220,
+            "prepTime": 5,
+            "spicyLevel": 0,
+            "isVegetarian": true,
+            "isGlutenFree": true,
+            "isHalal": true,
+            "isNationalSpecial": true,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Túye sütı",
+                "Tabiiy achıtqı"
+              ],
+              "uz": [
+                "Tuya suti",
+                "Achitqi"
+              ],
+              "ru": [
+                "Верблюжье молоко",
+                "Закваска"
+              ],
+              "en": [
+                "Camel Milk",
+                "Natural Culture"
+              ]
+            },
+            "allergens": [
+              "dairy"
+            ],
+            "rating": 5,
+            "ratingCount": 72,
+            "reviews": [],
+            "nutrition": {
+              "protein": 10,
+              "fat": 11,
+              "carbs": 14
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 28000,
+      "status": "preparing",
+      "createdAt": "16:03",
+      "paymentMethod": "cash",
+      "timestamp": 1787310207490
+    },
+    {
+      "tableNumber": "1",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "price": 32000
+          },
+          "quantity": 2
+        }
+      ],
+      "totalAmount": 64000,
+      "status": "preparing",
+      "id": "ORD-116549",
+      "createdAt": "12:38 PM",
+      "timestamp": 1787143136552
+    }
+  ],
+  "waiterCalls": [
+    {
+      "id": "call-1",
+      "tableNumber": "02",
+      "timestamp": "12:30",
+      "type": "waiter",
+      "status": "active"
+    }
+  ]
+}
