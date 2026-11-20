@@ -500,7 +500,7 @@ export default function App() {
             <NationalOrnamentHeader />
 
             {/* Categories Selector Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            <nav className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" aria-label="Taǵam kategoriyaları">
               {[
                 { id: 'all', label: t.catAll },
                 { id: 'fastfood', label: t.catFastfood },
@@ -511,7 +511,9 @@ export default function App() {
               ].map((cat) => (
                 <button
                   key={cat.id}
+                  type="button"
                   onClick={() => setSelectedCategory(cat.id as CategoryId)}
+                  aria-pressed={selectedCategory === cat.id}
                   className={`px-4 py-2.5 rounded-2xl font-serif font-bold text-xs sm:text-sm whitespace-nowrap transition-all shadow-md ${
                     selectedCategory === cat.id
                       ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 border-2 border-amber-300 shadow-[0_0_18px_rgba(245,158,11,0.5)] scale-105'
@@ -521,19 +523,20 @@ export default function App() {
                   {cat.label}
                 </button>
               ))}
-            </div>
+            </nav>
 
             {/* Search & Filter Bar */}
-            <div className="bg-[#18181b]/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-amber-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.6)] space-y-3">
+            <search className="bg-[#18181b]/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-amber-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.6)] space-y-3">
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 {/* Search Input */}
                 <div className="relative flex-1 w-full">
-                  <Search className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
                   <input
-                    type="text"
+                    type="search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t.searchPlaceholder}
+                    aria-label={t.searchPlaceholder || "Taǵam izlew"}
                     className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-950/80 border border-amber-500/30 text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:ring-2 focus:ring-amber-500 outline-none shadow-inner"
                   />
                 </div>
@@ -541,16 +544,18 @@ export default function App() {
                 {/* Calorie Filter Slider */}
                 <div className="w-full sm:w-64 bg-zinc-950/80 p-2 px-3 rounded-xl border border-amber-500/30 flex flex-col justify-center">
                   <div className="flex justify-between items-center text-[11px] font-bold text-zinc-300 mb-1">
-                    <span>{t.filterByCalorie}:</span>
+                    <label htmlFor="calorie-range-slider">{t.filterByCalorie}:</label>
                     <span className="text-amber-400 font-extrabold">{maxCalories} kcal</span>
                   </div>
                   <input
+                    id="calorie-range-slider"
                     type="range"
                     min={200}
                     max={1000}
                     step={50}
                     value={maxCalories}
                     onChange={(e) => setMaxCalories(parseInt(e.target.value))}
+                    aria-label={t.filterByCalorie || "Maksimal kaloriya"}
                     className="accent-amber-500 cursor-pointer"
                   />
                 </div>
@@ -560,19 +565,23 @@ export default function App() {
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-zinc-800 text-xs">
                 <div className="flex flex-wrap items-center gap-2">
                   <button
+                    type="button"
                     onClick={() => setIsSpicyOnly((p) => !p)}
+                    aria-pressed={isSpicyOnly}
                     className={`px-3 py-1 rounded-xl font-bold flex items-center gap-1 border transition ${
                       isSpicyOnly
                         ? 'bg-red-600 text-white border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]'
                         : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:bg-zinc-800'
                     }`}
                   >
-                    <Flame className="w-3.5 h-3.5" />
+                    <Flame className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>{t.filterSpicy}</span>
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => setIsVegetarianOnly((p) => !p)}
+                    aria-pressed={isVegetarianOnly}
                     className={`px-3 py-1 rounded-xl font-bold border transition ${
                       isVegetarianOnly
                         ? 'bg-emerald-600 text-white border-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]'
@@ -583,7 +592,9 @@ export default function App() {
                   </button>
 
                   <button
+                    type="button"
                     onClick={() => setIsGlutenFreeOnly((p) => !p)}
+                    aria-pressed={isGlutenFreeOnly}
                     className={`px-3 py-1 rounded-xl font-bold border transition ${
                       isGlutenFreeOnly
                         ? 'bg-amber-600 text-white border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
@@ -601,6 +612,7 @@ export default function App() {
                   isVegetarianOnly ||
                   isGlutenFreeOnly) && (
                   <button
+                    type="button"
                     onClick={() => {
                       setSearchQuery('');
                       setMaxCalories(1000);
@@ -610,12 +622,12 @@ export default function App() {
                     }}
                     className="text-amber-400 hover:text-amber-200 font-bold text-xs flex items-center gap-1"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
                     <span>{t.resetFilters}</span>
                   </button>
                 )}
               </div>
-            </div>
+            </search>
 
             {/* Food Grid */}
             <div className="space-y-3">

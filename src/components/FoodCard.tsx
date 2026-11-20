@@ -46,6 +46,8 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           <img
             src={food.imageUrl}
             alt={title}
+            width="320"
+            height="208"
             onLoad={() => setImageLoaded(true)}
             onError={() => {
               setImageError(true);
@@ -78,7 +80,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
           </div>
 
           <div className="flex items-center gap-1 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-amber-300 border border-amber-500/20">
-            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
             <span>{food.rating.toFixed(1)}</span>
             <span className="text-zinc-400 font-normal text-[10px]">({food.ratingCount})</span>
           </div>
@@ -96,11 +98,13 @@ export const FoodCard: React.FC<FoodCardProps> = ({
               {title}
             </h3>
             <button
+              type="button"
               onClick={() => onSelect(food)}
               className="text-amber-400 hover:text-amber-200 p-1"
               title="Tolıq maǵlıwmat"
+              aria-label={`Tolıq maǵlıwmat: ${title}`}
             >
-              <Info className="w-4 h-4" />
+              <Info className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
 
@@ -127,7 +131,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             )}
             {food.spicyLevel > 0 && (
               <span className="bg-red-950/80 text-red-300 px-2 py-0.5 rounded border border-red-500/40 flex items-center gap-0.5">
-                <Flame className="w-3 h-3 text-red-400" />
+                <Flame className="w-3 h-3 text-red-400" aria-hidden="true" />
                 {'🌶️'.repeat(food.spicyLevel)}
               </span>
             )}
@@ -137,7 +141,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
         {/* Footer Bar: Prep time & Add to Cart button */}
         <div className="pt-2 border-t border-zinc-800 flex items-center justify-between gap-2">
           <div className="flex items-center gap-1 text-xs text-zinc-400">
-            <Clock className="w-3.5 h-3.5 text-amber-400" />
+            <Clock className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
             <span>{food.prepTime} {t.prepTime}</span>
           </div>
 
@@ -151,6 +155,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                 }}
                 className="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-amber-300 font-extrabold text-sm flex items-center justify-center transition active:scale-90"
                 title="1 dana kemeytiw"
+                aria-label={`${title} miqdorini kamaytirish`}
               >
                 -
               </button>
@@ -165,16 +170,19 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                 }}
                 className="w-6 h-6 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-extrabold text-sm flex items-center justify-center transition active:scale-90 shadow"
                 title="1 dana qosıw"
+                aria-label={`${title} miqdorini oshirish`}
               >
                 +
               </button>
             </div>
           ) : (
             <button
+              type="button"
               onClick={() => onAddToCart(food)}
+              aria-label={`${title} ${t.addToCart}`}
               className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold text-xs shadow transition active:scale-95 bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 hover:from-amber-400 hover:to-amber-500 font-extrabold shadow-[0_0_12px_rgba(245,158,11,0.35)]"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
               <span>{t.addToCart}</span>
             </button>
           )}

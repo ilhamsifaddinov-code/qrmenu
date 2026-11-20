@@ -56,10 +56,12 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
             </h3>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label={t.close || 'Jabıw'}
             className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -85,6 +87,8 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
             <img
               src={qrImageSrc}
               alt={`QR Code for Table ${tableNumber}`}
+              width="192"
+              height="192"
               className="w-48 h-48 object-contain mx-auto rounded"
             />
           </div>
@@ -97,7 +101,9 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
           {/* Action Buttons */}
           <div className="flex items-center gap-2 pt-2">
             <button
+              type="button"
               onClick={handleCopyLink}
+              aria-label={t.copyLink || 'Siltemeni kóshiriw'}
               className={`flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition ${
                 copied
                   ? 'bg-emerald-600 text-white border border-emerald-400'
@@ -106,23 +112,25 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4 text-white" />
+                  <Check className="w-4 h-4 text-white" aria-hidden="true" />
                   <span>{t.linkCopied || 'Kóshirildi!'}</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4 text-amber-400" />
+                  <Copy className="w-4 h-4 text-amber-400" aria-hidden="true" />
                   <span>{t.copyLink || 'Siltemeni kóshiriw'}</span>
                 </>
               )}
             </button>
 
             <button
+              type="button"
               onClick={handleDownloadQr}
+              aria-label={t.downloadQr || 'QR-kodtı saqlaw'}
               className="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-xs flex items-center justify-center gap-1 shadow-[0_0_15px_rgba(245,158,11,0.35)] transition"
               title={t.downloadQr || 'QR-kodtı saqlaw'}
             >
-              <Download className="w-4 h-4" />
+              <Download className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>

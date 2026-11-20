@@ -50,10 +50,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           </div>
 
           <button
+            type="button"
             onClick={onClose}
+            aria-label={t.close || 'Savatni yopish'}
             className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -80,6 +82,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <img
                     src={item?.food?.imageUrl}
                     alt={title}
+                    width="56"
+                    height="56"
                     className="w-14 h-14 rounded-xl object-cover border border-amber-500/30"
                   />
 
@@ -101,9 +105,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   <div className="flex flex-col items-end gap-1">
                     <div className="flex items-center gap-1 bg-zinc-950 p-1 rounded-xl border border-amber-500/30">
                       <button
+                        type="button"
                         onClick={() =>
                           onUpdateQuantity(item?.food?.id, item.quantity - 1)
                         }
+                        aria-label={`${title} miqdorini kamaytirish`}
                         className="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold text-xs flex items-center justify-center"
                       >
                         -
@@ -112,9 +118,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         {item.quantity}
                       </span>
                       <button
+                        type="button"
                         onClick={() =>
                           onUpdateQuantity(item?.food?.id, item.quantity + 1)
                         }
+                        aria-label={`${title} miqdorini oshirish`}
                         className="w-6 h-6 rounded-lg bg-amber-500 text-zinc-950 font-bold text-xs flex items-center justify-center shadow"
                       >
                         +
@@ -122,11 +130,13 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     </div>
 
                     <button
+                      type="button"
                       onClick={() => onRemoveItem(item?.food?.id)}
                       className="text-red-400 hover:text-red-300 p-1"
                       title={t.deleteItem}
+                      aria-label={`${title} taomini o'chirish`}
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                   </div>
                 </div>

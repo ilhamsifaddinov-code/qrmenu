@@ -37,10 +37,12 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
             <h3 className="font-serif font-bold text-lg text-emerald-400">Zakaz tastıyıqlandı</h3>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Jabıw"
             className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -48,7 +50,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
         <div className="p-5 space-y-5 overflow-y-auto custom-scrollbar">
           <div className="space-y-4 text-center">
             <div className="w-14 h-14 rounded-full bg-emerald-950/80 mx-auto flex items-center justify-center text-emerald-400 border border-emerald-500/50">
-              <CheckCircle className="w-8 h-8" />
+              <CheckCircle className="w-8 h-8" aria-hidden="true" />
             </div>
 
             <div>
@@ -88,23 +90,27 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
 
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={handleSaveReceipt}
+                aria-label="Çekti saqlaw"
                 className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1 border border-zinc-700 transition"
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4 text-emerald-400" />
+                    <Check className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                     <span className="text-emerald-400">Saqlandı!</span>
                   </>
                 ) : (
                   <>
-                    <Printer className="w-4 h-4 text-amber-400" />
+                    <Printer className="w-4 h-4 text-amber-400" aria-hidden="true" />
                     <span>Çek saqlaw</span>
                   </>
                 )}
               </button>
               <button
+                type="button"
                 onClick={onClose}
+                aria-label="Jabıw"
                 className="flex-1 bg-amber-500 hover:bg-amber-400 text-zinc-950 py-2.5 rounded-xl font-bold text-xs shadow transition"
               >
                 Jabıw

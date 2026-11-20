@@ -90,10 +90,12 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
           <div className="absolute inset-0 bg-gradient-to-t from-[#18181b] via-transparent to-black/60" />
 
           <button
+            type="button"
             onClick={onClose}
+            aria-label={t.close || 'Jabıw'}
             className="absolute top-3 right-3 bg-black/70 hover:bg-black text-amber-300 p-2 rounded-full border border-amber-500/30 transition shadow-md"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
 
           {/* Title & Category overlay */}
@@ -236,6 +238,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                     <input
                       type="text"
                       placeholder={t.firstName}
+                      aria-label={t.firstName || "Ismińiz"}
                       value={reviewerName}
                       onChange={(e) => setReviewerName(e.target.value)}
                       className="w-1/2 px-2.5 py-1.5 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100 placeholder-zinc-500"
@@ -246,10 +249,11 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                         <button
                           type="button"
                           key={star}
+                          aria-label={`${star} juldız`}
                           onClick={() => setNewRating(star)}
                           className="text-lg transition"
                         >
-                          <Star className={`w-4 h-4 ${star <= newRating ? 'fill-amber-400 text-amber-400' : 'text-zinc-700'}`} />
+                          <Star className={`w-4 h-4 ${star <= newRating ? 'fill-amber-400 text-amber-400' : 'text-zinc-700'}`} aria-hidden="true" />
                         </button>
                       ))}
                     </div>
@@ -259,6 +263,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                     <input
                       type="text"
                       placeholder={t.yourComment}
+                      aria-label={t.yourComment || "Pikirińiz"}
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       className="flex-1 px-2.5 py-1.5 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100 placeholder-zinc-500"
@@ -266,9 +271,10 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                     />
                     <button
                       type="submit"
+                      aria-label="Pikir jiberiw"
                       className="bg-amber-500 hover:bg-amber-400 text-zinc-950 px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 shadow"
                     >
-                      <Send className="w-3.5 h-3.5" />
+                      <Send className="w-3.5 h-3.5" aria-hidden="true" />
                     </button>
                   </div>
                 </>
@@ -278,12 +284,14 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
           {/* Special Order Notes */}
           <div>
-            <label className="block text-xs font-serif font-bold text-zinc-300 mb-1">
+            <label htmlFor="food-order-note" className="block text-xs font-serif font-bold text-zinc-300 mb-1">
               📝 {t.orderNote}:
             </label>
             <input
+              id="food-order-note"
               type="text"
               placeholder="Mısalı: ashshı bolmasın, sarımsaq azraq bolsın..."
+              aria-label={t.orderNote || "Buyırtpa ushın qosımsha eskertpe"}
               value={orderNote}
               onChange={(e) => setOrderNote(e.target.value)}
               className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100 placeholder-zinc-500 focus:ring-2 focus:ring-amber-500 outline-none"
@@ -296,14 +304,18 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
           {/* Quantity Selector */}
           <div className="flex items-center gap-3 bg-zinc-950 px-3 py-1.5 rounded-2xl border border-amber-500/30 shadow-sm">
             <button
+              type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+              aria-label="1 dana kemeytiw"
               className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold text-lg flex items-center justify-center transition"
             >
               -
             </button>
             <span className="font-extrabold text-base text-amber-300 w-6 text-center">{quantity}</span>
             <button
+              type="button"
               onClick={() => setQuantity((q) => q + 1)}
+              aria-label="1 dana qosıw"
               className="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 font-bold text-lg flex items-center justify-center transition shadow"
             >
               +
@@ -312,7 +324,9 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
           {/* Add Button with calculated total */}
           <button
+            type="button"
             onClick={handleAdd}
+            aria-label={`${title} ${t.addToCart}`}
             className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 px-4 rounded-2xl font-serif font-extrabold text-sm sm:text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-between"
           >
             <span>{t.addToCart}</span>

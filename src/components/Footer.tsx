@@ -40,17 +40,17 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
 
           <div className="space-y-2 text-xs text-zinc-300">
             <div className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
               <span>{t.address}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+              <Clock className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
               <span>{t.workingHours}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+              <Phone className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
               <span>{t.phoneContact}</span>
             </div>
           </div>
@@ -74,10 +74,11 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               href="https://maps.google.com/?q=Nukus+Cakebumer"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={t.openInMaps || "Google Xaritada ko'rish"}
               className="absolute bottom-2 right-2 bg-zinc-950/90 text-amber-300 text-[10px] font-bold px-2 py-1 rounded-lg border border-amber-500/40 flex items-center gap-1 shadow"
             >
               <span>{t.openInMaps}</span>
-              <ExternalLink className="w-3 h-3" />
+              <ExternalLink className="w-3 h-3" aria-hidden="true" />
             </a>
           </div>
 
@@ -86,9 +87,10 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               href="https://t.me/qaraqalpaqmenu"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Bizning rasmiy Telegram kanalimiz"
               className="bg-sky-600/90 hover:bg-sky-500 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-sky-400/30"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-4 h-4" aria-hidden="true" />
               <span>Telegram</span>
             </a>
 
@@ -96,16 +98,17 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
               href="https://instagram.com/cakebumer_nukus"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Bizning rasmiy Instagram sahifamiz"
               className="bg-pink-700/90 hover:bg-pink-600 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-pink-400/30"
             >
-              <Instagram className="w-4 h-4" />
+              <Instagram className="w-4 h-4" aria-hidden="true" />
               <span>Instagram</span>
             </a>
           </div>
         </div>
       </div>
 
-      <div className="bg-zinc-950 text-center py-3.5 text-[11px] text-zinc-500 border-t border-zinc-800 font-mono">
+      <div className="bg-zinc-950 text-center py-3.5 text-[11px] text-zinc-400 border-t border-zinc-800 font-mono">
         © 2026 Qaraqalpaq Menu & Nukus Cakebumer. Barlıq huqıqlar qorǵalǵan.
       </div>
     </footer>

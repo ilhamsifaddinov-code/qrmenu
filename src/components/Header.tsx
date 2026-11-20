@@ -62,11 +62,13 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="font-semibold text-amber-400">{t.tableNumber}</span>
           <span className="font-bold text-base text-zinc-100">{tableNumber}</span>
           <button
+            type="button"
             onClick={onOpenQrCode}
             className="flex items-center gap-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-2.5 py-1 rounded-lg border border-amber-500/40 font-bold text-xs transition active:scale-95 shadow-[0_0_10px_rgba(245,158,11,0.2)]"
             title={t.viewQrCode || 'Mening QR Kodım'}
+            aria-label={t.viewQrCode || 'QR Kodni ochish'}
           >
-            <QrCode className="w-3.5 h-3.5 text-amber-400" />
+            <QrCode className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
             <span className="hidden sm:inline">{t.viewQrCode || 'QR Kodım'}</span>
           </button>
         </div>
@@ -74,11 +76,13 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Right Utility Buttons (Lang, User, Admin) */}
         <div className="flex items-center gap-2">
           {/* Language Selector */}
-          <div className="flex items-center bg-zinc-950/80 rounded-xl p-1 border border-amber-500/20 shadow-inner backdrop-blur-sm">
+          <div className="flex items-center bg-zinc-950/80 rounded-xl p-1 border border-amber-500/20 shadow-inner backdrop-blur-sm" role="group" aria-label="Til tanlash">
             {(['qr', 'uz', 'ru', 'en'] as Language[]).map((l) => (
               <button
                 key={l}
+                type="button"
                 onClick={() => onLanguageChange(l)}
+                aria-label={`Tilni o'zgartirish: ${l.toUpperCase()}`}
                 className={`px-2.5 py-1.5 text-[10px] sm:text-[11px] font-bold rounded-lg transition-all duration-300 flex items-center justify-center min-w-[32px] ${
                   lang === l
                     ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 shadow-[0_2px_10px_rgba(245,158,11,0.4)] scale-105'
@@ -92,6 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Admin toggle */}
           <button
+            type="button"
             onClick={onToggleAdminView}
             className={`p-1.5 rounded-lg border text-xs flex items-center gap-1 transition ${
               isAdminView
@@ -99,8 +104,9 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'bg-zinc-800 text-zinc-200 border-zinc-700 hover:bg-zinc-700'
             }`}
             title={t.adminLogin}
+            aria-label={isAdminView ? "Admin paneldan chiqish" : (t.adminLogin || "Admin panelga kirish")}
           >
-            <Shield className="w-4 h-4 text-amber-400" />
+            <Shield className="w-4 h-4 text-amber-400" aria-hidden="true" />
             <span className="hidden md:inline font-bold">Admin</span>
           </button>
         </div>
@@ -111,29 +117,35 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-2">
           {/* Call Waiter */}
           <button
+            type="button"
             onClick={() => triggerCall('waiter')}
+            aria-label={t.callWaiter}
             className="flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 px-3.5 py-1.5 rounded-lg font-bold text-xs sm:text-sm shadow-[0_0_15px_rgba(245,158,11,0.4)] border border-amber-300 transition active:scale-95"
           >
-            <Bell className="w-4 h-4 animate-bounce text-zinc-950" />
+            <Bell className="w-4 h-4 animate-bounce text-zinc-950" aria-hidden="true" />
             <span>{t.callWaiter}</span>
           </button>
 
           {/* Request Bill */}
           <button
+            type="button"
             onClick={() => triggerCall('bill')}
+            aria-label={t.requestBill}
             className="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 text-amber-300 px-3 py-1.5 rounded-lg font-semibold text-xs sm:text-sm border border-amber-500/30 transition active:scale-95"
           >
-            <FileText className="w-4 h-4 text-amber-400" />
+            <FileText className="w-4 h-4 text-amber-400" aria-hidden="true" />
             <span>{t.requestBill}</span>
           </button>
         </div>
 
         {/* Cart Button */}
         <button
+          type="button"
           onClick={onOpenCart}
+          aria-label={`${t.cartTitle}: ${cartCount} taom`}
           className="relative flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 px-4 py-1.5 rounded-xl font-bold text-xs sm:text-sm shadow-[0_0_18px_rgba(245,158,11,0.45)] border border-amber-200 transition active:scale-95"
         >
-          <ShoppingBag className="w-4 h-4 text-zinc-950" />
+          <ShoppingBag className="w-4 h-4 text-zinc-950" aria-hidden="true" />
           <span>{t.cartTitle}</span>
           {cartCount > 0 && (
             <span className="bg-zinc-950 text-amber-300 text-xs font-extrabold px-2 py-0.5 rounded-full border border-amber-400">
@@ -145,8 +157,8 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Instant Notification Banner for Waiter Call */}
       {notification && (
-        <div className="bg-amber-500/20 text-amber-300 text-xs sm:text-sm font-semibold px-4 py-2 text-center flex items-center justify-center gap-2 shadow-inner border-t border-amber-500/40 animate-fadeIn">
-          <CheckCircle className="w-4 h-4 text-amber-400" />
+        <div role="status" aria-live="polite" className="bg-amber-500/20 text-amber-300 text-xs sm:text-sm font-semibold px-4 py-2 text-center flex items-center justify-center gap-2 shadow-inner border-t border-amber-500/40 animate-fadeIn">
+          <CheckCircle className="w-4 h-4 text-amber-400" aria-hidden="true" />
           <span>{notification}</span>
         </div>
       )}

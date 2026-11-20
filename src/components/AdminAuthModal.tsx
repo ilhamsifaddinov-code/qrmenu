@@ -86,10 +86,12 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
             </h3>
           </div>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Jabıw"
             className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -101,7 +103,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
 
           <div>
             <div className="relative">
-              <KeyRound className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <KeyRound className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
               <input
                 type="password"
                 value={password}
@@ -110,6 +112,7 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
                   if (error) setError(false);
                 }}
                 placeholder="******"
+                aria-label="Admin paroli"
                 className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-amber-500/40 bg-zinc-950 text-sm text-zinc-100 placeholder-zinc-500 focus:ring-2 focus:ring-amber-500 outline-none"
                 autoFocus
                 required
