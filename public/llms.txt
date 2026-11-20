@@ -1,0 +1,31 @@
+# Qaraqalpaq Taǵamları - Smart QR Menyu (Nukus Cakebumer)
+
+> Nukus Cakebumer hám Qaraqalpaqstan milliy dástúrxan lezzetleri ushın smart onlayn QR menyu hám buyırtpa platforması.
+
+## Sayt haqqında
+Bul veb-sayt Nukus qalasındaǵı Cakebumer kafesi hám milliy taǵamlar orayı ushın tayarlanǵan smart QR menyu bolıp, miymanlarǵa stolda otırǵan halda telefon arqalı taǵamlardı tańlaw, buyırtpa beriw hám aficianttı shaqırıw imkaniyatın beredi.
+
+## Tiller
+- Qaraqalpaqsha (QR)
+- O'zbekcha (UZ)
+- Русский (RU)
+- English (EN)
+
+## Asosiy Imkoniyatlar
+- Stol nomeri boyınsha menyu kóriw (?table=X)
+- Taǵamlardı kaloriya, ashshılıq, vegetarian hám glyutensiz filtrler boyınsha izlew
+- Bir klik penen aficiant shaqırıw hám esaptı (chek) soraw
+- Taǵamlar quramı, bahası hám tayarlanıw waqtın anıq kóriw
+
+## Taǵam Kategoriyaları
+- Milliy taǵamlar (Besbarmaq, Ashshı quwırdaq, Shubat, Kóje)
+- Fastfud (Lavash, Burger, Klabb sendvich, Kartoshka fri)
+- Góshli taǵamlar (Kebab, Shashlik, Qızartılǵan gósh)
+- Ishimlikler (Moxito, Kofe, Shubat, Sharbatlar)
+- Tatlılar (Cheesecake, Medovik, Muzqaymaq)
+
+## Baylanıs hám Mánzil
+- Mánzil: Qaraqalpaqstan Respublikası, Nókis qalası
+- Kafeniń atı: Cakebumer & Milliy Taǵamlar
+- Jumıs waqtı: 09:00 - 23:00
+- Telegram: https://t.me/qaraqalpaqmenu
