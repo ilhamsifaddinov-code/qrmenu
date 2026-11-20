@@ -1,7 +1,6 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
-import { createServer as createViteServer } from 'vite';
 import * as db from './src/db';
 import { initialFoodItems } from './src/data/mockData';
 
@@ -270,6 +269,7 @@ app.post('/api/foods/sync-all', async (req, res) => {
 // ==========================================
 async function start() {
   if (process.env.NODE_ENV !== 'production') {
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
