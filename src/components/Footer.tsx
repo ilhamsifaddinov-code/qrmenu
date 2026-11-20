@@ -82,27 +82,27 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
             </a>
           </div>
 
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex flex-wrap items-center gap-2.5 pt-1">
             <a
-              href="https://t.me/qaraqalpaqmenu"
+              href="https://t.me/sifaddinov"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Bizning rasmiy Telegram kanalimiz"
-              className="bg-sky-600/90 hover:bg-sky-500 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-sky-400/30"
+              aria-label="Telegram orqali bog'lanish: @sifaddinov"
+              className="bg-sky-600/90 hover:bg-sky-500 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-sky-400/40 shadow hover:scale-105 active:scale-95"
             >
-              <Send className="w-4 h-4" aria-hidden="true" />
-              <span>Telegram</span>
+              <Send className="w-4 h-4 text-white" aria-hidden="true" />
+              <span>@sifaddinov</span>
             </a>
 
             <a
-              href="https://instagram.com/cakebumer_nukus"
+              href="https://instagram.com/sifaddinovv"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Bizning rasmiy Instagram sahifamiz"
-              className="bg-pink-700/90 hover:bg-pink-600 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-pink-400/30"
+              aria-label="Instagram orqali bog'lanish: sifaddinovv"
+              className="bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-pink-400/40 shadow hover:scale-105 active:scale-95"
             >
-              <Instagram className="w-4 h-4" aria-hidden="true" />
-              <span>Instagram</span>
+              <Instagram className="w-4 h-4 text-white" aria-hidden="true" />
+              <span>sifaddinovv</span>
             </a>
           </div>
         </div>
