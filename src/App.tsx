@@ -18,6 +18,7 @@ import { FoodCard } from './components/FoodCard';
 import { FoodDetailModal } from './components/FoodDetailModal';
 import { CartDrawer } from './components/CartDrawer';
 import { ReceiptModal } from './components/ReceiptModal';
+import { CustomerReceiptsModal } from './components/CustomerReceiptsModal';
 import { QRCodeModal } from './components/QRCodeModal';
 import { AdminAuthModal } from './components/AdminAuthModal';
 import { AdminPanel } from './components/AdminPanel';
@@ -60,6 +61,23 @@ export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [receiptOrder, setReceiptOrder] = useState<Order | null>(null);
+  const [isCustomerReceiptsOpen, setIsCustomerReceiptsOpen] = useState(false);
+  const [savedReceiptsCount, setSavedReceiptsCount] = useState<number>(0);
+
+  // Sync saved receipts count
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('cafe_customer_receipts');
+      if (stored) {
+        const list = JSON.parse(stored);
+        setSavedReceiptsCount(Array.isArray(list) ? list.length : 0);
+      } else {
+        setSavedReceiptsCount(0);
+      }
+    } catch {
+      setSavedReceiptsCount(0);
+    }
+  }, [isReceiptOpen, isCustomerReceiptsOpen]);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isAdminView, setIsAdminView] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
@@ -471,6 +489,8 @@ export default function App() {
         cartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenQrCode={() => setIsQrModalOpen(true)}
+        onOpenReceipts={() => setIsCustomerReceiptsOpen(true)}
+        receiptsCount={savedReceiptsCount}
         isAdminView={isAdminView}
         onToggleAdminView={handleToggleAdminView}
         onCallWaiter={handleCallWaiter}
@@ -709,6 +729,17 @@ export default function App() {
         lang={lang}
         order={receiptOrder}
         onClose={() => setIsReceiptOpen(false)}
+      />
+
+      <CustomerReceiptsModal
+        isOpen={isCustomerReceiptsOpen}
+        lang={lang}
+        onClose={() => setIsCustomerReceiptsOpen(false)}
+        onSelectReceipt={(rec) => {
+          setReceiptOrder(rec);
+          setIsCustomerReceiptsOpen(false);
+          setIsReceiptOpen(true);
+        }}
       />
 
       {isAdminAuthModalOpen && (

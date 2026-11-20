@@ -11,6 +11,8 @@ interface HeaderProps {
   cartCount: number;
   onOpenCart: () => void;
   onOpenQrCode: () => void;
+  onOpenReceipts?: () => void;
+  receiptsCount?: number;
   isAdminView: boolean;
   onToggleAdminView: () => void;
   onCallWaiter: (type: 'waiter' | 'bill') => void;
@@ -23,6 +25,8 @@ export const Header: React.FC<HeaderProps> = ({
   cartCount,
   onOpenCart,
   onOpenQrCode,
+  onOpenReceipts,
+  receiptsCount = 0,
   isAdminView,
   onToggleAdminView,
   onCallWaiter,
@@ -136,6 +140,26 @@ export const Header: React.FC<HeaderProps> = ({
             <FileText className="w-4 h-4 text-amber-400" aria-hidden="true" />
             <span>{t.requestBill}</span>
           </button>
+
+          {/* My Receipts */}
+          {onOpenReceipts && (
+            <button
+              type="button"
+              onClick={onOpenReceipts}
+              aria-label={t.myReceipts || 'Meniń çeklerim'}
+              className="flex items-center gap-1.5 bg-zinc-900 hover:bg-zinc-800 text-amber-300 px-3 py-1.5 rounded-lg font-semibold text-xs sm:text-sm border border-amber-500/30 transition active:scale-95"
+              title={t.myReceipts || 'Meniń çeklerim'}
+            >
+              <FileText className="w-4 h-4 text-amber-400" aria-hidden="true" />
+              <span className="hidden sm:inline">{t.myReceipts || 'Meniń çeklerim'}</span>
+              <span className="sm:hidden">Çekler</span>
+              {receiptsCount > 0 && (
+                <span className="bg-amber-500/20 text-amber-300 text-[10px] font-extrabold px-1.5 py-0.5 rounded-full border border-amber-500/40">
+                  {receiptsCount}
+                </span>
+              )}
+            </button>
+          )}
         </div>
 
         {/* Cart Button */}
