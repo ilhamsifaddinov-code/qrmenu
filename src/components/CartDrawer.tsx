@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { X, Trash2, ShoppingBag, ArrowRight, Loader2 } from 'lucide-react';
 import { CartItem, Language } from '../types';
 import { translations } from '../i18n/translations';
 import { getFoodTitle, formatPrice } from '../utils/formatters';
@@ -9,6 +9,7 @@ interface CartDrawerProps {
   lang: Language;
   tableNumber: string;
   items: CartItem[];
+  isSubmitting?: boolean;
   onClose: () => void;
   onUpdateQuantity: (foodId: string, quantity: number) => void;
   onRemoveItem: (foodId: string) => void;
@@ -20,6 +21,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   lang,
   tableNumber,
   items,
+  isSubmitting = false,
   onClose,
   onUpdateQuantity,
   onRemoveItem,
@@ -145,10 +147,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
             <button
               onClick={onProceedPayment}
-              className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 rounded-2xl font-serif font-extrabold text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className={`w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 rounded-2xl font-serif font-extrabold text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-center gap-2 ${
+                isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+              }`}
             >
-              <span>{t.proceedPayment}</span>
-              <ArrowRight className="w-5 h-5 text-zinc-950" />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin text-zinc-950" />
+                  <span>Zakaz jiberilmekte...</span>
+                </>
+              ) : (
+                <>
+                  <span>{t.proceedPayment}</span>
+                  <ArrowRight className="w-5 h-5 text-zinc-950" />
+                </>
+              )}
             </button>
           </div>
         )}

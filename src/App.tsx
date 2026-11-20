@@ -14,7 +14,6 @@ import { initialFoodItems } from './data/mockData';
 import { translations } from './i18n/translations';
 import { getFoodTitle, getFoodDescription, getFoodIngredients } from './utils/formatters';
 import { Header } from './components/Header';
-import { NeonLogo3D } from './components/NeonLogo3D';
 import { FoodCard } from './components/FoodCard';
 import { FoodDetailModal } from './components/FoodDetailModal';
 import { CartDrawer } from './components/CartDrawer';
@@ -41,12 +40,16 @@ export default function App() {
 
   // Keep table param synced if URL changes
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tableParam = params.get('table');
-    if (tableParam && tableParam !== tableNumber) {
-      setTableNumber(tableParam);
-    }
-  }, []);
+    const handleUrlChange = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tableParam = params.get('table');
+      if (tableParam && tableParam !== tableNumber) {
+        setTableNumber(tableParam);
+      }
+    };
+    window.addEventListener('popstate', handleUrlChange);
+    return () => window.removeEventListener('popstate', handleUrlChange);
+  }, [tableNumber]);
 
   // 2. Data State
   const [foodItems, setFoodItems] = useState<FoodItem[]>(initialFoodItems);
@@ -59,9 +62,34 @@ export default function App() {
   const [receiptOrder, setReceiptOrder] = useState<Order | null>(null);
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isAdminView, setIsAdminView] = useState(false);
-  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
+    try {
+      return sessionStorage.getItem('cafe_admin_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
   const [adminPassword, setAdminPassword] = useState('123456');
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
+
+  // Check URL params for admin view on mount
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const isAdminParam = params.get('admin') === 'true' || window.location.pathname === '/admin';
+      if (isAdminParam) {
+        if (sessionStorage.getItem('cafe_admin_auth') === 'true') {
+          setIsAdminAuthenticated(true);
+          setIsAdminView(true);
+        } else {
+          setIsAdminAuthModalOpen(true);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   const handleToggleAdminView = () => {
     if (isAdminView) {
@@ -117,13 +145,26 @@ export default function App() {
           setWaiterCalls(data.waiterCalls);
           localStorage.setItem('cafe_waiterCalls', JSON.stringify(data.waiterCalls));
         }
+        if (data.foods && Array.isArray(data.foods) && data.foods.length > 0) {
+          setFoodItems(data.foods);
+        }
       }
     } catch (err) {
       // Fallback silently if offline or server booting
     }
   };
 
+  // Initial load of foods and sync
   useEffect(() => {
+    fetch('/api/foods')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setFoodItems(data);
+        }
+      })
+      .catch((e) => console.warn('Could not fetch initial foods:', e));
+
     syncWithServer();
     const interval = setInterval(syncWithServer, 2000);
     return () => clearInterval(interval);
@@ -249,6 +290,7 @@ export default function App() {
 
   // Order completion
   const handleConfirmOrder = async () => {
+    if (isSubmittingOrder) return;
     if (!cartItems || cartItems.length === 0) return;
     
     const validItems = cartItems
@@ -260,6 +302,8 @@ export default function App() {
       }));
 
     if (validItems.length === 0) return;
+
+    setIsSubmittingOrder(true);
 
     const totalCalculated = validItems.reduce(
       (sum, i) => sum + (i.food.price || 0) * (i.quantity || 1),
@@ -290,9 +334,11 @@ export default function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newOrder),
       });
-      syncWithServer();
+      await syncWithServer();
     } catch (e) {
       console.error('Failed to post order:', e);
+    } finally {
+      setIsSubmittingOrder(false);
     }
   };
 
@@ -326,19 +372,47 @@ export default function App() {
     }
   };
 
-  // Admin handlers
-  const handleAddFoodItem = (newItem: FoodItem) => {
+  // Admin handlers - Connected globally via Server REST API
+  const handleAddFoodItem = async (newItem: FoodItem) => {
     setFoodItems((prev) => [newItem, ...prev]);
+    try {
+      await fetch('/api/foods', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newItem),
+      });
+      syncWithServer();
+    } catch (e) {
+      console.error('Failed to save food to server:', e);
+    }
   };
 
-  const handleUpdateFoodItem = (updatedItem: FoodItem) => {
+  const handleUpdateFoodItem = async (updatedItem: FoodItem) => {
     setFoodItems((prev) =>
       prev.map((i) => (i.id === updatedItem.id ? updatedItem : i))
     );
+    try {
+      await fetch(`/api/foods/${updatedItem.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedItem),
+      });
+      syncWithServer();
+    } catch (e) {
+      console.error('Failed to update food on server:', e);
+    }
   };
 
-  const handleDeleteFoodItem = (id: string) => {
+  const handleDeleteFoodItem = async (id: string) => {
     setFoodItems((prev) => prev.filter((i) => i.id !== id));
+    try {
+      await fetch(`/api/foods/${id}`, {
+        method: 'DELETE',
+      });
+      syncWithServer();
+    } catch (e) {
+      console.error('Failed to delete food from server:', e);
+    }
   };
 
   // Filtered Food Items logic
@@ -390,6 +464,10 @@ export default function App() {
         lang={lang}
         onLanguageChange={setLang}
         tableNumber={tableNumber}
+        onTableChange={(newT) => {
+          setTableNumber(newT);
+          window.history.pushState({}, '', '?table=' + newT);
+        }}
         cartCount={totalCartCount}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenQrCode={() => setIsQrModalOpen(true)}
@@ -419,9 +497,6 @@ export default function App() {
           />
         ) : (
           <>
-            {/* Interactive 3D Neon Cakebumer Logo Section */}
-            <NeonLogo3D lang={lang} />
-
             <NationalOrnamentHeader />
 
             {/* Categories Selector Tabs */}
@@ -582,6 +657,7 @@ export default function App() {
                         lang={lang}
                         onSelect={setSelectedFood}
                         onAddToCart={(f) => handleAddToCart(f, 1)}
+                        onUpdateQuantity={handleUpdateCartQuantity}
                         cartQuantity={cartQty}
                       />
                     );
@@ -609,6 +685,7 @@ export default function App() {
         lang={lang}
         tableNumber={tableNumber}
         items={cartItems}
+        isSubmitting={isSubmittingOrder}
         onClose={() => setIsCartOpen(false)}
         onUpdateQuantity={handleUpdateCartQuantity}
         onRemoveItem={handleRemoveCartItem}
@@ -629,6 +706,11 @@ export default function App() {
           adminPassword={adminPassword}
           onClose={() => setIsAdminAuthModalOpen(false)}
           onSuccess={() => {
+            try {
+              sessionStorage.setItem('cafe_admin_auth', 'true');
+            } catch (e) {
+              console.error(e);
+            }
             setIsAdminAuthenticated(true);
             setIsAdminAuthModalOpen(false);
             setIsAdminView(true);

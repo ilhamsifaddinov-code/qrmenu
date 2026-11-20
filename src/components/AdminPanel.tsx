@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Shield,
   Plus,
@@ -16,6 +16,9 @@ import {
   Check,
   ExternalLink,
   Download,
+  Upload,
+  Image as ImageIcon,
+  Loader2,
 } from 'lucide-react';
 import { FoodItem, Language, Order, WaiterCall } from '../types';
 import { translations } from '../i18n/translations';
@@ -102,12 +105,62 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   // New Food Item Form State
   const [newTitle, setNewTitle] = useState('');
   const [newPrice, setNewPrice] = useState('35000');
-  const [newCategory, setNewCategory] = useState<'national' | 'meats' | 'drinks' | 'desserts'>('national');
+  const [newCategory, setNewCategory] = useState<'national' | 'fastfood' | 'meats' | 'drinks' | 'desserts'>('national');
   const [newCalories, setNewCalories] = useState('450');
   const [newImgUrl, setNewImgUrl] = useState('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80');
   const [newDesc, setNewDesc] = useState('');
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
   const [tempPriceInput, setTempPriceInput] = useState('');
+
+  // Image Upload state
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  // Table filter in Orders
+  const [selectedTableFilter, setSelectedTableFilter] = useState<string>('all');
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setUploadError(null);
+    setUploadSuccess(false);
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const base64Data = reader.result as string;
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ filename: file.name, data: base64Data }),
+        });
+        const json = await res.json();
+        if (json.success && json.url) {
+          setNewImgUrl(json.url);
+          setUploadSuccess(true);
+        } else {
+          // If server upload failed, fallback to base64 Data URL
+          setNewImgUrl(base64Data);
+          setUploadSuccess(true);
+        }
+      } catch (err: any) {
+        console.warn('Backend upload fallback to Data URL:', err);
+        setNewImgUrl(reader.result as string);
+        setUploadSuccess(true);
+      } finally {
+        setIsUploading(false);
+      }
+    };
+    reader.onerror = () => {
+      setUploadError('Faylni yuklashda xatolik yuz berdi');
+      setIsUploading(false);
+    };
+    reader.readAsDataURL(file);
+  };
 
   // Calculate Stats
   const todayRevenue = orders.reduce((sum, o) => sum + o.totalAmount, 1280000);
@@ -123,7 +176,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       description: { qr: newDesc || newTitle, uz: newDesc, ru: newDesc, en: newDesc },
       price: parseInt(newPrice) || 30000,
       category: newCategory,
-      imageUrl: newImgUrl,
+      imageUrl: newImgUrl || 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
       calories: parseInt(newCalories) || 400,
       prepTime: 20,
       spicyLevel: 0,
@@ -143,6 +196,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     onAddFoodItem(item);
     setNewTitle('');
     setNewDesc('');
+    setUploadSuccess(false);
     setActiveTab('menu');
   };
 
@@ -376,6 +430,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs font-semibold text-zinc-100"
               >
                 <option value="national">🍲 Milliy Taǵamlar</option>
+                <option value="fastfood">🌯 Lavash & Fast Food</option>
                 <option value="meats">🥩 Kebab hám Taǵamlar</option>
                 <option value="drinks">🥤 Milliy İshimlikler</option>
                 <option value="desserts">🍰 Desserts & Cakebumer</option>
@@ -383,14 +438,88 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-zinc-300 mb-1">Súret URL (Rásim):</label>
+          {/* Food Image: Upload from Laptop OR Enter URL */}
+          <div className="bg-zinc-950 p-3.5 rounded-xl border border-amber-500/25 space-y-2.5">
+            <label className="block text-xs font-bold text-amber-300">
+              🖼️ Ovqat rasmi (Laptopdan yuklash yoki URL kiritish):
+            </label>
+
+            {/* Hidden file input */}
             <input
-              type="text"
-              value={newImgUrl}
-              onChange={(e) => setNewImgUrl(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100"
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileUpload}
             />
+
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/50 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition active:scale-95 shadow"
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                    <span>Rasm yuklanmoqda...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4 text-amber-400" />
+                    <span>📁 Laptopdan rasm yuklash</span>
+                  </>
+                )}
+              </button>
+
+              {uploadSuccess && (
+                <span className="text-emerald-400 text-xs font-semibold flex items-center gap-1">
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Rasm yuklandi!</span>
+                </span>
+              )}
+
+              {uploadError && (
+                <span className="text-red-400 text-xs font-semibold">
+                  {uploadError}
+                </span>
+              )}
+            </div>
+
+            {/* URL input field */}
+            <div>
+              <label className="block text-[11px] text-zinc-400 mb-1">
+                Yoki to'g'ridan-to'g'ri rasm havolasi (URL):
+              </label>
+              <input
+                type="text"
+                value={newImgUrl}
+                onChange={(e) => setNewImgUrl(e.target.value)}
+                placeholder="https://... yoki /uploads/..."
+                className="w-full px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs text-zinc-200"
+              />
+            </div>
+
+            {/* Thumbnail Preview */}
+            {newImgUrl && (
+              <div className="flex items-center gap-3 pt-1">
+                <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-amber-500/40 bg-zinc-900 shrink-0 shadow">
+                  <img
+                    src={newImgUrl}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80';
+                    }}
+                  />
+                </div>
+                <div className="text-xs text-zinc-400">
+                  <span className="text-zinc-200 font-semibold block">Rasm ko'rinishi</span>
+                  <span className="text-[11px]">Saytda ushbu rasm aks ettiriladi</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div>
@@ -460,17 +589,65 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
           {/* Active Orders List */}
           <div>
-            <h3 className="font-serif font-bold text-base text-zinc-100 mb-3">
-              {t.activeOrders}
-            </h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <h3 className="font-serif font-bold text-base text-zinc-100 flex items-center gap-2">
+                <span>{t.activeOrders}</span>
+                <span className="bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-bold">
+                  Jámi: {orders.length}
+                </span>
+              </h3>
 
-            {orders.length === 0 ? (
-              <p className="text-xs text-zinc-400 italic bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                Taza zakazlar házirshe joq.
-              </p>
-            ) : (
-              <div className="space-y-3">
-                {orders.map((ord) => (
+              {/* Table Filter Tabs */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 max-w-full">
+                <button
+                  type="button"
+                  onClick={() => setSelectedTableFilter('all')}
+                  className={`px-3 py-1 rounded-xl font-serif font-bold text-xs whitespace-nowrap transition ${
+                    selectedTableFilter === 'all'
+                      ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow'
+                      : 'bg-zinc-950 text-zinc-300 border border-zinc-800 hover:bg-zinc-800'
+                  }`}
+                >
+                  Barcha stollar ({orders.length})
+                </button>
+                {Array.from(new Set(orders.map((o) => String(o.tableNumber))))
+                  .sort((a, b) => Number(a) - Number(b))
+                  .map((tbl) => (
+                    <button
+                      type="button"
+                      key={tbl}
+                      onClick={() => setSelectedTableFilter(tbl)}
+                      className={`px-3 py-1 rounded-xl font-serif font-bold text-xs whitespace-nowrap transition ${
+                        selectedTableFilter === tbl
+                          ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow'
+                          : 'bg-zinc-950 text-zinc-300 border border-zinc-800 hover:bg-zinc-800'
+                      }`}
+                    >
+                      Stol №{tbl} ({orders.filter((o) => String(o.tableNumber) === tbl).length})
+                    </button>
+                  ))}
+              </div>
+            </div>
+
+            {(() => {
+              const displayOrders =
+                selectedTableFilter === 'all'
+                  ? orders
+                  : orders.filter((o) => String(o.tableNumber) === selectedTableFilter);
+
+              if (displayOrders.length === 0) {
+                return (
+                  <p className="text-xs text-zinc-400 italic bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+                    {selectedTableFilter === 'all'
+                      ? 'Taza zakazlar házirshe joq.'
+                      : `Stol №${selectedTableFilter} ushın zakazlar joq.`}
+                  </p>
+                );
+              }
+
+              return (
+                <div className="space-y-3">
+                  {displayOrders.map((ord) => (
                   <div key={ord.id} className="bg-zinc-900 p-4 rounded-2xl border border-amber-500/30 text-xs shadow-md space-y-3">
                     <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
                       <div className="flex items-center gap-2">
@@ -556,7 +733,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
                 ))}
               </div>
-            )}
+            );
+          })()}
           </div>
         </div>
       )}

@@ -63,6 +63,7 @@ export const NeonLogo3D: React.FC<NeonLogo3DProps> = ({ lang }) => {
   const entryProgressRef = useRef(0);
 
   useEffect(() => {
+    entryProgressRef.current = 0;
     const container = mountRef.current;
     if (!container) return;
 

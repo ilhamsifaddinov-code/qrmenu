@@ -9,6 +9,7 @@ interface FoodCardProps {
   lang: Language;
   onSelect: (food: FoodItem) => void;
   onAddToCart: (food: FoodItem) => void;
+  onUpdateQuantity?: (foodId: string, quantity: number) => void;
   cartQuantity: number;
 }
 
@@ -17,9 +18,11 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   lang,
   onSelect,
   onAddToCart,
+  onUpdateQuantity,
   cartQuantity,
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const t = translations[lang] || translations.qr;
 
   const title = getFoodTitle(food, lang);
@@ -29,18 +32,29 @@ export const FoodCard: React.FC<FoodCardProps> = ({
     <div className="group relative bg-[#18181b] rounded-2xl border border-amber-500/25 hover:border-amber-400/70 shadow-lg hover:shadow-[0_0_25px_rgba(245,158,11,0.2)] transition-all duration-300 overflow-hidden flex flex-col justify-between">
       {/* Top Badges overlay */}
       <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-zinc-950 cursor-pointer" onClick={() => onSelect(food)}>
-        {!imageLoaded && (
+        {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-zinc-900 animate-pulse flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
+            <div className="w-10 h-10 border-3 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
           </div>
         )}
-        <img
-          src={food.imageUrl}
-          alt={title}
-          onLoad={() => setImageLoaded(true)}
-          className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
-          loading="lazy"
-        />
+        {imageError ? (
+          <div className="w-full h-full bg-gradient-to-br from-zinc-900 to-zinc-950 flex flex-col items-center justify-center p-4 text-center">
+            <span className="text-4xl mb-2">🍽️</span>
+            <span className="text-xs font-serif font-bold text-amber-400">{title}</span>
+          </div>
+        ) : (
+          <img
+            src={food.imageUrl}
+            alt={title}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => {
+              setImageError(true);
+              setImageLoaded(true);
+            }}
+            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
+            loading="lazy"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#18181b] via-transparent to-black/40" />
 
         {/* National Special Badge */}
@@ -127,26 +141,43 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             <span>{food.prepTime} {t.prepTime}</span>
           </div>
 
-          <button
-            onClick={() => onAddToCart(food)}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold text-xs shadow transition active:scale-95 ${
-              cartQuantity > 0
-                ? 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-400/60'
-                : 'bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 hover:from-amber-400 hover:to-amber-500 font-extrabold shadow-[0_0_12px_rgba(245,158,11,0.35)]'
-            }`}
-          >
-            {cartQuantity > 0 ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-amber-400" />
-                <span>Qosıldı ({cartQuantity})</span>
-              </>
-            ) : (
-              <>
-                <Plus className="w-3.5 h-3.5" />
-                <span>{t.addToCart}</span>
-              </>
-            )}
-          </button>
+          {cartQuantity > 0 ? (
+            <div className="flex items-center gap-1.5 bg-zinc-950 px-2 py-1 rounded-xl border border-amber-400/60 shadow">
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onUpdateQuantity?.(food.id, cartQuantity - 1);
+                }}
+                className="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-amber-300 font-extrabold text-sm flex items-center justify-center transition active:scale-90"
+                title="1 dana kemeytiw"
+              >
+                -
+              </button>
+              <span className="font-extrabold text-xs text-amber-300 px-1 min-w-[16px] text-center">
+                {cartQuantity}
+              </span>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddToCart(food);
+                }}
+                className="w-6 h-6 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-extrabold text-sm flex items-center justify-center transition active:scale-90 shadow"
+                title="1 dana qosıw"
+              >
+                +
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => onAddToCart(food)}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold text-xs shadow transition active:scale-95 bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 hover:from-amber-400 hover:to-amber-500 font-extrabold shadow-[0_0_12px_rgba(245,158,11,0.35)]"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>{t.addToCart}</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

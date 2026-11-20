@@ -1,6 +1,758 @@
 {
   "orders": [
     {
+      "id": "ORD-928499",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:51 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795067495157
+    },
+    {
+      "id": "ORD-513528",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:49 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795067351628
+    },
+    {
+      "id": "ORD-525551",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:48 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795067286955
+    },
+    {
+      "id": "ORD-246799",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:41 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795066879670
+    },
+    {
+      "id": "ORD-531648",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:34 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795066491602
+    },
+    {
+      "id": "ORD-907377",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:33 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795066427083
+    },
+    {
+      "id": "ORD-691994",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:29 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795066172785
+    },
+    {
+      "id": "ORD-712381",
+      "tableNumber": "2",
+      "items": [
+        {
+          "food": {
+            "id": "food-lavash-beef",
+            "title": {
+              "qr": "Sıyır go'shli Lavash (Syrmen)",
+              "uz": "Mol go'shtli Lavash (Pishloqli)",
+              "ru": "Сочный Лаваш с говядиной и сыром",
+              "en": "Juicy Beef & Cheese Lavash"
+            },
+            "description": {
+              "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+              "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+              "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+              "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+            },
+            "price": 32000,
+            "category": "fastfood",
+            "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+            "calories": 540,
+            "prepTime": 12,
+            "spicyLevel": 0,
+            "isVegetarian": false,
+            "isGlutenFree": false,
+            "isHalal": true,
+            "isNationalSpecial": false,
+            "isAvailable": true,
+            "ingredients": {
+              "qr": [
+                "Sıyır go'shi",
+                "Lavash qamır",
+                "Mozzarella pishloq",
+                "Pomidor",
+                "Qıyar",
+                "Soba sous"
+              ],
+              "uz": [
+                "Mol go'shti",
+                "Lavash xamiri",
+                "Pishloq",
+                "Pomidor",
+                "Bodring",
+                "Maxsus sous"
+              ],
+              "ru": [
+                "Говядина",
+                "Лаваш",
+                "Сыр Моцарелла",
+                "Помидоры",
+                "Огурцы",
+                "Соус"
+              ],
+              "en": [
+                "Beef",
+                "Lavash Bread",
+                "Mozzarella Cheese",
+                "Tomatoes",
+                "Cucumbers",
+                "Special Sauce"
+              ]
+            },
+            "allergens": [
+              "gluten",
+              "dairy"
+            ],
+            "rating": 4.9,
+            "ratingCount": 240,
+            "reviews": [
+              {
+                "id": "rev-l1",
+                "userName": "Aydos K.",
+                "rating": 5,
+                "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+                "date": "2026-07-27"
+              }
+            ],
+            "nutrition": {
+              "protein": 28,
+              "fat": 22,
+              "carbs": 48
+            }
+          },
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 32000,
+      "status": "preparing",
+      "createdAt": "10:25 AM",
+      "paymentMethod": "cash",
+      "timestamp": 1795065956675
+    },
+    {
       "id": "ORD-891747",
       "tableNumber": "2",
       "items": [
@@ -590,6 +1342,1326 @@
       "timestamp": "12:30",
       "type": "waiter",
       "status": "active"
+    }
+  ],
+  "foods": [
+    {
+      "id": "food-lavash-beef",
+      "title": {
+        "qr": "Sıyır go'shli Lavash (Syrmen)",
+        "uz": "Mol go'shtli Lavash (Pishloqli)",
+        "ru": "Сочный Лаваш с говядиной и сыром",
+        "en": "Juicy Beef & Cheese Lavash"
+      },
+      "description": {
+        "qr": "Taza sıyır go'shi, erigen pishloq, qıyar, pomidor hám xosh boylı firmennıy sous penen oralanǵan ıssı lavash.",
+        "uz": "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
+        "ru": "Сочная обжаренная говядина, сыр Моцарелла, свежие огурцы, томаты и фирменный соус в тонком лаваше.",
+        "en": "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
+      },
+      "price": 32000,
+      "category": "fastfood",
+      "imageUrl": "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
+      "calories": 540,
+      "prepTime": 12,
+      "spicyLevel": 0,
+      "isVegetarian": false,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Sıyır go'shi",
+          "Lavash qamır",
+          "Mozzarella pishloq",
+          "Pomidor",
+          "Qıyar",
+          "Soba sous"
+        ],
+        "uz": [
+          "Mol go'shti",
+          "Lavash xamiri",
+          "Pishloq",
+          "Pomidor",
+          "Bodring",
+          "Maxsus sous"
+        ],
+        "ru": [
+          "Говядина",
+          "Лаваш",
+          "Сыр Моцарелла",
+          "Помидоры",
+          "Огурцы",
+          "Соус"
+        ],
+        "en": [
+          "Beef",
+          "Lavash Bread",
+          "Mozzarella Cheese",
+          "Tomatoes",
+          "Cucumbers",
+          "Special Sauce"
+        ]
+      },
+      "allergens": [
+        "gluten",
+        "dairy"
+      ],
+      "rating": 4.9,
+      "ratingCount": 240,
+      "reviews": [
+        {
+          "id": "rev-l1",
+          "userName": "Aydos K.",
+          "rating": 5,
+          "comment": "Lavash juda sotsnyy hám iri eken, ràxmet!",
+          "date": "2026-07-27"
+        }
+      ],
+      "nutrition": {
+        "protein": 28,
+        "fat": 22,
+        "carbs": 48
+      }
+    },
+    {
+      "id": "food-lavash-chicken",
+      "title": {
+        "qr": "Tawıq go'shli Lavash (Kartoshka Fri menen)",
+        "uz": "Tovuqli Lavash (Fri bilan)",
+        "ru": "Лаваш с курицей и картофелем фри",
+        "en": "Crispy Chicken & Fries Lavash"
+      },
+      "description": {
+        "qr": "Jumsaq tawıq filestı, ketti qowırılǵan fri, sarımsoqlı sous hám tazalangan sabzavotlar.",
+        "uz": "Tovuq filesi, oltinrang kartoshka fri, sarimsoqli sous va yangi sabzavotlar.",
+        "ru": "Нежное куриное филе, хрустящий картофель фри, чесночный соус и свежие овощи.",
+        "en": "Tender chicken fillet, golden french fries, garlic aioli, and crunchy fresh vegetables."
+      },
+      "price": 28000,
+      "category": "fastfood",
+      "imageUrl": "https://images.unsplash.com/photo-1561651823-34feb02250e4?auto=format&fit=crop&w=800&q=80",
+      "calories": 490,
+      "prepTime": 10,
+      "spicyLevel": 0,
+      "isVegetarian": false,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Tawıq go'shi",
+          "Kartoshka fri",
+          "Lavash qamır",
+          "Sarımsoqlı sous",
+          "Qıyar"
+        ],
+        "uz": [
+          "Tovuq go'shti",
+          "Kartoshka fri",
+          "Lavash",
+          "Sarimsoqli sous",
+          "Bodring"
+        ],
+        "ru": [
+          "Куриное филе",
+          "Картофель фри",
+          "Лаваш",
+          "Чесночный соус",
+          "Огурцы"
+        ],
+        "en": [
+          "Chicken Fillet",
+          "French Fries",
+          "Lavash",
+          "Garlic Sauce",
+          "Cucumbers"
+        ]
+      },
+      "allergens": [
+        "gluten",
+        "dairy"
+      ],
+      "rating": 4.8,
+      "ratingCount": 195,
+      "reviews": [],
+      "nutrition": {
+        "protein": 26,
+        "fat": 18,
+        "carbs": 52
+      }
+    },
+    {
+      "id": "food-burger-set",
+      "title": {
+        "qr": "Double Cheeseburger Set (Fri + Ketchup)",
+        "uz": "Chizburger Set (Fri va Ketchup)",
+        "ru": "Двойной Чизбургер Сет с Картофелем Фри",
+        "en": "Double Cheeseburger Combo with Fries"
+      },
+      "description": {
+        "qr": "Eki qabat sotsnyy sıyır go'shi kotleti, Cheddar pishloǵı, marinadlangan qıyar hám ketti qowırılǵan fri.",
+        "uz": "Ikki qavat mol go'shti kotleti, Cheddar pishloq, bodring va fri.",
+        "ru": "Сочные две говяжьи котлеты, плавлено-тягучий сыр Чеддер, соленые огурчики и золотистый картофель фри.",
+        "en": "Two flame-grilled beef patties, doubled Cheddar cheese, pickles, and crispy golden french fries."
+      },
+      "price": 45000,
+      "category": "fastfood",
+      "imageUrl": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+      "calories": 780,
+      "prepTime": 15,
+      "spicyLevel": 1,
+      "isVegetarian": false,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Sıyır go'shi kotlet",
+          "Cheddar pishloq",
+          "Bulochka",
+          "Marinad qıyar",
+          "Fri"
+        ],
+        "uz": [
+          "Mol go'shti kotlet",
+          "Cheddar pishloq",
+          "Bulochka",
+          "Tuzlangan bodring",
+          "Fri"
+        ],
+        "ru": [
+          "Говяжьи котлеты",
+          "Сыр Чеддер",
+          "Булочка с кунжутом",
+          "Соленые огурцы",
+          "Фри"
+        ],
+        "en": [
+          "Beef Patties",
+          "Cheddar Cheese",
+          "Sesame Bun",
+          "Pickles",
+          "French Fries"
+        ]
+      },
+      "allergens": [
+        "gluten",
+        "dairy",
+        "sesame"
+      ],
+      "rating": 4.9,
+      "ratingCount": 310,
+      "reviews": [
+        {
+          "id": "rev-b1",
+          "userName": "Sardorbek T.",
+          "rating": 5,
+          "comment": "Nukusdagı eń lezzetli burger seti!",
+          "date": "2026-07-26"
+        }
+      ],
+      "nutrition": {
+        "protein": 38,
+        "fat": 34,
+        "carbs": 64
+      }
+    },
+    {
+      "id": "food-pizza-pepperoni",
+      "title": {
+        "qr": "Pepperoni Pizza (30 cm - Mozzarella)",
+        "uz": "Pepperoni Pitssa (30 sm)",
+        "ru": "Пицца Пепперони (30 см)",
+        "en": "Classic Pepperoni Pizza (30cm)"
+      },
+      "description": {
+        "qr": "Mozzarella pishloǵı, otlı pepperoni kolbasası hám pomidor sousı solınǵan ıssı pizza.",
+        "uz": "Motsarella pishlog'i va pepperoni kolbasasi bilan yopilgan xushbo'y pitssa.",
+        "ru": "Итальянская пицца с соусом из томатов, сыром Моцарелла и пикантными колбасками Пепперони.",
+        "en": "Crispy dough baked with rich tomato sauce, mozzarella, and spicy pepperoni slices."
+      },
+      "price": 65000,
+      "category": "fastfood",
+      "imageUrl": "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=800&q=80",
+      "calories": 840,
+      "prepTime": 20,
+      "spicyLevel": 1,
+      "isVegetarian": false,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Pepperoni kolbasa",
+          "Mozzarella pishloq",
+          "Pomidor sous",
+          "Pizza qamır"
+        ],
+        "uz": [
+          "Pepperoni kolbasa",
+          "Mozzarella pishloq",
+          "Pomidor sous",
+          "Xamir"
+        ],
+        "ru": [
+          "Колбаски Пепперони",
+          "Сыр Моцарелла",
+          "Томатный соус",
+          "Тесто"
+        ],
+        "en": [
+          "Pepperoni Slices",
+          "Mozzarella Cheese",
+          "Tomato Sauce",
+          "Pizza Dough"
+        ]
+      },
+      "allergens": [
+        "gluten",
+        "dairy"
+      ],
+      "rating": 4.85,
+      "ratingCount": 180,
+      "reviews": [],
+      "nutrition": {
+        "protein": 32,
+        "fat": 36,
+        "carbs": 80
+      }
+    },
+    {
+      "id": "food-french-fries",
+      "title": {
+        "qr": "Kartoshka Fri (Ketchup & Mayonez)",
+        "uz": "Kartoshka Fri (Sous bilan)",
+        "ru": "Картофель Фри с Соусом",
+        "en": "Crispy French Fries with Dip"
+      },
+      "description": {
+        "qr": "Altın reńli ketti qowırılǵan fri kartoshkası, firmennıy ketchup hám sarımsoqlı mayonez menen.",
+        "uz": "Oltinrang qirsillama kartoshka fri va souslar.",
+        "ru": "Хрустящий золотистый картофель фри со специями, кетчупом и соусом.",
+        "en": "Golden crispy french fries lightly salted and served with tomato ketchup and garlic mayo."
+      },
+      "price": 18000,
+      "category": "fastfood",
+      "imageUrl": "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
+      "calories": 340,
+      "prepTime": 8,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Kartoshka",
+          "Moy",
+          "Tuz",
+          "Ketchup"
+        ],
+        "uz": [
+          "Kartoshka",
+          "Yog'",
+          "Tuz",
+          "Ketchup"
+        ],
+        "ru": [
+          "Картофель",
+          "Растительное масло",
+          "Соль",
+          "Кетчуп"
+        ],
+        "en": [
+          "Potatoes",
+          "Vegetable Oil",
+          "Salt",
+          "Ketchup"
+        ]
+      },
+      "allergens": [],
+      "rating": 4.75,
+      "ratingCount": 140,
+      "reviews": [],
+      "nutrition": {
+        "protein": 4,
+        "fat": 16,
+        "carbs": 42
+      }
+    },
+    {
+      "id": "food-cola-05",
+      "title": {
+        "qr": "Coca-Cola Classic (0.5 Litr / Muzday)",
+        "uz": "Coca-Cola Classic (0.5L)",
+        "ru": "Coca-Cola Classic (0.5 л)",
+        "en": "Coca-Cola Classic (0.5L)"
+      },
+      "description": {
+        "qr": "Salqın, muzday gazlanǵan klassikalıq Coca-Cola ishimligi.",
+        "uz": "Muzdek tetiklashtiruvchi Coca-Cola ichimligi.",
+        "ru": "Освежающий охлажденный газированный напиток Coca-Cola.",
+        "en": "Chilled classic refreshing carbonated Coca-Cola beverage."
+      },
+      "price": 10000,
+      "category": "drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=800&q=80",
+      "calories": 140,
+      "prepTime": 2,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Gazlanǵan suw",
+          "Shedre",
+          "Kofeina",
+          "Aromatizatorlar"
+        ],
+        "uz": [
+          "Gazlangan suv",
+          "Shakar",
+          "Kofein",
+          "Aromatizator"
+        ],
+        "ru": [
+          "Газированная вода",
+          "Сахар",
+          "Кофеин",
+          "Ароматизаторы"
+        ],
+        "en": [
+          "Carbonated Water",
+          "Sugar",
+          "Caffeine",
+          "Natural Flavors"
+        ]
+      },
+      "allergens": [],
+      "rating": 5,
+      "ratingCount": 420,
+      "reviews": [
+        {
+          "id": "rev-c1",
+          "userName": "Temur A.",
+          "rating": 5,
+          "comment": "Muzday hám sotsnyy cola!",
+          "date": "2026-07-28"
+        }
+      ],
+      "nutrition": {
+        "protein": 0,
+        "fat": 0,
+        "carbs": 35
+      }
+    },
+    {
+      "id": "food-fanta-05",
+      "title": {
+        "qr": "Fanta Orange (0.5 Litr / Muzday)",
+        "uz": "Fanta Apelsin (0.5L)",
+        "ru": "Fanta Апельсин (0.5 л)",
+        "en": "Fanta Orange (0.5L)"
+      },
+      "description": {
+        "qr": "Apelsin lezzetli muzday gazlanǵan ishimlik.",
+        "uz": "Apelsin ta'mli muzdek Fanta ichimligi.",
+        "ru": "Яркий апельсиновый охлажденный газированный напиток.",
+        "en": "Chilled citrus orange soda beverage with bright fruit flavors."
+      },
+      "price": 10000,
+      "category": "drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1624517452488-04869289c4ca?auto=format&fit=crop&w=800&q=80",
+      "calories": 150,
+      "prepTime": 2,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Gazlanǵan suw",
+          "Apelsin sokı",
+          "Shedre"
+        ],
+        "uz": [
+          "Gazlangan suv",
+          "Apelsin sharbati",
+          "Shakar"
+        ],
+        "ru": [
+          "Газированная вода",
+          "Апельсиновый сок",
+          "Сахар"
+        ],
+        "en": [
+          "Carbonated Water",
+          "Orange Juice Concentrate",
+          "Sugar"
+        ]
+      },
+      "allergens": [],
+      "rating": 4.8,
+      "ratingCount": 210,
+      "reviews": [],
+      "nutrition": {
+        "protein": 0,
+        "fat": 0,
+        "carbs": 37
+      }
+    },
+    {
+      "id": "food-ice-tea",
+      "title": {
+        "qr": "Ice Tea Fuse Tea (Limon / Shaftalı 0.5L)",
+        "uz": "Ice Tea (Limon yoki Shaftoli 0.5L)",
+        "ru": "Холодный Чай Ice Tea (Лимон / Персик)",
+        "en": "Ice Tea Lemon or Peach (0.5L)"
+      },
+      "description": {
+        "qr": "Muzday, sarǵayǵan limon yamasa shaftalı reńli tetikleshtiriwshi muzli shoy.",
+        "uz": "Muzdek limon va shaftoli ta'mli salqin shirin chay.",
+        "ru": "Освежающий холодный чай со вкусом сочного лимона или спелого персика.",
+        "en": "Refreshing chilled iced tea with natural lemon or sweet peach flavors."
+      },
+      "price": 11000,
+      "category": "drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80",
+      "calories": 90,
+      "prepTime": 2,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Muz",
+          "Shoy ekstraktı",
+          "Limon/Shaftalı sokı"
+        ],
+        "uz": [
+          "Muz",
+          "Choy ekstrakti",
+          "Limon/Shaftoli sharbati"
+        ],
+        "ru": [
+          "Лед",
+          "Экстракт чая",
+          "Сок лимона/персика"
+        ],
+        "en": [
+          "Ice",
+          "Tea Extract",
+          "Lemon/Peach Juice"
+        ]
+      },
+      "allergens": [],
+      "rating": 4.9,
+      "ratingCount": 165,
+      "reviews": [],
+      "nutrition": {
+        "protein": 0,
+        "fat": 0,
+        "carbs": 22
+      }
+    },
+    {
+      "id": "food-mojito",
+      "title": {
+        "qr": "Mojito Fresh (Limon-Jalpız & Muz)",
+        "uz": "Moxito Fresh (Limon-Yalpiz)",
+        "ru": "Безалкогольный Мохито (Лимон и Мята)",
+        "en": "Fresh Citrus Mint Virgin Mojito"
+      },
+      "description": {
+        "qr": "Taza jalpız xosh iyisi, laym, muz hám Sprite aralashpası menen tayarlanǵan muzday kokteyl.",
+        "uz": "Yalpiz, laym, muz va Sprite bilan tayyorlangan salqin ichimlik.",
+        "ru": "Освежающий безалкогольный коктейль со свежей мятой, лаймом, дробленым льдом и спрайтом.",
+        "en": "Crisp mocktail with crushed ice, fresh mint leaves, zesty lime, and sparkling soda."
+      },
+      "price": 18000,
+      "category": "drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80",
+      "calories": 110,
+      "prepTime": 5,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Laym",
+          "Taza jalpız",
+          "Muz",
+          "Sprite"
+        ],
+        "uz": [
+          "Laym",
+          "Yangi yalpiz",
+          "Muz",
+          "Sprite"
+        ],
+        "ru": [
+          "Лайм",
+          "Свежая мята",
+          "Лед",
+          "Спрайт"
+        ],
+        "en": [
+          "Lime",
+          "Fresh Mint",
+          "Crushed Ice",
+          "Sprite"
+        ]
+      },
+      "allergens": [],
+      "rating": 4.95,
+      "ratingCount": 230,
+      "reviews": [],
+      "nutrition": {
+        "protein": 0,
+        "fat": 0,
+        "carbs": 26
+      }
+    },
+    {
+      "id": "food-coffee-cappuccino",
+      "title": {
+        "qr": "Cappuccino / Americano (Arabica Kofe)",
+        "uz": "Kappuchino / Amerikano Kofe",
+        "ru": "Кофе Капучино / Американо (Арабика)",
+        "en": "Fresh Brewed Cappuccino / Americano"
+      },
+      "description": {
+        "qr": "Taza tútilgen Arabica kofe dánlerinen tayarlanǵan hám quyat sút ko'pigi menen.",
+        "uz": "Yangi tortilgan Arabika kofesi va yumshoq sut ko'pigi.",
+        "ru": "Ароматный кофе из свежеобжаренных зерен Арабики с нежной молочной пенкой.",
+        "en": "Rich aromatic espresso made from 100% Arabica beans topped with silky steamed milk foam."
+      },
+      "price": 16000,
+      "category": "drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=800&q=80",
+      "calories": 85,
+      "prepTime": 5,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Arabica kofe",
+          "Taza sút",
+          "Sheker"
+        ],
+        "uz": [
+          "Arabika kofe",
+          "Sut",
+          "Shakar"
+        ],
+        "ru": [
+          "Кофе Арабика",
+          "Молоко",
+          "Сахар"
+        ],
+        "en": [
+          "Arabica Coffee Beans",
+          "Fresh Milk",
+          "Sugar"
+        ]
+      },
+      "allergens": [
+        "dairy"
+      ],
+      "rating": 4.9,
+      "ratingCount": 175,
+      "reviews": [],
+      "nutrition": {
+        "protein": 4,
+        "fat": 3,
+        "carbs": 9
+      }
+    },
+    {
+      "id": "food-cakebumer-redvelvet",
+      "title": {
+        "qr": "Cakebumer Red Velvet Торт (Krasnyy Barkhat)",
+        "uz": "Cakebumer Red Velvet Torti",
+        "ru": "Торт Красный Бархат (Red Velvet Cakebumer)",
+        "en": "Cakebumer Red Velvet Cream Cheese Cake"
+      },
+      "description": {
+        "qr": "Nukus Cakebumer brendining eń ataqli qızıl velvet tortı, krem-chiz hám valinli naqıslar menen.",
+        "uz": "Nukus Cakebumer'ning krem-chizli mashhur qizil velvet torti.",
+        "ru": "Нежнейший фирменный торт Нукуса с сочными бисквитными коржами и кремом из сливочного сыра.",
+        "en": "Nukus Cakebumer signature red velvet sponge cake layered with silky cream cheese frosting."
+      },
+      "price": 28000,
+      "category": "desserts",
+      "imageUrl": "https://images.unsplash.com/photo-1586788680434-30d324b2d46f?auto=format&fit=crop&w=800&q=80",
+      "calories": 390,
+      "prepTime": 5,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Velvet biskvit",
+          "Krem-chiz pishloq",
+          "Sút qaymaǵı",
+          "Vanil"
+        ],
+        "uz": [
+          "Velvet biskvit",
+          "Krem-chiz",
+          "Sut qaymog'i",
+          "Vanil"
+        ],
+        "ru": [
+          "Бархатный бисквит",
+          "Сливочный сыр Cream Cheese",
+          "Сливки",
+          "Ваниль"
+        ],
+        "en": [
+          "Velvet Sponge",
+          "Cream Cheese",
+          "Whipped Cream",
+          "Vanilla"
+        ]
+      },
+      "allergens": [
+        "gluten",
+        "dairy",
+        "eggs"
+      ],
+      "rating": 4.95,
+      "ratingCount": 380,
+      "reviews": [
+        {
+          "id": "rev-rv1",
+          "userName": "Kamila N.",
+          "rating": 5,
+          "comment": "Cakebumer Red Velvet neshshe jıldan berli eń jaqsı ko'rgen tortım!",
+          "date": "2026-07-25"
+        }
+      ],
+      "nutrition": {
+        "protein": 6,
+        "fat": 18,
+        "carbs": 52
+      }
+    },
+    {
+      "id": "food-san-sebastian",
+      "title": {
+        "qr": "San Sebastian Cheesecake (Shokolad menen)",
+        "uz": "San Sebastian Chizkeyk (Issiq shokoladli)",
+        "ru": "Чизкейк Сан-Себастьян с горячим шоколадом",
+        "en": "San Sebastian Burnt Cheesecake with Chocolate"
+      },
+      "description": {
+        "qr": "Ishin jumsaq, ústi qızargan ispan chizkeyki, ıssı belgiya shokoladı tuslıǵı menen usınıladı.",
+        "uz": "Issiq shokoladli sous bilan tortiladigan mashhur chizkeyk.",
+        "ru": "Знаменитый баскский обожженный чизкейк с нежной текстурой и горячим бельгийским шоколадом.",
+        "en": "Rich creamy Basque burnt cheesecake drizzled with warm Belgian chocolate sauce."
+      },
+      "price": 34000,
+      "category": "desserts",
+      "imageUrl": "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=800&q=80",
+      "calories": 420,
+      "prepTime": 5,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Sút pishloǵı",
+          "Shokolad",
+          "Jumurtqa",
+          "Sút qaymaǵı"
+        ],
+        "uz": [
+          "Pishloq",
+          "Shokolad",
+          "Tuxum",
+          "Sut qaymog'i"
+        ],
+        "ru": [
+          "Творожный сыр",
+          "Бельгийский шоколад",
+          "Яйца",
+          "Сливки"
+        ],
+        "en": [
+          "Cream Cheese",
+          "Belgian Chocolate",
+          "Eggs",
+          "Cream"
+        ]
+      },
+      "allergens": [
+        "dairy",
+        "eggs"
+      ],
+      "rating": 4.9,
+      "ratingCount": 220,
+      "reviews": [],
+      "nutrition": {
+        "protein": 8,
+        "fat": 26,
+        "carbs": 38
+      }
+    },
+    {
+      "id": "food-cakebumer-honey",
+      "title": {
+        "qr": "Cakebumer Special Bal Торт (Medovik)",
+        "uz": "Cakebumer Asalli Tort (Medovik)",
+        "ru": "Фирменный Медовик Cakebumer",
+        "en": "Cakebumer Signature Honey Cake"
+      },
+      "description": {
+        "qr": "Bal qamır qatlamları, təbiy sút qaymaǵı hám janǵaq boyları menen juqa tayarlanǵan shirinlik.",
+        "uz": "Sut qaymog'i va ionalar bilan tayyorlangan mayin asalli tort.",
+        "ru": "Классический медовик на натуральном меде со взбитыми сливками и грецкими орехами.",
+        "en": "Layers of wildflower honey biscuits separated by light whipped cream and crushed walnuts."
+      },
+      "price": 30000,
+      "category": "desserts",
+      "imageUrl": "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+      "calories": 410,
+      "prepTime": 5,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Tábiy bal",
+          "Sút qaymaǵı",
+          "Janǵaq",
+          "Un",
+          "Sarı moy"
+        ],
+        "uz": [
+          "Asal",
+          "Sut qaymog'i",
+          "Yong'oq",
+          "Un",
+          "Sari yog'"
+        ],
+        "ru": [
+          "Мед",
+          "Сливки",
+          "Грецкие орехи",
+          "Мука",
+          "Сливочное масло"
+        ],
+        "en": [
+          "Honey",
+          "Fresh Cream",
+          "Walnuts",
+          "Flour",
+          "Butter"
+        ]
+      },
+      "allergens": [
+        "gluten",
+        "dairy",
+        "nuts"
+      ],
+      "rating": 4.95,
+      "ratingCount": 310,
+      "reviews": [],
+      "nutrition": {
+        "protein": 7,
+        "fat": 22,
+        "carbs": 58
+      }
+    },
+    {
+      "id": "food-1",
+      "title": {
+        "qr": "Qaraqalpaqsha Tughrama",
+        "uz": "Qoraqalpoqcha Tug'rama",
+        "ru": "Каракалпакская Туграма",
+        "en": "Karakalpak Tughrama"
+      },
+      "description": {
+        "qr": "Dástúrli qaraqalpaq milliy taǵamı. Maydalangan semiz sıyır hám jılqı go'shi, qatlama qamır hám xosh boylı sorpa menen usınıladı.",
+        "uz": "An'anaviy qoraqalpoq milliy taomi. Maydalangan semiz mol va ot go'shti, qatlama xamir va xushbo'y sho'rva bilan tortiladi.",
+        "ru": "Традиционное каракалпакское блюдо. Мелко рубленая говядина и конина с домашней лапшой и ароматным бульоном.",
+        "en": "Authentic Karakalpak delicacy. Finely chopped tender beef and horsemeat served with handmade dough strips and rich broth."
+      },
+      "price": 48000,
+      "category": "national",
+      "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
+      "calories": 620,
+      "prepTime": 25,
+      "spicyLevel": 0,
+      "isVegetarian": false,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": true,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Sıyır go'shi",
+          "Jılqı go'shi",
+          "Un",
+          "Moy",
+          "Piyaz",
+          "Qara burısh",
+          "Zira"
+        ],
+        "uz": [
+          "Mol go'shti",
+          "Ot go'shti",
+          "Un",
+          "Yog'",
+          "Piyoz",
+          "Murch",
+          "Zira"
+        ],
+        "ru": [
+          "Говядина",
+          "Конина",
+          "Мука",
+          "Масло",
+          "Лук",
+          "Черный перец",
+          "Зира"
+        ],
+        "en": [
+          "Beef",
+          "Horsemeat",
+          "Flour",
+          "Butter",
+          "Onion",
+          "Black Pepper",
+          "Cumin"
+        ]
+      },
+      "allergens": [
+        "gluten"
+      ],
+      "rating": 4.9,
+      "ratingCount": 128,
+      "reviews": [
+        {
+          "id": "rev-1",
+          "userName": "Aydos Qabulov",
+          "rating": 5,
+          "comment": "Tuwrı Nukus milliy lezzeti! Tughrama ləzzetli hám sorpası xosh boylı.",
+          "date": "2026-07-20"
+        }
+      ],
+      "nutrition": {
+        "protein": 42,
+        "fat": 28,
+        "carbs": 45
+      }
+    },
+    {
+      "id": "food-2",
+      "title": {
+        "qr": "Juwery Gurtuk (Júweri Gurtik)",
+        "uz": "Javdari Gurtuk",
+        "ru": "Джувери Гуртук (Пельмени из сорго)",
+        "en": "Sorghum Dumplings (Juwery Gurtuk)"
+      },
+      "description": {
+        "qr": "Qaraqalpaq xalqınıń áyyemgi dástúrli júweri unınan tayarlanǵan gurtikleri hám qaynatılǵan sirke go'shi.",
+        "uz": "Qoraqalpoq xalqining qadimiy taomi, makkajo'xori va javdari unidan tayyorlangan gurtuk va go'sht.",
+        "ru": "Уникальное старинное блюдо Каракалпакстана из сорговой муки с отварной говядиной.",
+        "en": "Ancient Karakalpak specialty made with sorghum flour dumplings and tender boiled beef."
+      },
+      "price": 42000,
+      "category": "national",
+      "imageUrl": "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80",
+      "calories": 510,
+      "prepTime": 30,
+      "spicyLevel": 0,
+      "isVegetarian": false,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": true,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Júweri unı",
+          "Sıyır go'shi",
+          "Qatıq",
+          "Sarı moy",
+          "Sarımsoq"
+        ],
+        "uz": [
+          "Javdari un",
+          "Mol go'shti",
+          "Qatiq",
+          "Sari yog'",
+          "Sarımsaq"
+        ],
+        "ru": [
+          "Сорговая мука",
+          "Говядина",
+          "Катык",
+          "Сливочное масло",
+          "Чеснок"
+        ],
+        "en": [
+          "Sorghum Flour",
+          "Beef",
+          "Kefir/Qatiq",
+          "Butter",
+          "Garlic"
+        ]
+      },
+      "allergens": [
+        "dairy"
+      ],
+      "rating": 4.8,
+      "ratingCount": 94,
+      "reviews": [],
+      "nutrition": {
+        "protein": 35,
+        "fat": 18,
+        "carbs": 52
+      }
+    },
+    {
+      "id": "food-3",
+      "title": {
+        "qr": "Qaraqalpaqsha Beshbaarmak (Qazı menen)",
+        "uz": "Qoraqalpoqcha Beshbarmoq",
+        "ru": "Бешбармак по-каракалпакски с Казы",
+        "en": "Karakalpak Beshbarmak with Qazy"
+      },
+      "description": {
+        "qr": "Sıyır hám jılqı go'shinen jasalǵan qazı-qarta, juqa jazılǵan qamır hám xosh boylı sorpa tuslıǵı.",
+        "uz": "Mol va ot go'shti, qazi-qarta, yupqa xamir va totli sho'rva.",
+        "ru": "Праздничное блюдо из нежного мяса, деликатесного казы и домашней сочной лапши.",
+        "en": "Feast dish featuring tender beef, gourmet horsemeat qazy sausages, thin pasta ribbons, and onion broth."
+      },
+      "price": 65000,
+      "category": "national",
+      "imageUrl": "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=80",
+      "calories": 780,
+      "prepTime": 35,
+      "spicyLevel": 0,
+      "isVegetarian": false,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": true,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Qazı-qarta",
+          "Jılqı go'shi",
+          "Un",
+          "Piyaz tuslıǵı",
+          "Gazi boylar"
+        ],
+        "uz": [
+          "Qazi",
+          "Ot go'shti",
+          "Un",
+          "Piyozli sous",
+          "Ziravorlar"
+        ],
+        "ru": [
+          "Казы",
+          "Конина",
+          "Мука",
+          "Луковый тузлук",
+          "Специи"
+        ],
+        "en": [
+          "Qazy Sausage",
+          "Horsemeat",
+          "Wheat Flour",
+          "Onion Sauce",
+          "Spices"
+        ]
+      },
+      "allergens": [
+        "gluten"
+      ],
+      "rating": 5,
+      "ratingCount": 210,
+      "reviews": [],
+      "nutrition": {
+        "protein": 54,
+        "fat": 36,
+        "carbs": 60
+      }
+    },
+    {
+      "id": "food-tandir-kebap",
+      "title": {
+        "qr": "Tandir Kebap (Qoy go'shinen)",
+        "uz": "Tandir Kebab (Qo'y go'shtidan)",
+        "ru": "Тандыр Кебаб из баранины",
+        "en": "Tandoor Lamb Kebap"
+      },
+      "description": {
+        "qr": "Dástúrli ılay tandırda arsha tutınında 2 saat pisirilgen jumsaq qoy go'shi hám piyaz.",
+        "uz": "Tandirda pishirilgan yumshoq qo'y go'shti.",
+        "ru": "Нежная баранина, запеченная в глиняном тандыре на ветках можжевельника.",
+        "en": "Succulent lamb slow-baked in a clay tandoor oven infused with juniper herbs."
+      },
+      "price": 58000,
+      "category": "meats",
+      "imageUrl": "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800&q=80",
+      "calories": 690,
+      "prepTime": 25,
+      "spicyLevel": 1,
+      "isVegetarian": false,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Qoy go'shi",
+          "Tandır piyazı",
+          "Zira",
+          "Kashnich",
+          "Tuz"
+        ],
+        "uz": [
+          "Qo'y go'shti",
+          "Piyoz",
+          "Zira",
+          "Kashnich",
+          "Tuz"
+        ],
+        "ru": [
+          "Баранина",
+          "Лук",
+          "Зира",
+          "Кориандр",
+          "Соль"
+        ],
+        "en": [
+          "Lamb",
+          "Onions",
+          "Cumin",
+          "Coriander",
+          "Salt"
+        ]
+      },
+      "allergens": [],
+      "rating": 4.9,
+      "ratingCount": 150,
+      "reviews": [],
+      "nutrition": {
+        "protein": 48,
+        "fat": 38,
+        "carbs": 4
+      }
+    },
+    {
+      "id": "food-somsa",
+      "title": {
+        "qr": "Tandir Somsa (Go'shli hám Piyazlı)",
+        "uz": "Tandir Somsa",
+        "ru": "Тандырная Самса с мясом",
+        "en": "Crispy Tandoor Somsa"
+      },
+      "description": {
+        "qr": "Qatlama juqa qamır hám sochli sıyır go'shi toltırılǵan dástúrli tandır somsa.",
+        "uz": "Yupqa qatlama xamir va mol go'shti solingan tandir somsa.",
+        "ru": "Хрустящая слоеная самса с сочной говядиной и луком из тандыра.",
+        "en": "Golden layered pastry filled with spiced diced beef and sweet onions."
+      },
+      "price": 12000,
+      "category": "meats",
+      "imageUrl": "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
+      "calories": 320,
+      "prepTime": 15,
+      "spicyLevel": 0,
+      "isVegetarian": false,
+      "isGlutenFree": false,
+      "isHalal": true,
+      "isNationalSpecial": false,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Sıyır go'shi",
+          "Un",
+          "Sarı moy",
+          "Piyaz",
+          "Zira"
+        ],
+        "uz": [
+          "Mol go'shti",
+          "Un",
+          "Sari yog'",
+          "Piyoz",
+          "Zira"
+        ],
+        "ru": [
+          "Говядина",
+          "Мука",
+          "Масло",
+          "Лук",
+          "Зира"
+        ],
+        "en": [
+          "Beef",
+          "Flour",
+          "Butter",
+          "Onions",
+          "Cumin"
+        ]
+      },
+      "allergens": [
+        "gluten"
+      ],
+      "rating": 4.8,
+      "ratingCount": 180,
+      "reviews": [],
+      "nutrition": {
+        "protein": 16,
+        "fat": 18,
+        "carbs": 28
+      }
+    },
+    {
+      "id": "food-qimiz",
+      "title": {
+        "qr": "Taza Shıpalı Qımız (1 Litr)",
+        "uz": "Shifobaxsh Qimiz (1 Litr)",
+        "ru": "Лечебный Кумыс из кобыльего молока (1 Л)",
+        "en": "Fresh Fermented Kumis Mare Milk (1L)"
+      },
+      "description": {
+        "qr": "Qaraqalpaqstan dalalarınan keshken taza beye sutinen tayarlanǵan, densawlıqqa paydalı shiftalı milliy ishimlik.",
+        "uz": "Tabiiy biya sutidan tayyorlangan shifobaxsh milliy ichimlik.",
+        "ru": "Традиционный освежающий ферментированный напиток из чистого кобыльего молока.",
+        "en": "Healthy traditional fermented mare's milk rich in natural vitamins."
+      },
+      "price": 22000,
+      "category": "drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=800&q=80",
+      "calories": 180,
+      "prepTime": 5,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": true,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Beye sütı",
+          "Achıtqı"
+        ],
+        "uz": [
+          "Biya suti",
+          "Achitqi"
+        ],
+        "ru": [
+          "Кобылье молоко",
+          "Закваска"
+        ],
+        "en": [
+          "Mare's Milk",
+          "Natural Starter Culture"
+        ]
+      },
+      "allergens": [
+        "dairy"
+      ],
+      "rating": 4.9,
+      "ratingCount": 88,
+      "reviews": [],
+      "nutrition": {
+        "protein": 8,
+        "fat": 6,
+        "carbs": 12
+      }
+    },
+    {
+      "id": "food-shubat",
+      "title": {
+        "qr": "Qaraqalpaq Shubat (Túye Sútı - 1 Litr)",
+        "uz": "Qoraqalpoq Shubat (Tuya suti - 1 Litr)",
+        "ru": "Шубат из верблюжьего молока (1 Л)",
+        "en": "Shubat Fermented Camel Milk (1L)"
+      },
+      "description": {
+        "qr": "Qızılqum dalalarında baǵılǵan túyeler sütinen aşıtılǵan milliy delikates ishimlik.",
+        "uz": "Qizilqum tuya sutidan tayyorlangan shifobaxsh ichimlik.",
+        "ru": "Густой лечебный напиток из парного верблюжьего молока пустыни Кызылкум.",
+        "en": "Rich creamy fermented camel milk directly from Kyzylkum desert farms."
+      },
+      "price": 28000,
+      "category": "drinks",
+      "imageUrl": "https://images.unsplash.com/photo-1528498033373-3c6c08e93d79?auto=format&fit=crop&w=800&q=80",
+      "calories": 220,
+      "prepTime": 5,
+      "spicyLevel": 0,
+      "isVegetarian": true,
+      "isGlutenFree": true,
+      "isHalal": true,
+      "isNationalSpecial": true,
+      "isAvailable": true,
+      "ingredients": {
+        "qr": [
+          "Túye sütı",
+          "Tabiiy achıtqı"
+        ],
+        "uz": [
+          "Tuya suti",
+          "Achitqi"
+        ],
+        "ru": [
+          "Верблюжье молоко",
+          "Закваска"
+        ],
+        "en": [
+          "Camel Milk",
+          "Natural Culture"
+        ]
+      },
+      "allergens": [
+        "dairy"
+      ],
+      "rating": 5,
+      "ratingCount": 72,
+      "reviews": [],
+      "nutrition": {
+        "protein": 10,
+        "fat": 11,
+        "carbs": 14
+      }
     }
   ]
 }

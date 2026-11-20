@@ -35,6 +35,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   const description = getFoodDescription(food, lang);
   const ingredients = getFoodIngredients(food, lang);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,17 +65,28 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
       <div className="relative w-full max-w-2xl bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(0,0,0,0.9)] overflow-hidden my-auto max-h-[90vh] flex flex-col">
         {/* Header Bar with Close Button */}
         <div className="relative h-60 sm:h-72 w-full shrink-0">
-          {!imageLoaded && (
+          {!imageLoaded && !imageError && (
             <div className="absolute inset-0 bg-zinc-900 animate-pulse flex items-center justify-center">
-              <div className="w-12 h-12 border-4 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
+              <div className="w-10 h-10 border-3 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
             </div>
           )}
-          <img
-            src={food.imageUrl}
-            alt={title}
-            onLoad={() => setImageLoaded(true)}
-            className={`w-full h-full object-cover transition-opacity duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
-          />
+          {imageError ? (
+            <div className="w-full h-full bg-gradient-to-br from-zinc-900 to-zinc-950 flex flex-col items-center justify-center p-4 text-center">
+              <span className="text-5xl mb-2">🍽️</span>
+              <span className="text-sm font-serif font-bold text-amber-400">{title}</span>
+            </div>
+          ) : (
+            <img
+              src={food.imageUrl}
+              alt={title}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => {
+                setImageError(true);
+                setImageLoaded(true);
+              }}
+              className={`w-full h-full object-cover transition-opacity duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#18181b] via-transparent to-black/60" />
 
           <button
