@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
+import * as db from './src/db';
 import { initialFoodItems } from './src/data/mockData';
 
 const app = express();
@@ -23,104 +24,44 @@ try {
 }
 app.use('/uploads', express.static(UPLOADS_DIR));
 
-// Persistence file
-const BASE_DATA_FILE = path.join(process.cwd(), 'cafe_data.json');
-const DATA_FILE = process.env.VERCEL
-  ? path.join('/tmp', 'cafe_data.json')
-  : BASE_DATA_FILE;
-
-// Seed /tmp data file on Vercel from BASE_DATA_FILE
-if (process.env.VERCEL && !fs.existsSync(DATA_FILE) && fs.existsSync(BASE_DATA_FILE)) {
-  try {
-    fs.copyFileSync(BASE_DATA_FILE, DATA_FILE);
-  } catch (e) {
-    console.warn('Failed to seed /tmp data file:', e);
-  }
-}
-
-interface StoredData {
-  orders: any[];
-  waiterCalls: any[];
-  foods?: any[];
-}
-
-function loadData(): StoredData {
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      const parsed = JSON.parse(raw);
-      if (!parsed.foods || !Array.isArray(parsed.foods) || parsed.foods.length === 0) {
-        parsed.foods = initialFoodItems;
-        saveData(parsed);
-      }
-      return parsed;
-    }
-  } catch (err) {
-    console.error('Failed to read data file, using defaults:', err);
-  }
-  const defaultData: StoredData = {
-    orders: [],
-    waiterCalls: [
-      {
-        id: 'call-1',
-        tableNumber: '02',
-        timestamp: '12:30',
-        type: 'waiter',
-        status: 'active',
-      },
-    ],
-    foods: initialFoodItems,
-  };
-  saveData(defaultData);
-  return defaultData;
-}
-
-function saveData(data: StoredData) {
-  try {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
-  } catch (err) {
-    console.error('Failed to write data file:', err);
-  }
-}
-
-let db = loadData();
-
 // ==========================================
 // API ROUTES (Must be registered before Vite)
 // ==========================================
 
 // Health Check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', time: new Date().toISOString() });
-});
-
-// Fast Sync Endpoint for real-time polling across phones and laptops
-app.get('/api/sync', (req, res) => {
   res.json({
-    orders: db.orders,
-    waiterCalls: db.waiterCalls,
-    foods: db.foods || initialFoodItems,
-    serverTime: Date.now(),
+    status: 'ok',
+    database: 'Neon PostgreSQL',
+    time: new Date().toISOString(),
   });
 });
 
-// --- ORDERS API ---
-app.get('/api/orders', (req, res) => {
-  res.json(db.orders);
+// Fast Sync Endpoint for real-time polling across phones and laptops
+app.get('/api/sync', async (req, res) => {
+  try {
+    const data = await db.getSyncData();
+    res.json(data);
+  } catch (err: any) {
+    console.error('Error in /api/sync:', err);
+    res.status(500).json({ error: 'Sync failed', details: err?.message });
+  }
 });
 
-app.post('/api/orders', (req, res) => {
+// --- ORDERS API ---
+app.get('/api/orders', async (req, res) => {
+  try {
+    const orders = await db.getOrders();
+    res.json(orders);
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+app.post('/api/orders', async (req, res) => {
   const newOrder = req.body;
   if (!newOrder || !newOrder.tableNumber) {
     return res.status(400).json({ error: 'Invalid order data' });
-  }
-
-  // Deduplication: if order with this ID already exists, do not duplicate!
-  if (newOrder.id) {
-    const existing = db.orders.find((o) => o.id === newOrder.id);
-    if (existing) {
-      return res.status(200).json(existing);
-    }
   }
 
   // Ensure unique ID and timestamps
@@ -132,40 +73,54 @@ app.post('/api/orders', (req, res) => {
     timestamp: Date.now(),
   };
 
-  db.orders.unshift(order);
-  saveData(db);
-
-  console.log(`[ORDER CREATED] Table ${order.tableNumber} - Order ID: ${order.id} - Total: ${order.totalAmount} UZS`);
-  res.status(201).json(order);
+  try {
+    const saved = await db.createOrder(order);
+    console.log(`[ORDER CREATED IN NEON] Table ${saved.tableNumber} - Order ID: ${saved.id} - Total: ${saved.totalAmount} UZS`);
+    res.status(201).json(saved);
+  } catch (err: any) {
+    console.error('Failed to create order:', err);
+    res.status(500).json({ error: 'Failed to save order in database' });
+  }
 });
 
-app.patch('/api/orders/:id/status', (req, res) => {
+app.patch('/api/orders/:id/status', async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  const orderIndex = db.orders.findIndex((o) => o.id === id);
-  if (orderIndex === -1) {
-    return res.status(404).json({ error: 'Order not found' });
+  try {
+    const updated = await db.updateOrderStatus(id, status);
+    if (!updated) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json(updated);
+  } catch (err: any) {
+    console.error('Failed to update order status:', err);
+    res.status(500).json({ error: 'Failed to update order status' });
   }
-
-  db.orders[orderIndex].status = status;
-  saveData(db);
-  res.json(db.orders[orderIndex]);
 });
 
-app.delete('/api/orders/:id', (req, res) => {
+app.delete('/api/orders/:id', async (req, res) => {
   const { id } = req.params;
-  db.orders = db.orders.filter((o) => o.id !== id);
-  saveData(db);
-  res.json({ success: true, message: 'Order removed' });
+  try {
+    await db.deleteOrder(id);
+    res.json({ success: true, message: 'Order removed from Neon' });
+  } catch (err: any) {
+    console.error('Failed to delete order:', err);
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
 });
 
 // --- WAITER CALLS API ---
-app.get('/api/waiter-calls', (req, res) => {
-  res.json(db.waiterCalls);
+app.get('/api/waiter-calls', async (req, res) => {
+  try {
+    const calls = await db.getWaiterCalls();
+    res.json(calls);
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to fetch waiter calls' });
+  }
 });
 
-app.post('/api/waiter-calls', (req, res) => {
+app.post('/api/waiter-calls', async (req, res) => {
   const { tableNumber, type } = req.body;
   if (!tableNumber) {
     return res.status(400).json({ error: 'tableNumber is required' });
@@ -176,31 +131,37 @@ app.post('/api/waiter-calls', (req, res) => {
     tableNumber: String(tableNumber),
     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     type: type || 'waiter',
-    status: 'active',
+    status: 'active' as const,
   };
 
-  db.waiterCalls.unshift(call);
-  saveData(db);
-
-  console.log(`[WAITER CALL] Table ${call.tableNumber} - Type: ${call.type}`);
-  res.status(201).json(call);
-});
-
-app.patch('/api/waiter-calls/:id/resolve', (req, res) => {
-  const { id } = req.params;
-  const call = db.waiterCalls.find((c) => c.id === id);
-  if (call) {
-    call.status = 'resolved';
-    saveData(db);
+  try {
+    const saved = await db.createWaiterCall(call);
+    console.log(`[WAITER CALL IN NEON] Table ${saved.tableNumber} - Type: ${saved.type}`);
+    res.status(201).json(saved);
+  } catch (err: any) {
+    console.error('Failed to create waiter call:', err);
+    res.status(500).json({ error: 'Failed to save waiter call' });
   }
-  res.json({ success: true, call });
 });
 
-app.delete('/api/waiter-calls/:id', (req, res) => {
+app.patch('/api/waiter-calls/:id/resolve', async (req, res) => {
   const { id } = req.params;
-  db.waiterCalls = db.waiterCalls.filter((c) => c.id !== id);
-  saveData(db);
-  res.json({ success: true });
+  try {
+    const call = await db.resolveWaiterCall(id);
+    res.json({ success: true, call });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to resolve waiter call' });
+  }
+});
+
+app.delete('/api/waiter-calls/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.deleteWaiterCall(id);
+    res.json({ success: true });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to delete waiter call' });
+  }
 });
 
 // --- IMAGE UPLOAD FROM LAPTOP API ---
@@ -235,52 +196,73 @@ app.post('/api/upload', (req, res) => {
 });
 
 // --- FOODS CRUD & SYNC API ---
-app.get('/api/foods', (req, res) => {
-  res.json(db.foods || initialFoodItems);
+app.get('/api/foods', async (req, res) => {
+  try {
+    const foods = await db.getFoods();
+    res.json(foods);
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to fetch foods' });
+  }
 });
 
-app.post('/api/foods', (req, res) => {
+app.post('/api/foods', async (req, res) => {
   const item = req.body;
   if (!item || !item.id) {
     return res.status(400).json({ error: 'Invalid food item data' });
   }
-  if (!db.foods) db.foods = [...initialFoodItems];
-  db.foods.unshift(item);
-  saveData(db);
-  console.log(`[FOOD ADDED GLOBALLY] ${item.title?.qr || item.title?.uz || item.id}`);
-  res.status(201).json(item);
-});
-
-app.put('/api/foods/:id', (req, res) => {
-  const { id } = req.params;
-  const updated = req.body;
-  if (!db.foods) db.foods = [...initialFoodItems];
-  const idx = db.foods.findIndex((f) => f.id === id);
-  if (idx === -1) {
-    return res.status(404).json({ error: 'Food item not found' });
+  try {
+    const saved = await db.addFood(item);
+    console.log(`[FOOD ADDED IN NEON] ${item.title?.qr || item.title?.uz || item.id}`);
+    res.status(201).json(saved);
+  } catch (err: any) {
+    console.error('Failed to add food:', err);
+    res.status(500).json({ error: 'Failed to save food' });
   }
-  db.foods[idx] = { ...db.foods[idx], ...updated };
-  saveData(db);
-  console.log(`[FOOD UPDATED GLOBALLY] ${id}`);
-  res.json(db.foods[idx]);
 });
 
-app.delete('/api/foods/:id', (req, res) => {
+app.put('/api/foods/:id', async (req, res) => {
   const { id } = req.params;
-  if (!db.foods) db.foods = [...initialFoodItems];
-  db.foods = db.foods.filter((f) => f.id !== id);
-  saveData(db);
-  console.log(`[FOOD DELETED GLOBALLY] ${id}`);
-  res.json({ success: true, id });
+  try {
+    const updated = await db.updateFood(id, req.body);
+    if (!updated) {
+      return res.status(404).json({ error: 'Food item not found' });
+    }
+    console.log(`[FOOD UPDATED IN NEON] ${id}`);
+    res.json(updated);
+  } catch (err: any) {
+    console.error('Failed to update food:', err);
+    res.status(500).json({ error: 'Failed to update food' });
+  }
 });
 
-app.post('/api/foods/sync-all', (req, res) => {
+app.delete('/api/foods/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.deleteFood(id);
+    console.log(`[FOOD DELETED IN NEON] ${id}`);
+    res.json({ success: true, id });
+  } catch (err: any) {
+    console.error('Failed to delete food:', err);
+    res.status(500).json({ error: 'Failed to delete food' });
+  }
+});
+
+app.post('/api/foods/sync-all', async (req, res) => {
   const foods = req.body;
   if (Array.isArray(foods)) {
-    db.foods = foods;
-    saveData(db);
+    try {
+      for (const food of foods) {
+        if (food && food.id) {
+          await db.addFood(food);
+        }
+      }
+      res.json({ success: true });
+    } catch (err: any) {
+      res.status(500).json({ error: 'Failed to sync foods' });
+    }
+  } else {
+    res.status(400).json({ error: 'Expected array of foods' });
   }
-  res.json({ success: true });
 });
 
 // ==========================================
@@ -319,7 +301,7 @@ async function start() {
   }
 
   const server = app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n🚀 Qaraqalpaq Menu Server muvaffaqiyatli ishga tushdi:`);
+    console.log(`\n🚀 Qaraqalpaq Menu Server (Neon PostgreSQL) muvaffaqiyatli ishga tushdi:`);
     console.log(`   ➜ Local:    http://localhost:${PORT}/`);
     console.log(`   ➜ Local IP: http://127.0.0.1:${PORT}/`);
     console.log(`   ➜ Tarmoq:   http://0.0.0.0:${PORT}/\n`);
