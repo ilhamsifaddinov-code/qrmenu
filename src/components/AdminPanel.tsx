@@ -89,16 +89,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [newPassword, setNewPassword] = useState('');
   const [passwordSaved, setPasswordSaved] = useState(false);
 
-  const [telegramInput, setTelegramInput] = useState(settings?.telegramUsername || 'sifaddinov');
-  const [instagramInput, setInstagramInput] = useState(settings?.instagramUsername || 'sifaddinovv');
+  const [telegramInput, setTelegramInput] = useState(settings?.telegramUsername ?? 'sifaddinov');
+  const [instagramInput, setInstagramInput] = useState(settings?.instagramUsername ?? 'sifaddinovv');
   const [linksSaved, setLinksSaved] = useState(false);
+  const [isEditingTg, setIsEditingTg] = useState(false);
+  const [isEditingInsta, setIsEditingInsta] = useState(false);
 
   React.useEffect(() => {
     if (settings) {
-      if (settings.telegramUsername) setTelegramInput(settings.telegramUsername);
-      if (settings.instagramUsername) setInstagramInput(settings.instagramUsername);
+      if (!isEditingTg && typeof settings.telegramUsername === 'string') {
+        setTelegramInput(settings.telegramUsername);
+      }
+      if (!isEditingInsta && typeof settings.instagramUsername === 'string') {
+        setInstagramInput(settings.instagramUsername);
+      }
     }
-  }, [settings]);
+  }, [settings, isEditingTg, isEditingInsta]);
 
   const handleApplyAutoCount = () => {
     const count = Math.min(100, Math.max(1, autoTableCount));
@@ -1458,6 +1464,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   .trim();
                 setTelegramInput(cleanTg);
                 setInstagramInput(cleanInsta);
+                setIsEditingTg(false);
+                setIsEditingInsta(false);
                 if (onUpdateSettings) {
                   onUpdateSettings({
                     telegramUsername: cleanTg,
@@ -1470,50 +1478,114 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               className="max-w-md space-y-4"
             >
               <div>
-                <label className="block text-xs font-bold text-zinc-300 mb-1.5 flex items-center gap-1.5">
-                  <Send className="w-4 h-4 text-sky-400" />
-                  <span>Telegram akkaunt / silteme:</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                    <Send className="w-4 h-4 text-sky-400" />
+                    <span>Telegram akkaunt / silteme:</span>
+                  </label>
+                  {telegramInput && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditingTg(true);
+                        setTelegramInput('');
+                      }}
+                      className="text-[11px] text-zinc-400 hover:text-red-400 transition cursor-pointer"
+                    >
+                      ✕ {lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}
+                    </button>
+                  )}
+                </div>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">@</span>
                   <input
                     type="text"
                     value={telegramInput.replace(/^@/, '')}
-                    onChange={(e) => setTelegramInput(e.target.value.replace(/^@/, ''))}
-                    placeholder="sifaddinov"
-                    className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
-                    required
+                    onFocus={() => setIsEditingTg(true)}
+                    onChange={(e) => {
+                      setIsEditingTg(true);
+                      setTelegramInput(e.target.value.replace(/^@/, ''));
+                    }}
+                    placeholder={lang === 'qr' ? 'sifaddinov (óshiriw ushın bos qaldırıń)' : 'sifaddinov (o\'chirish uchun bo\'sh qoldiring)'}
+                    className="w-full pl-8 pr-8 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
                   />
+                  {telegramInput && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditingTg(true);
+                        setTelegramInput('');
+                      }}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 text-xs"
+                      title={lang === 'qr' ? 'Tozalaw' : 'Tozalash'}
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
                 <span className="text-[11px] text-zinc-500 mt-1 block">
-                  Mısalı: <span className="text-amber-400 font-mono">sifaddinov</span> (https://t.me/sifaddinov)
+                  {lang === 'qr'
+                    ? 'Mısalı: sifaddinov (siltemeni alıp taslaw ushın teksti óshirip Saqlawdı basıń)'
+                    : 'Masalan: sifaddinov (havolani olib tashlash uchun matnni o\'chirib Saqlashni bosing)'}
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-zinc-300 mb-1.5 flex items-center gap-1.5">
-                  <Instagram className="w-4 h-4 text-pink-400" />
-                  <span>Instagram akkaunt / profil:</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
+                    <Instagram className="w-4 h-4 text-pink-400" />
+                    <span>Instagram akkaunt / profil:</span>
+                  </label>
+                  {instagramInput && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditingInsta(true);
+                        setInstagramInput('');
+                      }}
+                      className="text-[11px] text-zinc-400 hover:text-red-400 transition cursor-pointer"
+                    >
+                      ✕ {lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}
+                    </button>
+                  )}
+                </div>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">@</span>
                   <input
                     type="text"
                     value={instagramInput.replace(/^@/, '')}
-                    onChange={(e) => setInstagramInput(e.target.value.replace(/^@/, ''))}
-                    placeholder="sifaddinovv"
-                    className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
-                    required
+                    onFocus={() => setIsEditingInsta(true)}
+                    onChange={(e) => {
+                      setIsEditingInsta(true);
+                      setInstagramInput(e.target.value.replace(/^@/, ''));
+                    }}
+                    placeholder={lang === 'qr' ? 'sifaddinovv (óshiriw ushın bos qaldırıń)' : 'sifaddinovv (o\'chirish uchun bo\'sh qoldiring)'}
+                    className="w-full pl-8 pr-8 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
                   />
+                  {instagramInput && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsEditingInsta(true);
+                        setInstagramInput('');
+                      }}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 text-xs"
+                      title={lang === 'qr' ? 'Tozalaw' : 'Tozalash'}
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
                 <span className="text-[11px] text-zinc-500 mt-1 block">
-                  Mısalı: <span className="text-amber-400 font-mono">sifaddinovv</span> (https://instagram.com/sifaddinovv)
+                  {lang === 'qr'
+                    ? 'Mısalı: sifaddinovv (siltemeni alıp taslaw ushın teksti óshirip Saqlawdı basıń)'
+                    : 'Masalan: sifaddinovv (havolani olib tashlash uchun matnni o\'chirib Saqlashni bosing)'}
                 </span>
               </div>
 
               <button
                 type="submit"
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-serif font-bold text-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition w-full shadow-[0_0_15px_rgba(245,158,11,0.3)] active:scale-95"
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-serif font-bold text-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition w-full shadow-[0_0_15px_rgba(245,158,11,0.3)] active:scale-95 cursor-pointer"
               >
                 {linksSaved ? (
                   <>

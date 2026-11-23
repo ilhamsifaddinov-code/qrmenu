@@ -188,8 +188,19 @@ export default function App() {
           localStorage.setItem('cafe_foods', JSON.stringify(data.foods));
         }
         if (data.settings) {
-          setSettings(data.settings);
-          localStorage.setItem('cafe_settings', JSON.stringify(data.settings));
+          setSettings((prev) => {
+            if (
+              prev &&
+              prev.telegramUsername === data.settings.telegramUsername &&
+              prev.instagramUsername === data.settings.instagramUsername
+            ) {
+              return prev;
+            }
+            try {
+              localStorage.setItem('cafe_settings', JSON.stringify(data.settings));
+            } catch {}
+            return data.settings;
+          });
         }
       }
     } catch (err) {
@@ -212,9 +223,11 @@ export default function App() {
     fetch('/api/settings')
       .then((res) => res.json())
       .then((data) => {
-        if (data && data.telegramUsername) {
+        if (data && (typeof data.telegramUsername === 'string' || typeof data.instagramUsername === 'string')) {
           setSettings(data);
-          localStorage.setItem('cafe_settings', JSON.stringify(data));
+          try {
+            localStorage.setItem('cafe_settings', JSON.stringify(data));
+          } catch {}
         }
       })
       .catch(() => {});
