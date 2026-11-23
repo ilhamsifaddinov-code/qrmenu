@@ -77,3 +77,8 @@ export interface User {
   isTelegramUser?: boolean;
   role: 'user' | 'admin';
 }
+
+export interface AppSettings {
+  telegramUsername: string;
+  instagramUsername: string;
+}

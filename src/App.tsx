@@ -9,6 +9,7 @@ import {
   Review,
   User,
   WaiterCall,
+  AppSettings,
 } from './types';
 import { initialFoodItems } from './data/mockData';
 import { translations } from './i18n/translations';
@@ -53,8 +54,27 @@ export default function App() {
   }, [tableNumber]);
 
   // 2. Data State
-  const [foodItems, setFoodItems] = useState<FoodItem[]>(initialFoodItems);
+  const [foodItems, setFoodItems] = useState<FoodItem[]>(() => {
+    try {
+      const stored = localStorage.getItem('cafe_foods');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return initialFoodItems;
+  });
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [settings, setSettings] = useState<AppSettings>(() => {
+    try {
+      const stored = localStorage.getItem('cafe_settings');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return {
+      telegramUsername: 'sifaddinov',
+      instagramUsername: 'sifaddinovv',
+    };
+  });
 
   // 3. UI Views & Modals
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
@@ -165,6 +185,11 @@ export default function App() {
         }
         if (data.foods && Array.isArray(data.foods) && data.foods.length > 0) {
           setFoodItems(data.foods);
+          localStorage.setItem('cafe_foods', JSON.stringify(data.foods));
+        }
+        if (data.settings) {
+          setSettings(data.settings);
+          localStorage.setItem('cafe_settings', JSON.stringify(data.settings));
         }
       }
     } catch (err) {
@@ -172,16 +197,27 @@ export default function App() {
     }
   };
 
-  // Initial load of foods and sync
+  // Initial load of foods and settings
   useEffect(() => {
     fetch('/api/foods')
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setFoodItems(data);
+          localStorage.setItem('cafe_foods', JSON.stringify(data));
         }
       })
       .catch((e) => console.warn('Could not fetch initial foods:', e));
+
+    fetch('/api/settings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.telegramUsername) {
+          setSettings(data);
+          localStorage.setItem('cafe_settings', JSON.stringify(data));
+        }
+      })
+      .catch(() => {});
 
     syncWithServer();
     const interval = setInterval(syncWithServer, 2000);
@@ -406,9 +442,13 @@ export default function App() {
   };
 
   const handleUpdateFoodItem = async (updatedItem: FoodItem) => {
-    setFoodItems((prev) =>
-      prev.map((i) => (i.id === updatedItem.id ? updatedItem : i))
-    );
+    setFoodItems((prev) => {
+      const updated = prev.map((i) => (i.id === updatedItem.id ? updatedItem : i));
+      try {
+        localStorage.setItem('cafe_foods', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
     try {
       await fetch(`/api/foods/${updatedItem.id}`, {
         method: 'PUT',
@@ -418,6 +458,30 @@ export default function App() {
       syncWithServer();
     } catch (e) {
       console.error('Failed to update food on server:', e);
+    }
+  };
+
+  const handleUpdateSettings = async (newSettings: Partial<AppSettings>) => {
+    setSettings((prev) => {
+      const updated = { ...prev, ...newSettings };
+      try {
+        localStorage.setItem('cafe_settings', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    try {
+      const res = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSettings),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSettings(data);
+        localStorage.setItem('cafe_settings', JSON.stringify(data));
+      }
+    } catch (e) {
+      console.error('Failed to update settings:', e);
     }
   };
 
@@ -505,8 +569,10 @@ export default function App() {
             foodItems={foodItems}
             orders={orders}
             waiterCalls={waiterCalls}
+            settings={settings}
             adminPassword={adminPassword}
             onUpdatePassword={setAdminPassword}
+            onUpdateSettings={handleUpdateSettings}
             onAddFoodItem={handleAddFoodItem}
             onUpdateFoodItem={handleUpdateFoodItem}
             onDeleteFoodItem={handleDeleteFoodItem}
@@ -771,7 +837,7 @@ export default function App() {
       )}
 
       {/* Footer */}
-      <Footer lang={lang} />
+      <Footer lang={lang} settings={settings} />
     </div>
   );
 }

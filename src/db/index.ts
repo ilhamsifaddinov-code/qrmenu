@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { FoodItem, Order, WaiterCall } from '../types';
+import { FoodItem, Order, WaiterCall, AppSettings } from '../types';
 import { initialFoodItems } from '../data/mockData';
 
 const connectionString =
@@ -12,6 +12,10 @@ const sql = neon(connectionString);
 let cachedFoods: FoodItem[] = [...initialFoodItems];
 let cachedOrders: Order[] = [];
 let cachedCalls: WaiterCall[] = [];
+let cachedSettings: AppSettings = {
+  telegramUsername: 'sifaddinov',
+  instagramUsername: 'sifaddinovv',
+};
 
 // ==========================================
 // FOODS
@@ -51,19 +55,30 @@ export async function addFood(item: FoodItem): Promise<FoodItem> {
 export async function updateFood(id: string, updated: Partial<FoodItem>): Promise<FoodItem | null> {
   try {
     const existing = await sql`SELECT data FROM foods WHERE id = ${id} LIMIT 1;`;
-    if (!existing || existing.length === 0) return null;
-    const currentData = existing[0].data as FoodItem;
-    const merged: FoodItem = { ...currentData, ...updated, id };
+    let currentData: FoodItem | undefined =
+      existing && existing.length > 0
+        ? (existing[0].data as FoodItem)
+        : cachedFoods.find((f) => f.id === id) || initialFoodItems.find((f) => f.id === id);
+
+    const merged: FoodItem = {
+      ...(currentData || initialFoodItems[0]),
+      ...updated,
+      id,
+    } as FoodItem;
 
     await sql`
-      UPDATE foods
-      SET category = ${merged.category || 'other'},
-          price = ${merged.price || 0},
-          data = ${JSON.stringify(merged)},
-          updated_at = NOW()
-      WHERE id = ${id};
+      INSERT INTO foods (id, category, price, data)
+      VALUES (${id}, ${merged.category || 'other'}, ${merged.price || 0}, ${JSON.stringify(merged)})
+      ON CONFLICT (id) DO UPDATE SET
+        category = EXCLUDED.category,
+        price = EXCLUDED.price,
+        data = EXCLUDED.data,
+        updated_at = NOW();
     `;
     cachedFoods = cachedFoods.map((f) => (f.id === id ? merged : f));
+    if (!cachedFoods.some((f) => f.id === id)) {
+      cachedFoods.push(merged);
+    }
     return merged;
   } catch (err) {
     console.error('[NEON DB] Failed to update food:', err);
@@ -229,14 +244,75 @@ export async function deleteWaiterCall(id: string): Promise<boolean> {
 }
 
 // ==========================================
+// SETTINGS (TELEGRAM & INSTAGRAM LINKS)
+// ==========================================
+export async function getSettings(): Promise<AppSettings> {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      );
+    `;
+    const rows = await sql`SELECT key, value FROM settings;`;
+    if (rows && rows.length > 0) {
+      const res: AppSettings = { ...cachedSettings };
+      rows.forEach((r: any) => {
+        if (r.key === 'telegram_username') res.telegramUsername = r.value;
+        if (r.key === 'instagram_username') res.instagramUsername = r.value;
+      });
+      cachedSettings = res;
+    }
+    return cachedSettings;
+  } catch (err) {
+    console.error('[NEON DB] Failed to fetch settings, using cache:', err);
+    return cachedSettings;
+  }
+}
+
+export async function updateSettings(settings: Partial<AppSettings>): Promise<AppSettings> {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      );
+    `;
+    if (settings.telegramUsername !== undefined) {
+      const cleanTg = settings.telegramUsername.replace(/^@/, '').trim();
+      await sql`
+        INSERT INTO settings (key, value)
+        VALUES ('telegram_username', ${cleanTg})
+        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
+      `;
+      cachedSettings.telegramUsername = cleanTg;
+    }
+    if (settings.instagramUsername !== undefined) {
+      const cleanInsta = settings.instagramUsername.replace(/^@/, '').trim();
+      await sql`
+        INSERT INTO settings (key, value)
+        VALUES ('instagram_username', ${cleanInsta})
+        ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
+      `;
+      cachedSettings.instagramUsername = cleanInsta;
+    }
+    return cachedSettings;
+  } catch (err) {
+    console.error('[NEON DB] Failed to update settings:', err);
+    throw err;
+  }
+}
+
+// ==========================================
 // FAST SYNC (POLLING)
 // ==========================================
 export async function getSyncData() {
   try {
-    const [ordersRows, callsRows, foodsRows] = await Promise.all([
+    const [ordersRows, callsRows, foodsRows, settingsRows] = await Promise.all([
       sql`SELECT data FROM orders ORDER BY created_at DESC;`,
       sql`SELECT data FROM waiter_calls ORDER BY created_at DESC;`,
       sql`SELECT data FROM foods ORDER BY created_at ASC;`,
+      sql`SELECT key, value FROM settings;`.catch(() => []),
     ]);
 
     const orders = ordersRows.map((r: any) => r.data as Order);
@@ -246,6 +322,13 @@ export async function getSyncData() {
         ? foodsRows.map((r: any) => r.data as FoodItem)
         : initialFoodItems;
 
+    if (settingsRows && settingsRows.length > 0) {
+      settingsRows.forEach((r: any) => {
+        if (r.key === 'telegram_username') cachedSettings.telegramUsername = r.value;
+        if (r.key === 'instagram_username') cachedSettings.instagramUsername = r.value;
+      });
+    }
+
     cachedOrders = orders;
     cachedCalls = waiterCalls;
     cachedFoods = foods;
@@ -254,6 +337,7 @@ export async function getSyncData() {
       orders,
       waiterCalls,
       foods,
+      settings: cachedSettings,
       serverTime: Date.now(),
     };
   } catch (err) {
@@ -262,6 +346,7 @@ export async function getSyncData() {
       orders: cachedOrders,
       waiterCalls: cachedCalls,
       foods: cachedFoods,
+      settings: cachedSettings,
       serverTime: Date.now(),
     };
   }

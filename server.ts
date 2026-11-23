@@ -264,6 +264,26 @@ app.post('/api/foods/sync-all', async (req, res) => {
   }
 });
 
+// --- SETTINGS (TELEGRAM & INSTAGRAM LINKS) API ---
+app.get('/api/settings', async (req, res) => {
+  try {
+    const settings = await db.getSettings();
+    res.json(settings);
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to fetch settings' });
+  }
+});
+
+app.put('/api/settings', async (req, res) => {
+  try {
+    const settings = await db.updateSettings(req.body);
+    console.log(`[SETTINGS UPDATED IN NEON]`, settings);
+    res.json(settings);
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to update settings' });
+  }
+});
+
 // ==========================================
 // VITE / STATIC SERVING
 // ==========================================

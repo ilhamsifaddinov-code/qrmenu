@@ -34,6 +34,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   const title = getFoodTitle(food, lang);
   const description = getFoodDescription(food, lang);
   const ingredients = getFoodIngredients(food, lang);
+  const isAvailable = food.isAvailable !== false;
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -88,6 +89,17 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
             />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-[#18181b] via-transparent to-black/60" />
+
+          {!isAvailable && (
+            <div className="absolute inset-0 bg-black/75 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center p-4 text-center">
+              <span className="bg-red-600/95 text-white font-extrabold text-sm sm:text-base px-4 py-2 rounded-xl border border-red-400 shadow-[0_0_25px_rgba(239,68,68,0.7)] flex items-center gap-2">
+                ✕ {lang === 'qr' ? 'Házirshe bul taǵam tawsılǵan (Joq)' : 'Hozircha bu taom tugagan (Qolmagan)'}
+              </span>
+              <span className="text-xs text-zinc-300 mt-2 font-medium max-w-sm">
+                {lang === 'qr' ? 'Asxanada bul taǵam házirshe tayarlanbaydı. Bólek taǵamlardı tańlap kóriwińiz múmkin.' : 'Oshxonada bu taom hozircha tayyorlanmayapti. Boshqa taomlarni tanlab ko\'rishingiz mumkin.'}
+              </span>
+            </div>
+          )}
 
           <button
             type="button"
@@ -301,39 +313,47 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
         {/* Modal Footer Controls */}
         <div className="p-4 bg-zinc-900 border-t border-amber-500/30 flex items-center justify-between gap-3 shrink-0">
-          {/* Quantity Selector */}
-          <div className="flex items-center gap-3 bg-zinc-950 px-3 py-1.5 rounded-2xl border border-amber-500/30 shadow-sm">
-            <button
-              type="button"
-              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              aria-label="1 dana kemeytiw"
-              className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold text-lg flex items-center justify-center transition"
-            >
-              -
-            </button>
-            <span className="font-extrabold text-base text-amber-300 w-6 text-center">{quantity}</span>
-            <button
-              type="button"
-              onClick={() => setQuantity((q) => q + 1)}
-              aria-label="1 dana qosıw"
-              className="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 font-bold text-lg flex items-center justify-center transition shadow"
-            >
-              +
-            </button>
-          </div>
+          {!isAvailable ? (
+            <div className="w-full bg-zinc-950 border border-red-500/40 text-red-400 text-xs sm:text-sm font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-inner">
+              <span>✕ {lang === 'qr' ? 'Bul taǵam tawsılǵan — házirshe buyırtpa berip bolmaydı' : 'Bu taom qolmagan / tugagan — buyurtma berib bo\'lmaydi'}</span>
+            </div>
+          ) : (
+            <>
+              {/* Quantity Selector */}
+              <div className="flex items-center gap-3 bg-zinc-950 px-3 py-1.5 rounded-2xl border border-amber-500/30 shadow-sm">
+                <button
+                  type="button"
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  aria-label="1 dana kemeytiw"
+                  className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold text-lg flex items-center justify-center transition"
+                >
+                  -
+                </button>
+                <span className="font-extrabold text-base text-amber-300 w-6 text-center">{quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => setQuantity((q) => q + 1)}
+                  aria-label="1 dana qosıw"
+                  className="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 font-bold text-lg flex items-center justify-center transition shadow"
+                >
+                  +
+                </button>
+              </div>
 
-          {/* Add Button with calculated total */}
-          <button
-            type="button"
-            onClick={handleAdd}
-            aria-label={`${title} ${t.addToCart}`}
-            className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 px-4 rounded-2xl font-serif font-extrabold text-sm sm:text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-between"
-          >
-            <span>{t.addToCart}</span>
-            <span className="text-zinc-950 font-sans font-extrabold">
-              {(food.price * quantity).toLocaleString('uz-UZ')} UZS
-            </span>
-          </button>
+              {/* Add Button with calculated total */}
+              <button
+                type="button"
+                onClick={handleAdd}
+                aria-label={`${title} ${t.addToCart}`}
+                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 px-4 rounded-2xl font-serif font-extrabold text-sm sm:text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-between"
+              >
+                <span>{t.addToCart}</span>
+                <span className="text-zinc-950 font-sans font-extrabold">
+                  {(food.price * quantity).toLocaleString('uz-UZ')} UZS
+                </span>
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

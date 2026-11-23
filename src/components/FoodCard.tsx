@@ -25,13 +25,29 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   const [imageError, setImageError] = useState(false);
   const t = translations[lang] || translations.qr;
 
+  const isAvailable = food.isAvailable !== false;
   const title = getFoodTitle(food, lang);
   const description = getFoodDescription(food, lang);
 
   return (
-    <div className="group relative bg-[#18181b] rounded-2xl border border-amber-500/25 hover:border-amber-400/70 shadow-lg hover:shadow-[0_0_25px_rgba(245,158,11,0.2)] transition-all duration-300 overflow-hidden flex flex-col justify-between">
+    <div className={`group relative bg-[#18181b] rounded-2xl border transition-all duration-300 overflow-hidden flex flex-col justify-between ${
+      !isAvailable 
+        ? 'border-red-500/30 opacity-85 shadow-[0_0_15px_rgba(239,68,68,0.1)]' 
+        : 'border-amber-500/25 hover:border-amber-400/70 shadow-lg hover:shadow-[0_0_25px_rgba(245,158,11,0.2)]'
+    }`}>
       {/* Top Badges overlay */}
       <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-zinc-950 cursor-pointer" onClick={() => onSelect(food)}>
+        {!isAvailable && (
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center p-3 text-center">
+            <span className="bg-red-600/95 text-white font-black text-xs sm:text-sm px-3.5 py-1.5 rounded-xl border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] flex items-center gap-1.5 animate-pulse">
+              ✕ {lang === 'qr' ? 'Tawsılǵan (Joq)' : 'Tugagan (Qolmagan)'}
+            </span>
+            <span className="text-[10px] text-zinc-300 mt-1.5 font-semibold">
+              {lang === 'qr' ? 'Házirshe buyırtpa berip bolmaydı' : 'Hozircha buyurtma berib bo\'lmaydi'}
+            </span>
+          </div>
+        )}
+
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-zinc-900 animate-pulse flex items-center justify-center">
             <div className="w-10 h-10 border-3 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
@@ -53,7 +69,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
               setImageError(true);
               setImageLoaded(true);
             }}
-            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
+            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'} ${!isAvailable ? 'grayscale opacity-50' : ''}`}
             loading="lazy"
           />
         )}
@@ -114,11 +130,6 @@ export const FoodCard: React.FC<FoodCardProps> = ({
 
           {/* Special Diet Tags */}
           <div className="flex flex-wrap gap-1.5 mt-2.5 text-[10px] font-semibold">
-            {food.isHalal && (
-              <span className="bg-emerald-950/80 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/40">
-                ✓ Xalal
-              </span>
-            )}
             {food.isGlutenFree && (
               <span className="bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded border border-amber-500/40">
                 🌾 Glütensiz
@@ -145,7 +156,16 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             <span>{food.prepTime} {t.prepTime}</span>
           </div>
 
-          {cartQuantity > 0 ? (
+          {!isAvailable ? (
+            <button
+              type="button"
+              disabled
+              aria-disabled="true"
+              className="flex items-center gap-1 px-3 py-1.5 rounded-xl font-bold text-xs bg-zinc-900 text-red-400 border border-red-500/40 cursor-not-allowed opacity-90 shadow"
+            >
+              <span>✕ {lang === 'qr' ? 'Tawsılǵan' : 'Qolmagan'}</span>
+            </button>
+          ) : cartQuantity > 0 ? (
             <div className="flex items-center gap-1.5 bg-zinc-950 px-2 py-1 rounded-xl border border-amber-400/60 shadow">
               <button
                 type="button"

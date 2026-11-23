@@ -27,8 +27,10 @@ import {
   PieChart,
   Users,
   Sparkles,
+  Send,
+  Instagram,
 } from 'lucide-react';
-import { FoodItem, Language, Order, WaiterCall } from '../types';
+import { FoodItem, Language, Order, WaiterCall, AppSettings } from '../types';
 import { translations } from '../i18n/translations';
 import { getFoodTitle, formatPrice } from '../utils/formatters';
 import { ReceiptModal } from './ReceiptModal';
@@ -38,6 +40,7 @@ interface AdminPanelProps {
   foodItems: FoodItem[];
   orders: Order[];
   waiterCalls: WaiterCall[];
+  settings?: AppSettings;
   onAddFoodItem: (newItem: FoodItem) => void;
   onUpdateFoodItem: (updatedItem: FoodItem) => void;
   onDeleteFoodItem: (id: string) => void;
@@ -47,6 +50,7 @@ interface AdminPanelProps {
   onCloseAdmin: () => void;
   adminPassword?: string;
   onUpdatePassword?: (password: string) => void;
+  onUpdateSettings?: (newSettings: Partial<AppSettings>) => void;
 }
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({
@@ -54,6 +58,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   foodItems,
   orders,
   waiterCalls,
+  settings,
   onAddFoodItem,
   onUpdateFoodItem,
   onDeleteFoodItem,
@@ -63,6 +68,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onCloseAdmin,
   adminPassword,
   onUpdatePassword,
+  onUpdateSettings,
 }) => {
   const t = translations[lang];
 
@@ -82,6 +88,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
   const [newPassword, setNewPassword] = useState('');
   const [passwordSaved, setPasswordSaved] = useState(false);
+
+  const [telegramInput, setTelegramInput] = useState(settings?.telegramUsername || 'sifaddinov');
+  const [instagramInput, setInstagramInput] = useState(settings?.instagramUsername || 'sifaddinovv');
+  const [linksSaved, setLinksSaved] = useState(false);
+
+  React.useEffect(() => {
+    if (settings) {
+      if (settings.telegramUsername) setTelegramInput(settings.telegramUsername);
+      if (settings.instagramUsername) setInstagramInput(settings.instagramUsername);
+    }
+  }, [settings]);
 
   const handleApplyAutoCount = () => {
     const count = Math.min(100, Math.max(1, autoTableCount));
@@ -463,16 +480,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                     {/* Toggle Availability */}
                     <button
-                      onClick={() =>
-                        onUpdateFoodItem({ ...food, isAvailable: !food.isAvailable })
-                      }
-                      className={`mt-1.5 text-[10px] font-bold px-2 py-0.5 rounded ${
-                        food.isAvailable
-                          ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40'
-                          : 'bg-red-950 text-red-300 border border-red-500/40'
+                      type="button"
+                      onClick={() => {
+                        const newAvail = food.isAvailable === false ? true : false;
+                        onUpdateFoodItem({ ...food, isAvailable: newAvail });
+                      }}
+                      className={`mt-1.5 text-xs font-bold px-3 py-1 rounded-xl transition shadow active:scale-95 flex items-center gap-1.5 ${
+                        food.isAvailable !== false
+                          ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-900/80'
+                          : 'bg-red-950 text-red-300 border border-red-500/50 hover:bg-red-900/80'
                       }`}
+                      title={food.isAvailable !== false ? "Mavjud (Bor) - Bosilsa qolmagan qilinadi" : "Qolmagan (Tugagan) - Bosilsa mavjud qilinadi"}
                     >
-                      {food.isAvailable ? `✓ ${t.isAvailable}` : `✕ ${t.notAvailable}`}
+                      {food.isAvailable !== false ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>{t.isAvailable || 'Barlıǵı / Bar'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <X className="w-3.5 h-3.5 text-red-400" />
+                          <span>{t.notAvailable || 'Tawsılǵan / Joq'}</span>
+                        </>
+                      )}
                     </button>
                   </div>
 
@@ -1396,6 +1426,90 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 )}
               </button>
             </div>
+          </div>
+
+          {/* Social Links Settings Card (Telegram & Instagram) */}
+          <div className="bg-zinc-900 p-5 rounded-2xl border border-amber-500/30">
+            <h3 className="font-serif font-bold text-lg text-amber-300 flex items-center gap-2 mb-2">
+              <Send className="w-5 h-5 text-sky-400" />
+              <span>{lang === 'qr' ? 'Telegram hám Instagram siltemeleri' : 'Telegram va Instagram havolalari'}</span>
+            </h3>
+            <p className="text-xs text-zinc-400 mb-4">
+              {lang === 'qr' 
+                ? 'Sayt tómengi bólimindegi (Footer) Telegram hám Instagram akkauntların usı jerden ózgertiwińiz múmkin.' 
+                : 'Sayt pastki qismidagi (Footer) Telegram va Instagram akkauntlarini shu yerdan o\'zgartirishingiz mumkin.'}
+            </p>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (onUpdateSettings) {
+                  onUpdateSettings({
+                    telegramUsername: telegramInput.trim(),
+                    instagramUsername: instagramInput.trim(),
+                  });
+                  setLinksSaved(true);
+                  setTimeout(() => setLinksSaved(false), 3000);
+                }
+              }}
+              className="max-w-md space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-bold text-zinc-300 mb-1.5 flex items-center gap-1.5">
+                  <Send className="w-4 h-4 text-sky-400" />
+                  <span>Telegram akkaunt / silteme:</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">@</span>
+                  <input
+                    type="text"
+                    value={telegramInput.replace(/^@/, '')}
+                    onChange={(e) => setTelegramInput(e.target.value.replace(/^@/, ''))}
+                    placeholder="sifaddinov"
+                    className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
+                    required
+                  />
+                </div>
+                <span className="text-[11px] text-zinc-500 mt-1 block">
+                  Mısalı: <span className="text-amber-400 font-mono">sifaddinov</span> (https://t.me/sifaddinov)
+                </span>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-zinc-300 mb-1.5 flex items-center gap-1.5">
+                  <Instagram className="w-4 h-4 text-pink-400" />
+                  <span>Instagram akkaunt / profil:</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">@</span>
+                  <input
+                    type="text"
+                    value={instagramInput.replace(/^@/, '')}
+                    onChange={(e) => setInstagramInput(e.target.value.replace(/^@/, ''))}
+                    placeholder="sifaddinovv"
+                    className="w-full pl-8 pr-3 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
+                    required
+                  />
+                </div>
+                <span className="text-[11px] text-zinc-500 mt-1 block">
+                  Mısalı: <span className="text-amber-400 font-mono">sifaddinovv</span> (https://instagram.com/sifaddinovv)
+                </span>
+              </div>
+
+              <button
+                type="submit"
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-serif font-bold text-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition w-full shadow-[0_0_15px_rgba(245,158,11,0.3)] active:scale-95"
+              >
+                {linksSaved ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 text-zinc-950" />
+                    <span>Siltemeler saqlandı!</span>
+                  </>
+                ) : (
+                  <span>Siltemelerdi saqlaw</span>
+                )}
+              </button>
+            </form>
           </div>
         </div>
       )}

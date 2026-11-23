@@ -1,15 +1,24 @@
 import React from 'react';
 import { MapPin, Phone, Clock, ExternalLink, Send, Instagram } from 'lucide-react';
-import { Language } from '../types';
+import { Language, AppSettings } from '../types';
 import { translations } from '../i18n/translations';
 import { NationalOrnamentHeader } from './NationalOrnament';
 
 interface FooterProps {
   lang: Language;
+  settings?: AppSettings;
 }
 
-export const Footer: React.FC<FooterProps> = ({ lang }) => {
+export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
   const t = translations[lang] || translations.qr;
+
+  const rawTg = settings?.telegramUsername || 'sifaddinov';
+  const cleanTg = rawTg.replace(/^@/, '').replace(/^https?:\/\/t\.me\//, '').trim();
+  const tgUrl = rawTg.startsWith('http') ? rawTg : `https://t.me/${cleanTg}`;
+
+  const rawInsta = settings?.instagramUsername || 'sifaddinovv';
+  const cleanInsta = rawInsta.replace(/^@/, '').replace(/^https?:\/\/instagram\.com\//, '').replace(/\/$/, '').trim();
+  const instaUrl = rawInsta.startsWith('http') ? rawInsta : `https://instagram.com/${cleanInsta}`;
 
   return (
     <footer className="mt-12 bg-[#18181b] text-zinc-100 border-t border-amber-500/30">
@@ -84,25 +93,25 @@ export const Footer: React.FC<FooterProps> = ({ lang }) => {
 
           <div className="flex flex-wrap items-center gap-2.5 pt-1">
             <a
-              href="https://t.me/sifaddinov"
+              href={tgUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Telegram orqali bog'lanish: @sifaddinov"
+              aria-label={`Telegram: @${cleanTg}`}
               className="bg-sky-600/90 hover:bg-sky-500 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-sky-400/40 shadow hover:scale-105 active:scale-95"
             >
               <Send className="w-4 h-4 text-white" aria-hidden="true" />
-              <span>@sifaddinov</span>
+              <span>@{cleanTg}</span>
             </a>
 
             <a
-              href="https://instagram.com/sifaddinovv"
+              href={instaUrl}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Instagram orqali bog'lanish: sifaddinovv"
+              aria-label={`Instagram: ${cleanInsta}`}
               className="bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-pink-400/40 shadow hover:scale-105 active:scale-95"
             >
               <Instagram className="w-4 h-4 text-white" aria-hidden="true" />
-              <span>sifaddinovv</span>
+              <span>{cleanInsta}</span>
             </a>
           </div>
         </div>
