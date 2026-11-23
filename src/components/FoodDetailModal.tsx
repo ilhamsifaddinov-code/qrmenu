@@ -38,6 +38,15 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
+  // Close modal on Escape key press
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!reviewerName.trim() || !newComment.trim()) return;
@@ -62,9 +71,27 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fadeIn">
-      <div className="relative w-full max-w-2xl bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(0,0,0,0.9)] overflow-hidden my-auto max-h-[90vh] flex flex-col">
-        {/* Header Bar with Close Button */}
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fadeIn cursor-pointer"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-2xl bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(0,0,0,0.95)] overflow-hidden my-auto max-h-[90vh] flex flex-col cursor-default"
+      >
+        {/* Floating Always-Visible Close Button */}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={t.close || 'Jabıw (Artqa)'}
+          className="absolute top-3.5 right-3.5 z-30 bg-zinc-950/90 hover:bg-zinc-900 text-amber-300 hover:text-amber-200 p-2 sm:p-2.5 rounded-full border-2 border-amber-500/50 transition-transform active:scale-90 shadow-[0_0_20px_rgba(0,0,0,0.9)] cursor-pointer"
+        >
+          <X className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
+        </button>
+
+        {/* Header Bar Image */}
         <div className="relative h-60 sm:h-72 w-full shrink-0">
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 bg-zinc-900 animate-pulse flex items-center justify-center">
@@ -100,15 +127,6 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
               </span>
             </div>
           )}
-
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t.close || 'Jabıw'}
-            className="absolute top-3 right-3 bg-black/70 hover:bg-black text-amber-300 p-2 rounded-full border border-amber-500/30 transition shadow-md"
-          >
-            <X className="w-5 h-5" aria-hidden="true" />
-          </button>
 
           {/* Title & Category overlay */}
           <div className="absolute bottom-4 left-4 right-4 text-white">
@@ -314,27 +332,47 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
         {/* Modal Footer Controls */}
         <div className="p-4 bg-zinc-900 border-t border-amber-500/30 flex items-center justify-between gap-3 shrink-0">
           {!isAvailable ? (
-            <div className="w-full bg-zinc-950 border border-red-500/40 text-red-400 text-xs sm:text-sm font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-inner">
-              <span>✕ {lang === 'qr' ? 'Bul taǵam tawsılǵan — házirshe buyırtpa berip bolmaydı' : 'Bu taom qolmagan / tugagan — buyurtma berib bo\'lmaydi'}</span>
+            <div className="w-full flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-1 w-full bg-zinc-950 border border-red-500/40 text-red-400 text-xs sm:text-sm font-bold py-3 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-inner text-center">
+                <span>✕ {lang === 'qr' ? 'Bul taǵam tawsılǵan (Joq)' : 'Bu taom qolmagan (Tugagan)'}</span>
+              </div>
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 px-6 py-3 rounded-2xl font-serif font-extrabold text-xs sm:text-sm shadow-[0_0_15px_rgba(245,158,11,0.35)] transition active:scale-95 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+              >
+                <span>← {lang === 'qr' ? 'Artqa qaytıw (Jabıw)' : 'Orqaga qaytish (Yopish)'}</span>
+              </button>
             </div>
           ) : (
-            <>
+            <div className="flex items-center justify-between gap-2.5 w-full">
+              {/* Back button */}
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-3.5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs sm:text-sm transition border border-zinc-700 active:scale-95 flex items-center gap-1 shrink-0 cursor-pointer"
+                title={lang === 'qr' ? 'Artqa' : 'Orqaga'}
+              >
+                <span>←</span>
+                <span className="hidden sm:inline">{lang === 'qr' ? 'Artqa' : 'Orqaga'}</span>
+              </button>
+
               {/* Quantity Selector */}
-              <div className="flex items-center gap-3 bg-zinc-950 px-3 py-1.5 rounded-2xl border border-amber-500/30 shadow-sm">
+              <div className="flex items-center gap-2 sm:gap-3 bg-zinc-950 px-2.5 sm:px-3 py-1.5 rounded-2xl border border-amber-500/30 shadow-sm shrink-0">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   aria-label="1 dana kemeytiw"
-                  className="w-8 h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold text-lg flex items-center justify-center transition"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold text-lg flex items-center justify-center transition"
                 >
                   -
                 </button>
-                <span className="font-extrabold text-base text-amber-300 w-6 text-center">{quantity}</span>
+                <span className="font-extrabold text-sm sm:text-base text-amber-300 w-5 sm:w-6 text-center">{quantity}</span>
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
                   aria-label="1 dana qosıw"
-                  className="w-8 h-8 rounded-xl bg-amber-500 text-zinc-950 font-bold text-lg flex items-center justify-center transition shadow"
+                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500 text-zinc-950 font-bold text-lg flex items-center justify-center transition shadow"
                 >
                   +
                 </button>
@@ -345,14 +383,14 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                 type="button"
                 onClick={handleAdd}
                 aria-label={`${title} ${t.addToCart}`}
-                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 px-4 rounded-2xl font-serif font-extrabold text-sm sm:text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-between"
+                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 px-3 sm:px-4 rounded-2xl font-serif font-extrabold text-xs sm:text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-between cursor-pointer"
               >
                 <span>{t.addToCart}</span>
-                <span className="text-zinc-950 font-sans font-extrabold">
+                <span className="text-zinc-950 font-sans font-extrabold ml-1">
                   {(food.price * quantity).toLocaleString('uz-UZ')} UZS
                 </span>
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>

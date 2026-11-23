@@ -1,5 +1,5 @@
-import React from 'react';
-import { MapPin, Phone, Clock, ExternalLink, Send, Instagram } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { MapPin, Phone, Clock, ExternalLink, Send, Instagram, ArrowUpRight } from 'lucide-react';
 import { Language, AppSettings } from '../types';
 import { translations } from '../i18n/translations';
 import { NationalOrnamentHeader } from './NationalOrnament';
@@ -12,13 +12,56 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
   const t = translations[lang] || translations.qr;
 
+  // Active tooltip state for mobile touch support
+  const [activeTooltip, setActiveTooltip] = useState<'telegram' | 'instagram' | null>(null);
+  const socialsRef = useRef<HTMLDivElement>(null);
+
+  // Close tooltip when clicking outside on mobile
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (socialsRef.current && !socialsRef.current.contains(e.target as Node)) {
+        setActiveTooltip(null);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, []);
+
+  // Format and clean usernames and URLs robustly
   const rawTg = settings?.telegramUsername || 'sifaddinov';
-  const cleanTg = rawTg.replace(/^@/, '').replace(/^https?:\/\/t\.me\//, '').trim();
-  const tgUrl = rawTg.startsWith('http') ? rawTg : `https://t.me/${cleanTg}`;
+  const cleanTg = rawTg
+    .replace(/^https?:\/\/(www\.)?t\.me\//i, '')
+    .replace(/^https?:\/\/(www\.)?telegram\.me\//i, '')
+    .replace(/^t\.me\//i, '')
+    .replace(/^@/, '')
+    .replace(/\/$/, '')
+    .trim() || 'sifaddinov';
+  const tgUrl = `https://t.me/${cleanTg}`;
 
   const rawInsta = settings?.instagramUsername || 'sifaddinovv';
-  const cleanInsta = rawInsta.replace(/^@/, '').replace(/^https?:\/\/instagram\.com\//, '').replace(/\/$/, '').trim();
-  const instaUrl = rawInsta.startsWith('http') ? rawInsta : `https://instagram.com/${cleanInsta}`;
+  const cleanInsta = rawInsta
+    .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
+    .replace(/^instagram\.com\//i, '')
+    .replace(/^@/, '')
+    .replace(/\/$/, '')
+    .trim() || 'sifaddinovv';
+  const instaUrl = `https://instagram.com/${cleanInsta}`;
+
+  const handleTelegramClick = (e: React.MouseEvent) => {
+    const isTouch = window.matchMedia('(hover: none)').matches || 'ontouchstart' in window;
+    if (isTouch && activeTooltip !== 'telegram') {
+      e.preventDefault();
+      setActiveTooltip('telegram');
+    }
+  };
+
+  const handleInstagramClick = (e: React.MouseEvent) => {
+    const isTouch = window.matchMedia('(hover: none)').matches || 'ontouchstart' in window;
+    if (isTouch && activeTooltip !== 'instagram') {
+      e.preventDefault();
+      setActiveTooltip('instagram');
+    }
+  };
 
   return (
     <footer className="mt-12 bg-[#18181b] text-zinc-100 border-t border-amber-500/30">
@@ -91,28 +134,97 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
             </a>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 pt-1">
-            <a
-              href={tgUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Telegram: @${cleanTg}`}
-              className="bg-sky-600/90 hover:bg-sky-500 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-sky-400/40 shadow hover:scale-105 active:scale-95"
-            >
-              <Send className="w-4 h-4 text-white" aria-hidden="true" />
-              <span>@{cleanTg}</span>
-            </a>
+          {/* Social Icons with Desktop Hover Tooltip & Mobile Tap reveal */}
+          <div ref={socialsRef} className="flex items-center gap-4 pt-2">
+            {/* Telegram Icon Button */}
+            <div className="relative group">
+              <a
+                href={tgUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleTelegramClick}
+                onMouseEnter={() => setActiveTooltip('telegram')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                aria-label={`Telegram: @${cleanTg}`}
+                className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 to-sky-400 hover:from-sky-500 hover:to-sky-300 text-white flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(56,189,248,0.35)] hover:scale-110 active:scale-95 border border-sky-300/40 cursor-pointer"
+              >
+                <Send className="w-5 h-5 text-white" aria-hidden="true" />
+              </a>
 
-            <a
-              href={instaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Instagram: ${cleanInsta}`}
-              className="bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-500 hover:to-amber-400 text-white px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 font-bold transition border border-pink-400/40 shadow hover:scale-105 active:scale-95"
-            >
-              <Instagram className="w-4 h-4 text-white" aria-hidden="true" />
-              <span>{cleanInsta}</span>
-            </a>
+              {/* Tooltip */}
+              <div
+                className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 z-30 transition-all duration-300 ${
+                  activeTooltip === 'telegram'
+                    ? 'opacity-100 visible translate-y-0 scale-100 pointer-events-auto'
+                    : 'opacity-0 invisible translate-y-2 scale-95 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto'
+                }`}
+              >
+                <div className="bg-zinc-950/95 backdrop-blur-md border border-sky-400/60 shadow-[0_4px_25px_rgba(0,0,0,0.85)] rounded-xl px-3.5 py-2 whitespace-nowrap text-center">
+                  <div className="text-[10px] text-sky-400 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                    <Send className="w-3 h-3" />
+                    <span>Telegram</span>
+                  </div>
+                  <a
+                    href={tgUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-mono font-extrabold text-zinc-100 hover:text-sky-300 flex items-center justify-center gap-1 transition mt-0.5"
+                  >
+                    <span>@{cleanTg}</span>
+                    <ArrowUpRight className="w-3 h-3 text-sky-400" />
+                  </a>
+                  <div className="text-[9px] text-zinc-400 mt-0.5 sm:hidden font-sans">
+                    {lang === 'qr' ? 'Kiriw ushın basıń' : 'Kirish uchun bosing'}
+                  </div>
+                </div>
+                <div className="w-2.5 h-2.5 bg-zinc-950 border-r border-b border-sky-400/60 transform rotate-45 mx-auto -mt-1.5" />
+              </div>
+            </div>
+
+            {/* Instagram Icon Button */}
+            <div className="relative group">
+              <a
+                href={instaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={handleInstagramClick}
+                onMouseEnter={() => setActiveTooltip('instagram')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                aria-label={`Instagram: @${cleanInsta}`}
+                className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-pink-600 to-purple-600 hover:opacity-95 text-white flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.35)] hover:scale-110 active:scale-95 border border-pink-300/40 cursor-pointer"
+              >
+                <Instagram className="w-5 h-5 text-white" aria-hidden="true" />
+              </a>
+
+              {/* Tooltip */}
+              <div
+                className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 z-30 transition-all duration-300 ${
+                  activeTooltip === 'instagram'
+                    ? 'opacity-100 visible translate-y-0 scale-100 pointer-events-auto'
+                    : 'opacity-0 invisible translate-y-2 scale-95 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto'
+                }`}
+              >
+                <div className="bg-zinc-950/95 backdrop-blur-md border border-pink-400/60 shadow-[0_4px_25px_rgba(0,0,0,0.85)] rounded-xl px-3.5 py-2 whitespace-nowrap text-center">
+                  <div className="text-[10px] text-pink-400 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                    <Instagram className="w-3 h-3" />
+                    <span>Instagram</span>
+                  </div>
+                  <a
+                    href={instaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs font-mono font-extrabold text-zinc-100 hover:text-pink-300 flex items-center justify-center gap-1 transition mt-0.5"
+                  >
+                    <span>@{cleanInsta}</span>
+                    <ArrowUpRight className="w-3 h-3 text-pink-400" />
+                  </a>
+                  <div className="text-[9px] text-zinc-400 mt-0.5 sm:hidden font-sans">
+                    {lang === 'qr' ? 'Kiriw ushın basıń' : 'Kirish uchun bosing'}
+                  </div>
+                </div>
+                <div className="w-2.5 h-2.5 bg-zinc-950 border-r border-b border-pink-400/60 transform rotate-45 mx-auto -mt-1.5" />
+              </div>
+            </div>
           </div>
         </div>
       </div>

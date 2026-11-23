@@ -1443,10 +1443,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             <form
               onSubmit={(e) => {
                 e.preventDefault();
+                const cleanTg = telegramInput
+                  .replace(/^https?:\/\/(www\.)?t\.me\//i, '')
+                  .replace(/^https?:\/\/(www\.)?telegram\.me\//i, '')
+                  .replace(/^t\.me\//i, '')
+                  .replace(/^@/, '')
+                  .replace(/\/$/, '')
+                  .trim();
+                const cleanInsta = instagramInput
+                  .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
+                  .replace(/^instagram\.com\//i, '')
+                  .replace(/^@/, '')
+                  .replace(/\/$/, '')
+                  .trim();
+                setTelegramInput(cleanTg);
+                setInstagramInput(cleanInsta);
                 if (onUpdateSettings) {
                   onUpdateSettings({
-                    telegramUsername: telegramInput.trim(),
-                    instagramUsername: instagramInput.trim(),
+                    telegramUsername: cleanTg,
+                    instagramUsername: cleanInsta,
                   });
                   setLinksSaved(true);
                   setTimeout(() => setLinksSaved(false), 3000);

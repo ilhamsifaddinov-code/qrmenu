@@ -279,7 +279,13 @@ export async function updateSettings(settings: Partial<AppSettings>): Promise<Ap
       );
     `;
     if (settings.telegramUsername !== undefined) {
-      const cleanTg = settings.telegramUsername.replace(/^@/, '').trim();
+      const cleanTg = settings.telegramUsername
+        .replace(/^https?:\/\/(www\.)?t\.me\//i, '')
+        .replace(/^https?:\/\/(www\.)?telegram\.me\//i, '')
+        .replace(/^t\.me\//i, '')
+        .replace(/^@/, '')
+        .replace(/\/$/, '')
+        .trim();
       await sql`
         INSERT INTO settings (key, value)
         VALUES ('telegram_username', ${cleanTg})
@@ -288,7 +294,12 @@ export async function updateSettings(settings: Partial<AppSettings>): Promise<Ap
       cachedSettings.telegramUsername = cleanTg;
     }
     if (settings.instagramUsername !== undefined) {
-      const cleanInsta = settings.instagramUsername.replace(/^@/, '').trim();
+      const cleanInsta = settings.instagramUsername
+        .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
+        .replace(/^instagram\.com\//i, '')
+        .replace(/^@/, '')
+        .replace(/\/$/, '')
+        .trim();
       await sql`
         INSERT INTO settings (key, value)
         VALUES ('instagram_username', ${cleanInsta})
