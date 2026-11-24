@@ -1176,6 +1176,53 @@ async function getSyncData() {
     };
   }
 }
+async function saveImage(id, mimeType, base64Data) {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS images (
+        id TEXT PRIMARY KEY,
+        mime_type TEXT NOT NULL,
+        data TEXT NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    await sql`
+      INSERT INTO images (id, mime_type, data)
+      VALUES (${id}, ${mimeType}, ${base64Data})
+      ON CONFLICT (id) DO UPDATE SET
+        mime_type = EXCLUDED.mime_type,
+        data = EXCLUDED.data,
+        created_at = NOW();
+    `;
+    return `/api/images/${id}`;
+  } catch (err) {
+    console.error("[NEON DB] Failed to save image:", err);
+    throw err;
+  }
+}
+async function getImage(id) {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS images (
+        id TEXT PRIMARY KEY,
+        mime_type TEXT NOT NULL,
+        data TEXT NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    const rows = await sql`SELECT mime_type, data FROM images WHERE id = ${id} LIMIT 1;`;
+    if (rows && rows.length > 0) {
+      return {
+        mimeType: rows[0].mime_type,
+        data: rows[0].data
+      };
+    }
+    return null;
+  } catch (err) {
+    console.error("[NEON DB] Failed to get image:", err);
+    return null;
+  }
+}
 
 // server.ts
 var app = express();
@@ -1307,29 +1354,75 @@ app.delete("/api/waiter-calls/:id", async (req, res) => {
     res.status(500).json({ error: "Failed to delete waiter call" });
   }
 });
-app.post("/api/upload", (req, res) => {
+app.post("/api/upload", async (req, res) => {
   try {
     const { filename, data } = req.body;
     if (!data) {
       return res.status(400).json({ error: "No image data provided" });
     }
+    let mimeType = "image/jpeg";
     let ext = "jpg";
-    let base64Data = data;
-    const match = data.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+    let rawBase64 = data;
+    const match = data.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9+.-]+);base64,(.+)$/);
     if (match) {
-      ext = match[1] === "jpeg" ? "jpg" : match[1];
-      base64Data = match[2];
+      mimeType = match[1];
+      rawBase64 = match[2];
+      ext = mimeType.split("/")[1] === "jpeg" ? "jpg" : mimeType.split("/")[1] || "jpg";
     } else if (filename && filename.includes(".")) {
       ext = filename.split(".").pop() || "jpg";
+      mimeType = ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
     }
-    const uniqueName = `food-${Date.now()}-${Math.floor(Math.random() * 1e4)}.${ext}`;
-    const targetFile = path.join(UPLOADS_DIR, uniqueName);
-    fs.writeFileSync(targetFile, Buffer.from(base64Data, "base64"));
-    console.log(`[LAPTOP IMAGE UPLOADED] saved as ${uniqueName}`);
-    res.json({ success: true, url: `/uploads/${uniqueName}` });
+    const uniqueId = `food-${Date.now()}-${Math.floor(Math.random() * 1e4)}.${ext}`;
+    await saveImage(uniqueId, mimeType, rawBase64);
+    try {
+      const targetFile = path.join(UPLOADS_DIR, uniqueId);
+      fs.writeFileSync(targetFile, Buffer.from(rawBase64, "base64"));
+    } catch (e) {
+    }
+    console.log(`[LAPTOP IMAGE SAVED IN NEON DB] /api/images/${uniqueId}`);
+    res.json({ success: true, url: `/api/images/${uniqueId}` });
   } catch (err) {
     console.error("Failed to save uploaded image:", err);
     res.status(500).json({ error: "Failed to save image", details: err?.message });
+  }
+});
+app.get("/api/images/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const img = await getImage(id);
+    if (!img) {
+      const localFile = path.join(UPLOADS_DIR, id);
+      if (fs.existsSync(localFile)) {
+        return res.sendFile(localFile);
+      }
+      return res.status(404).send("Image not found");
+    }
+    const buffer = Buffer.from(img.data, "base64");
+    res.setHeader("Content-Type", img.mimeType || "image/jpeg");
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    res.send(buffer);
+  } catch (err) {
+    console.error("Failed to serve image:", err);
+    res.status(500).send("Error serving image");
+  }
+});
+app.get("/uploads/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const img = await getImage(id);
+    if (img) {
+      const buffer = Buffer.from(img.data, "base64");
+      res.setHeader("Content-Type", img.mimeType || "image/jpeg");
+      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      return res.send(buffer);
+    }
+    const localFile = path.join(UPLOADS_DIR, id);
+    if (fs.existsSync(localFile)) {
+      return res.sendFile(localFile);
+    }
+    res.status(404).send("Image not found");
+  } catch (err) {
+    res.status(404).send("Not found");
   }
 });
 app.get("/api/foods", async (req, res) => {

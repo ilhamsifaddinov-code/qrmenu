@@ -29,10 +29,12 @@ import {
   Sparkles,
   Send,
   Instagram,
+  Camera,
 } from 'lucide-react';
 import { FoodItem, Language, Order, WaiterCall, AppSettings } from '../types';
 import { translations } from '../i18n/translations';
 import { getFoodTitle, formatPrice } from '../utils/formatters';
+import { compressImage } from '../utils/imageCompressor';
 import { ReceiptModal } from './ReceiptModal';
 
 interface AdminPanelProps {
@@ -141,7 +143,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [newPrice, setNewPrice] = useState('35000');
   const [newCategory, setNewCategory] = useState<'national' | 'fastfood' | 'meats' | 'drinks' | 'desserts'>('national');
   const [newCalories, setNewCalories] = useState('450');
-  const [newImgUrl, setNewImgUrl] = useState('https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80');
+  const [newImgUrl, setNewImgUrl] = useState('');
   const [newDesc, setNewDesc] = useState('');
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
   const [tempPriceInput, setTempPriceInput] = useState('');
@@ -151,11 +153,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [editingImageFoodId, setEditingImageFoodId] = useState<string | null>(null);
 
   // Table filter in Orders
   const [selectedTableFilter, setSelectedTableFilter] = useState<string>('all');
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -163,37 +166,64 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setUploadError(null);
     setUploadSuccess(false);
 
-    const reader = new FileReader();
-    reader.onload = async () => {
-      try {
-        const base64Data = reader.result as string;
-        const res = await fetch('/api/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ filename: file.name, data: base64Data }),
-        });
-        const json = await res.json();
-        if (json.success && json.url) {
-          setNewImgUrl(json.url);
-          setUploadSuccess(true);
-        } else {
-          // If server upload failed, fallback to base64 Data URL
-          setNewImgUrl(base64Data);
-          setUploadSuccess(true);
-        }
-      } catch (err: any) {
-        console.warn('Backend upload fallback to Data URL:', err);
-        setNewImgUrl(reader.result as string);
+    try {
+      // 1. Client-side canvas resize and compression for instant speed
+      const compressedDataUrl = await compressImage(file, 1000, 0.82);
+      // Immediately preview the user's actual photo
+      setNewImgUrl(compressedDataUrl);
+
+      // 2. Upload to server to persist permanently in Neon PostgreSQL
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: file.name, data: compressedDataUrl }),
+      });
+      const json = await res.json();
+      if (json.success && json.url) {
+        setNewImgUrl(json.url);
         setUploadSuccess(true);
-      } finally {
-        setIsUploading(false);
+      } else {
+        // Fallback to compressed Data URL
+        setNewImgUrl(compressedDataUrl);
+        setUploadSuccess(true);
       }
-    };
-    reader.onerror = () => {
-      setUploadError('Faylni yuklashda xatolik yuz berdi');
+    } catch (err: any) {
+      console.warn('Image upload fallback to raw file reader:', err);
+      try {
+        const rawReader = new FileReader();
+        rawReader.onload = () => {
+          setNewImgUrl(rawReader.result as string);
+          setUploadSuccess(true);
+        };
+        rawReader.readAsDataURL(file);
+      } catch {
+        setUploadError('Faylni yuklashda xatolik yuz berdi');
+      }
+    } finally {
       setIsUploading(false);
-    };
-    reader.readAsDataURL(file);
+    }
+  };
+
+  const handleEditExistingFoodImage = async (food: FoodItem, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setEditingImageFoodId(food.id);
+    try {
+      const compressed = await compressImage(file, 1000, 0.82);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: file.name, data: compressed }),
+      });
+      const json = await res.json();
+      const finalUrl = json.success && json.url ? json.url : compressed;
+      onUpdateFoodItem({ ...food, imageUrl: finalUrl });
+    } catch (err) {
+      console.error('Failed to change food image:', err);
+    } finally {
+      setEditingImageFoodId(null);
+    }
   };
 
   // Dynamic Real-time Calculations for Admin Analytics
@@ -296,7 +326,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       description: { qr: newDesc || newTitle, uz: newDesc, ru: newDesc, en: newDesc },
       price: parseInt(newPrice) || 30000,
       category: newCategory,
-      imageUrl: newImgUrl || 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+      imageUrl: newImgUrl.trim() || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
       calories: parseInt(newCalories) || 400,
       prepTime: 20,
       spicyLevel: 0,
@@ -316,6 +346,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     onAddFoodItem(item);
     setNewTitle('');
     setNewDesc('');
+    setNewImgUrl('');
     setUploadSuccess(false);
     setActiveTab('menu');
   };
@@ -441,11 +472,33 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   key={food.id}
                   className="bg-zinc-900 p-3 rounded-2xl border border-amber-500/25 shadow-sm flex items-center justify-between gap-3"
                 >
-                  <img
-                    src={food.imageUrl}
-                    alt={title}
-                    className="w-16 h-16 rounded-xl object-cover border border-zinc-800"
-                  />
+                  <div className="relative group/img w-16 h-16 rounded-xl overflow-hidden border border-zinc-800 shrink-0 bg-zinc-950">
+                    <img
+                      src={food.imageUrl}
+                      alt={title}
+                      className="w-full h-full object-cover"
+                    />
+                    <label
+                      className="absolute inset-0 bg-black/75 opacity-0 group-hover/img:opacity-100 flex flex-col items-center justify-center cursor-pointer transition text-amber-300 text-[9px] font-bold p-1 text-center"
+                      title={lang === 'qr' ? 'Súwretti ózgertiw' : 'Rasmni o\'zgartirish'}
+                    >
+                      {editingImageFoodId === food.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                      ) : (
+                        <>
+                          <Camera className="w-4 h-4 text-amber-400 mb-0.5" />
+                          <span>{lang === 'qr' ? 'Ózgertiw' : 'O\'zgartirish'}</span>
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={editingImageFoodId === food.id}
+                        onChange={(e) => handleEditExistingFoodImage(food, e)}
+                      />
+                    </label>
+                  </div>
 
                   <div className="flex-1 min-w-0">
                     <h4 className="font-bold text-sm text-zinc-100 truncate">{title}</h4>
@@ -629,28 +682,47 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 type="text"
                 value={newImgUrl}
                 onChange={(e) => setNewImgUrl(e.target.value)}
-                placeholder="https://... yoki /uploads/..."
-                className="w-full px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs text-zinc-200"
+                placeholder={lang === 'qr' ? "https://... yamasa /api/images/..." : "https://... yoki /api/images/..."}
+                className="w-full px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs text-zinc-200 outline-none focus:border-amber-500"
               />
             </div>
 
             {/* Thumbnail Preview */}
-            {newImgUrl && (
+            {newImgUrl ? (
               <div className="flex items-center gap-3 pt-1">
-                <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-amber-500/40 bg-zinc-900 shrink-0 shadow">
+                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-amber-500/50 bg-zinc-900 shrink-0 shadow-lg">
                   <img
                     src={newImgUrl}
                     alt="Preview"
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80';
-                    }}
                   />
                 </div>
-                <div className="text-xs text-zinc-400">
-                  <span className="text-zinc-200 font-semibold block">Rasm ko'rinishi</span>
-                  <span className="text-[11px]">Saytda ushbu rasm aks ettiriladi</span>
+                <div className="text-xs text-zinc-400 space-y-1">
+                  <span className="text-emerald-400 font-bold block flex items-center gap-1">
+                    <Check className="w-4 h-4" />
+                    <span>{lang === 'qr' ? 'Súwret tayın' : 'Rasm tayyor'}</span>
+                  </span>
+                  <span className="text-[11px] text-zinc-300 block">
+                    {lang === 'qr' ? 'Saytta usı súwret kórsetiledi' : 'Saytda ushbu rasm ko\'rinadi'}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNewImgUrl('');
+                      setUploadSuccess(false);
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                    className="text-[11px] text-red-400 hover:text-red-300 transition underline cursor-pointer"
+                  >
+                    ✕ {lang === 'qr' ? 'Súwretti alıp taslaw' : 'Rasmni olib tashlash'}
+                  </button>
                 </div>
+              </div>
+            ) : (
+              <div className="p-3 rounded-xl border border-dashed border-zinc-700 bg-zinc-900/40 text-center text-xs text-zinc-400">
+                {lang === 'qr'
+                  ? 'Házirshe súwret tańlanbadı. Laptopıńızdan júkleń yamasa URL kiritiń.'
+                  : 'Hozircha rasm tanlanmadi. Laptopingizdan yuklang yoki URL kiriting.'}
               </div>
             )}
           </div>

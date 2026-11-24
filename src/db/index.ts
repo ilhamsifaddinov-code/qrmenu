@@ -362,3 +362,55 @@ export async function getSyncData() {
     };
   }
 }
+
+// ==========================================
+// IMAGES (UPLOADED FROM LAPTOP / MOBILE)
+// ==========================================
+export async function saveImage(id: string, mimeType: string, base64Data: string): Promise<string> {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS images (
+        id TEXT PRIMARY KEY,
+        mime_type TEXT NOT NULL,
+        data TEXT NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    await sql`
+      INSERT INTO images (id, mime_type, data)
+      VALUES (${id}, ${mimeType}, ${base64Data})
+      ON CONFLICT (id) DO UPDATE SET
+        mime_type = EXCLUDED.mime_type,
+        data = EXCLUDED.data,
+        created_at = NOW();
+    `;
+    return `/api/images/${id}`;
+  } catch (err) {
+    console.error('[NEON DB] Failed to save image:', err);
+    throw err;
+  }
+}
+
+export async function getImage(id: string): Promise<{ mimeType: string; data: string } | null> {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS images (
+        id TEXT PRIMARY KEY,
+        mime_type TEXT NOT NULL,
+        data TEXT NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    const rows = await sql`SELECT mime_type, data FROM images WHERE id = ${id} LIMIT 1;`;
+    if (rows && rows.length > 0) {
+      return {
+        mimeType: rows[0].mime_type,
+        data: rows[0].data,
+      };
+    }
+    return null;
+  } catch (err) {
+    console.error('[NEON DB] Failed to get image:', err);
+    return null;
+  }
+}

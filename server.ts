@@ -163,8 +163,8 @@ app.delete('/api/waiter-calls/:id', async (req, res) => {
   }
 });
 
-// --- IMAGE UPLOAD FROM LAPTOP API ---
-app.post('/api/upload', (req, res) => {
+// --- IMAGE UPLOAD FROM LAPTOP / MOBILE API ---
+app.post('/api/upload', async (req, res) => {
   try {
     const { filename, data } = req.body;
     if (!data) {
@@ -172,25 +172,83 @@ app.post('/api/upload', (req, res) => {
     }
 
     // data format: "data:image/jpeg;base64,..." or pure base64
+    let mimeType = 'image/jpeg';
     let ext = 'jpg';
-    let base64Data = data;
-    const match = data.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+    let rawBase64 = data;
+
+    const match = data.match(/^data:([a-zA-Z0-9]+\/[a-zA-Z0-9+.-]+);base64,(.+)$/);
     if (match) {
-      ext = match[1] === 'jpeg' ? 'jpg' : match[1];
-      base64Data = match[2];
+      mimeType = match[1];
+      rawBase64 = match[2];
+      ext = mimeType.split('/')[1] === 'jpeg' ? 'jpg' : mimeType.split('/')[1] || 'jpg';
     } else if (filename && filename.includes('.')) {
       ext = filename.split('.').pop() || 'jpg';
+      mimeType = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
     }
 
-    const uniqueName = `food-${Date.now()}-${Math.floor(Math.random() * 10000)}.${ext}`;
-    const targetFile = path.join(UPLOADS_DIR, uniqueName);
-    fs.writeFileSync(targetFile, Buffer.from(base64Data, 'base64'));
+    const uniqueId = `food-${Date.now()}-${Math.floor(Math.random() * 10000)}.${ext}`;
 
-    console.log(`[LAPTOP IMAGE UPLOADED] saved as ${uniqueName}`);
-    res.json({ success: true, url: `/uploads/${uniqueName}` });
+    // 1. Save in Neon PostgreSQL for permanent serverless cloud persistence
+    await db.saveImage(uniqueId, mimeType, rawBase64);
+
+    // 2. Also save to local filesystem if running locally or in temp
+    try {
+      const targetFile = path.join(UPLOADS_DIR, uniqueId);
+      fs.writeFileSync(targetFile, Buffer.from(rawBase64, 'base64'));
+    } catch (e) {
+      // Ignored if serverless read-only filesystem
+    }
+
+    console.log(`[LAPTOP IMAGE SAVED IN NEON DB] /api/images/${uniqueId}`);
+    res.json({ success: true, url: `/api/images/${uniqueId}` });
   } catch (err: any) {
     console.error('Failed to save uploaded image:', err);
     res.status(500).json({ error: 'Failed to save image', details: err?.message });
+  }
+});
+
+// Serve images stored in Neon PostgreSQL
+app.get('/api/images/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const img = await db.getImage(id);
+    if (!img) {
+      // Check local fallback
+      const localFile = path.join(UPLOADS_DIR, id);
+      if (fs.existsSync(localFile)) {
+        return res.sendFile(localFile);
+      }
+      return res.status(404).send('Image not found');
+    }
+
+    const buffer = Buffer.from(img.data, 'base64');
+    res.setHeader('Content-Type', img.mimeType || 'image/jpeg');
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    res.send(buffer);
+  } catch (err: any) {
+    console.error('Failed to serve image:', err);
+    res.status(500).send('Error serving image');
+  }
+});
+
+// Serve /uploads/:id seamlessly from Neon DB or local file
+app.get('/uploads/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const img = await db.getImage(id);
+    if (img) {
+      const buffer = Buffer.from(img.data, 'base64');
+      res.setHeader('Content-Type', img.mimeType || 'image/jpeg');
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      return res.send(buffer);
+    }
+    const localFile = path.join(UPLOADS_DIR, id);
+    if (fs.existsSync(localFile)) {
+      return res.sendFile(localFile);
+    }
+    res.status(404).send('Image not found');
+  } catch (err) {
+    res.status(404).send('Not found');
   }
 });
 
