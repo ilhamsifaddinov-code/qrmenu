@@ -1,6 +1,6 @@
 export type Language = 'qr' | 'uz' | 'ru' | 'en';
 
-export type CategoryId = 'all' | 'fastfood' | 'national' | 'meats' | 'drinks' | 'desserts';
+export type CategoryId = 'all' | 'cakes' | 'pastries' | 'bakery' | 'coffee' | 'desserts' | 'fastfood' | 'national' | 'meats' | 'drinks';
 
 export interface AllergenTag {
   id: string;

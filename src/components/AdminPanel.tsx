@@ -141,7 +141,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   // New Food Item Form State
   const [newTitle, setNewTitle] = useState('');
   const [newPrice, setNewPrice] = useState('35000');
-  const [newCategory, setNewCategory] = useState<'national' | 'fastfood' | 'meats' | 'drinks' | 'desserts'>('national');
+  const [newCategory, setNewCategory] = useState<'cakes' | 'pastries' | 'bakery' | 'coffee' | 'desserts'>('cakes');
   const [newCalories, setNewCalories] = useState('450');
   const [newImgUrl, setNewImgUrl] = useState('');
   const [newDesc, setNewDesc] = useState('');
@@ -615,11 +615,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 onChange={(e) => setNewCategory(e.target.value as any)}
                 className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs font-semibold text-zinc-100"
               >
-                <option value="national">🍲 Milliy Taǵamlar</option>
-                <option value="fastfood">🌯 Lavash & Fast Food</option>
-                <option value="meats">🥩 Kebab hám Taǵamlar</option>
-                <option value="drinks">🥤 Milliy İshimlikler</option>
-                <option value="desserts">🍰 Desserts & Cakebumer</option>
+                <option value="cakes">🎂 Tortlar (Cakes)</option>
+                <option value="pastries">🧁 Pirojniylar (Pastries)</option>
+                <option value="bakery">🥐 Pishiriqlar & Kruassan (Bakery)</option>
+                <option value="coffee">☕ Qahva & Ichimliklar (Coffee & Drinks)</option>
+                <option value="desserts">🍮 Shirinliklar (Desserts)</option>
               </select>
             </div>
           </div>

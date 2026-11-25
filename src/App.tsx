@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { Search, Flame, SlidersHorizontal, RotateCcw } from 'lucide-react';
+import { Search, Flame, RotateCcw, ShoppingBag, ArrowRight } from 'lucide-react';
 import {
   CategoryId,
   FoodItem,
@@ -7,13 +7,12 @@ import {
   Language,
   Order,
   Review,
-  User,
   WaiterCall,
   AppSettings,
 } from './types';
 import { initialFoodItems } from './data/mockData';
 import { translations } from './i18n/translations';
-import { getFoodTitle, getFoodDescription, getFoodIngredients } from './utils/formatters';
+import { getFoodTitle, getFoodIngredients, formatPrice } from './utils/formatters';
 import { Header } from './components/Header';
 import { FoodCard } from './components/FoodCard';
 import { FoodDetailModal } from './components/FoodDetailModal';
@@ -24,11 +23,14 @@ import { QRCodeModal } from './components/QRCodeModal';
 import { AdminAuthModal } from './components/AdminAuthModal';
 import { AdminPanel } from './components/AdminPanel';
 import { Footer } from './components/Footer';
-import { NationalOrnamentHeader } from './components/NationalOrnament';
+import { LoadingScreen } from './components/LoadingScreen';
 
 export default function App() {
-  // 1. Language & Table Number State
-  const [lang, setLang] = useState<Language>('qr');
+  // 1. Initial Loading Screen state
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+
+  // 2. Language & Table Number State
+  const [lang, setLang] = useState<Language>('uz');
   const [tableNumber, setTableNumber] = useState<string>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -53,7 +55,7 @@ export default function App() {
     return () => window.removeEventListener('popstate', handleUrlChange);
   }, [tableNumber]);
 
-  // 2. Data State
+  // 3. Data State
   const [foodItems, setFoodItems] = useState<FoodItem[]>(() => {
     try {
       const stored = localStorage.getItem('cafe_foods');
@@ -64,7 +66,18 @@ export default function App() {
     } catch {}
     return initialFoodItems;
   });
+
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  // User's active confirmed order IDs (persisted until user dismisses them)
+  const [userActiveOrderIds, setUserActiveOrderIds] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cafe_user_active_order_ids');
+      if (stored) return JSON.parse(stored);
+    } catch {}
+    return [];
+  });
+
   const [settings, setSettings] = useState<AppSettings>(() => {
     try {
       const stored = localStorage.getItem('cafe_settings');
@@ -76,7 +89,7 @@ export default function App() {
     };
   });
 
-  // 3. UI Views & Modals
+  // 4. UI Views & Modals
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
@@ -98,6 +111,7 @@ export default function App() {
       setSavedReceiptsCount(0);
     }
   }, [isReceiptOpen, isCustomerReceiptsOpen]);
+
   const [isQrModalOpen, setIsQrModalOpen] = useState(false);
   const [isAdminView, setIsAdminView] = useState(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
@@ -134,14 +148,14 @@ export default function App() {
       setIsAdminView(false);
     } else {
       if (isAdminAuthenticated) {
-         setIsAdminView(true);
+        setIsAdminView(true);
       } else {
-         setIsAdminAuthModalOpen(true);
+        setIsAdminAuthModalOpen(true);
       }
     }
   };
 
-  // 4. Filtering State
+  // 5. Filtering State
   const [selectedCategory, setSelectedCategory] = useState<CategoryId>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [maxCalories, setMaxCalories] = useState<number>(1000);
@@ -149,7 +163,7 @@ export default function App() {
   const [isVegetarianOnly, setIsVegetarianOnly] = useState(false);
   const [isGlutenFreeOnly, setIsGlutenFreeOnly] = useState(false);
 
-  // 5. Orders & Waiter Calls (Synchronized with Backend Server)
+  // 6. Orders & Waiter Calls (Synchronized with Backend Server)
   const [orders, setOrders] = useState<Order[]>(() => {
     try {
       const stored = localStorage.getItem('cafe_orders');
@@ -159,6 +173,7 @@ export default function App() {
     }
     return [];
   });
+
   const [waiterCalls, setWaiterCalls] = useState<WaiterCall[]>(() => {
     try {
       const stored = localStorage.getItem('cafe_waiterCalls');
@@ -237,6 +252,14 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // Dismiss loading screen after initial render
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Sync state changes to localStorage
   useEffect(() => {
     localStorage.setItem('cafe_orders', JSON.stringify(orders));
@@ -255,12 +278,28 @@ export default function App() {
       if (e.key === 'cafe_waiterCalls' && e.newValue) {
         setWaiterCalls(JSON.parse(e.newValue));
       }
+      if (e.key === 'cafe_user_active_order_ids' && e.newValue) {
+        setUserActiveOrderIds(JSON.parse(e.newValue));
+      }
     };
     window.addEventListener('storage', handleStorage);
     return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
-  const t = translations[lang] || translations.qr;
+  const t = translations[lang] || translations.uz;
+
+  // Active confirmed orders belonging to this user
+  const activeUserOrders = useMemo(() => {
+    return orders.filter((o) => userActiveOrderIds.includes(o.id));
+  }, [orders, userActiveOrderIds]);
+
+  const handleDismissActiveOrder = (orderId: string) => {
+    setUserActiveOrderIds((prev) => {
+      const updated = prev.filter((id) => id !== orderId);
+      localStorage.setItem('cafe_user_active_order_ids', JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   // Cart operations
   const handleAddToCart = (food: FoodItem, quantity: number = 1, note?: string) => {
@@ -359,7 +398,7 @@ export default function App() {
   const handleConfirmOrder = async () => {
     if (isSubmittingOrder) return;
     if (!cartItems || cartItems.length === 0) return;
-    
+
     const validItems = cartItems
       .filter((i) => i && i.food)
       .map((i) => ({
@@ -388,9 +427,17 @@ export default function App() {
     };
 
     setOrders((prev) => [newOrder, ...(prev || [])]);
+
+    // Keep active order in user's active orders
+    setUserActiveOrderIds((prev) => {
+      const updated = [newOrder.id, ...prev];
+      localStorage.setItem('cafe_user_active_order_ids', JSON.stringify(updated));
+      return updated;
+    });
+
     setCartItems([]);
-    
-    // Show receipt
+
+    // Show receipt modal
     setReceiptOrder(newOrder);
     setIsCartOpen(false);
     setIsReceiptOpen(true);
@@ -439,7 +486,7 @@ export default function App() {
     }
   };
 
-  // Admin handlers - Connected globally via Server REST API
+  // Admin handlers
   const handleAddFoodItem = async (newItem: FoodItem) => {
     setFoodItems((prev) => [newItem, ...prev]);
     try {
@@ -551,10 +598,20 @@ export default function App() {
   ]);
 
   const totalCartCount = (cartItems || []).reduce((sum, item) => sum + (item?.quantity || 0), 0);
+  const pendingCartTotal = (cartItems || []).reduce(
+    (sum, item) => sum + (item?.food?.price || 0) * (item?.quantity || 1),
+    0
+  );
 
   return (
-    <div className="min-h-screen bg-[#121212] font-sans text-zinc-100 selection:bg-amber-500 selection:text-zinc-950 flex flex-col justify-between">
-      {/* Top Header */}
+    <div className="min-h-screen bg-[#FAF5EF] font-sans text-[#2E1E17] flex flex-col justify-between selection:bg-[#C0684C] selection:text-white">
+      {/* 1. Animated Loading Screen matching Image 3 */}
+      <LoadingScreen
+        isLoading={isInitialLoading}
+        onFinish={() => setIsInitialLoading(false)}
+      />
+
+      {/* 2. Top Header matching Image 2 */}
       <Header
         lang={lang}
         onLanguageChange={setLang}
@@ -563,7 +620,7 @@ export default function App() {
           setTableNumber(newT);
           window.history.pushState({}, '', '?table=' + newT);
         }}
-        cartCount={totalCartCount}
+        cartCount={totalCartCount + activeUserOrders.length}
         onOpenCart={() => setIsCartOpen(true)}
         onOpenQrCode={() => setIsQrModalOpen(true)}
         onOpenReceipts={() => setIsCustomerReceiptsOpen(true)}
@@ -573,8 +630,8 @@ export default function App() {
         onCallWaiter={handleCallWaiter}
       />
 
-      {/* Main Body */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-6 py-4 w-full flex-1 space-y-6">
+      {/* 3. Main Body */}
+      <main className="max-w-7xl mx-auto px-3 sm:px-6 py-4 w-full flex-1 space-y-5">
         {/* Admin Panel Toggle View */}
         {isAdminView ? (
           <AdminPanel
@@ -596,27 +653,44 @@ export default function App() {
           />
         ) : (
           <>
-            <NationalOrnamentHeader />
+            {/* Search Bar matching Image 2 */}
+            <div className="relative w-full">
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t.searchPlaceholder || 'Qidirish...'}
+                aria-label={t.searchPlaceholder || 'Qidirish'}
+                className="w-full pl-4 pr-11 py-2.5 sm:py-3 rounded-2xl bg-[#F1EAE0] border border-[#E6DDD2] text-xs sm:text-sm text-[#2E1E17] placeholder-[#8D6B58] outline-none focus:ring-1 focus:ring-[#C0684C] shadow-2xs"
+              />
+              <Search
+                className="w-4 h-4 text-[#C0684C] absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none"
+                aria-hidden="true"
+              />
+            </div>
 
-            {/* Categories Selector Tabs */}
-            <nav className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" aria-label="Taǵam kategoriyaları">
+            {/* Categories Selector Tabs matching Image 2 */}
+            <nav
+              className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none"
+              aria-label="Kategoriyalar"
+            >
               {[
-                { id: 'all', label: t.catAll },
-                { id: 'fastfood', label: t.catFastfood },
-                { id: 'national', label: t.catNational },
-                { id: 'meats', label: t.catMeats },
-                { id: 'drinks', label: t.catDrinks },
-                { id: 'desserts', label: t.catDesserts },
+                { id: 'all', label: t.catAll || 'Barchasi' },
+                { id: 'cakes', label: t.catCakes || 'Tortlar' },
+                { id: 'pastries', label: t.catPastries || 'Pirojniylar' },
+                { id: 'bakery', label: t.catBakery || 'Pishiriqlar' },
+                { id: 'coffee', label: t.catCoffee || 'Qahva' },
+                { id: 'desserts', label: t.catDesserts || 'Shirinliklar' },
               ].map((cat) => (
                 <button
                   key={cat.id}
                   type="button"
                   onClick={() => setSelectedCategory(cat.id as CategoryId)}
                   aria-pressed={selectedCategory === cat.id}
-                  className={`px-4 py-2.5 rounded-2xl font-serif font-bold text-xs sm:text-sm whitespace-nowrap transition-all shadow-md ${
+                  className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all shadow-xs ${
                     selectedCategory === cat.id
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 border-2 border-amber-300 shadow-[0_0_18px_rgba(245,158,11,0.5)] scale-105'
-                      : 'bg-[#18181b] text-zinc-300 hover:bg-zinc-800 border border-amber-500/20'
+                      ? 'bg-[#C0684C] text-white shadow-sm'
+                      : 'bg-[#F1EAE0] text-[#2E1E17] hover:bg-[#EAE0D4]'
                   }`}
                 >
                   {cat.label}
@@ -624,67 +698,39 @@ export default function App() {
               ))}
             </nav>
 
-            {/* Search & Filter Bar */}
-            <search className="bg-[#18181b]/90 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-amber-500/30 shadow-[0_4px_20px_rgba(0,0,0,0.6)] space-y-3">
-              <div className="flex flex-col sm:flex-row items-center gap-3">
-                {/* Search Input */}
-                <div className="relative flex-1 w-full">
-                  <Search className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
+            {/* Sub-Filters: Calorie slider & Tags */}
+            <div className="bg-white p-3 rounded-2xl border border-[#EAE0D4] shadow-2xs space-y-2.5">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                {/* Calorie Filter */}
+                <div className="w-full sm:w-72 flex items-center justify-between gap-2 text-xs">
+                  <label htmlFor="calorie-slider" className="font-semibold text-[#8D6B58] shrink-0">
+                    {t.filterByCalorie || 'Max Kaloriya'}:
+                  </label>
                   <input
-                    type="search"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={t.searchPlaceholder}
-                    aria-label={t.searchPlaceholder || "Taǵam izlew"}
-                    className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-950/80 border border-amber-500/30 text-xs sm:text-sm text-zinc-100 placeholder-zinc-500 focus:ring-2 focus:ring-amber-500 outline-none shadow-inner"
-                  />
-                </div>
-
-                {/* Calorie Filter Slider */}
-                <div className="w-full sm:w-64 bg-zinc-950/80 p-2 px-3 rounded-xl border border-amber-500/30 flex flex-col justify-center">
-                  <div className="flex justify-between items-center text-[11px] font-bold text-zinc-300 mb-1">
-                    <label htmlFor="calorie-range-slider">{t.filterByCalorie}:</label>
-                    <span className="text-amber-400 font-extrabold">{maxCalories} kcal</span>
-                  </div>
-                  <input
-                    id="calorie-range-slider"
+                    id="calorie-slider"
                     type="range"
-                    min={200}
+                    min={150}
                     max={1000}
                     step={50}
                     value={maxCalories}
                     onChange={(e) => setMaxCalories(parseInt(e.target.value))}
-                    aria-label={t.filterByCalorie || "Maksimal kaloriya"}
-                    className="accent-amber-500 cursor-pointer"
+                    className="accent-[#C0684C] flex-1 cursor-pointer"
                   />
+                  <span className="font-bold text-[#C0684C] text-xs shrink-0 w-16 text-right">
+                    {maxCalories} kcal
+                  </span>
                 </div>
-              </div>
 
-              {/* Tag Filters */}
-              <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-zinc-800 text-xs">
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setIsSpicyOnly((p) => !p)}
-                    aria-pressed={isSpicyOnly}
-                    className={`px-3 py-1 rounded-xl font-bold flex items-center gap-1 border transition ${
-                      isSpicyOnly
-                        ? 'bg-red-600 text-white border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]'
-                        : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:bg-zinc-800'
-                    }`}
-                  >
-                    <Flame className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>{t.filterSpicy}</span>
-                  </button>
-
+                {/* Dietary Tags & Reset */}
+                <div className="flex flex-wrap items-center gap-1.5 text-xs w-full sm:w-auto justify-end">
                   <button
                     type="button"
                     onClick={() => setIsVegetarianOnly((p) => !p)}
                     aria-pressed={isVegetarianOnly}
-                    className={`px-3 py-1 rounded-xl font-bold border transition ${
+                    className={`px-2.5 py-1 rounded-xl font-semibold border transition ${
                       isVegetarianOnly
-                        ? 'bg-emerald-600 text-white border-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]'
-                        : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:bg-zinc-800'
+                        ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                        : 'bg-[#FAF5EF] text-[#6C5343] border-[#EAE0D4]'
                     }`}
                   >
                     🌱 {t.filterVegetarian}
@@ -694,69 +740,67 @@ export default function App() {
                     type="button"
                     onClick={() => setIsGlutenFreeOnly((p) => !p)}
                     aria-pressed={isGlutenFreeOnly}
-                    className={`px-3 py-1 rounded-xl font-bold border transition ${
+                    className={`px-2.5 py-1 rounded-xl font-semibold border transition ${
                       isGlutenFreeOnly
-                        ? 'bg-amber-600 text-white border-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]'
-                        : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:bg-zinc-800'
+                        ? 'bg-[#C0684C]/15 text-[#C0684C] border-[#C0684C]/40'
+                        : 'bg-[#FAF5EF] text-[#6C5343] border-[#EAE0D4]'
                     }`}
                   >
                     🌾 {t.filterGlutenFree}
                   </button>
+
+                  {(searchQuery || maxCalories < 1000 || isVegetarianOnly || isGlutenFreeOnly) && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery('');
+                        setMaxCalories(1000);
+                        setIsVegetarianOnly(false);
+                        setIsGlutenFreeOnly(false);
+                      }}
+                      className="text-[#C0684C] hover:text-[#A9563C] font-semibold text-xs flex items-center gap-1 ml-1"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>{t.resetFilters}</span>
+                    </button>
+                  )}
                 </div>
-
-                {/* Reset Filters */}
-                {(searchQuery ||
-                  maxCalories < 1000 ||
-                  isSpicyOnly ||
-                  isVegetarianOnly ||
-                  isGlutenFreeOnly) && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery('');
-                      setMaxCalories(1000);
-                      setIsSpicyOnly(false);
-                      setIsVegetarianOnly(false);
-                      setIsGlutenFreeOnly(false);
-                    }}
-                    className="text-amber-400 hover:text-amber-200 font-bold text-xs flex items-center gap-1"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>{t.resetFilters}</span>
-                  </button>
-                )}
               </div>
-            </search>
+            </div>
 
-            {/* Food Grid */}
-            <div className="space-y-3">
+            {/* Food Grid: 2 columns on mobile, 3-4 on larger screens (Image 2) */}
+            <div className="space-y-3 pb-24 sm:pb-28">
               <div className="flex items-center justify-between">
-                <h2 className="font-serif font-bold text-xl text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.25)]">
+                <h2 className="font-serif font-bold text-base sm:text-lg text-[#2E1E17]">
                   {selectedCategory === 'all'
-                    ? t.catAll
-                    : selectedCategory === 'national'
-                    ? t.catNational
-                    : selectedCategory === 'meats'
-                    ? t.catMeats
-                    : selectedCategory === 'drinks'
-                    ? t.catDrinks
-                    : t.catDesserts}{' '}
-                  ({filteredFoodItems.length})
+                    ? t.catAll || 'Barchasi'
+                    : selectedCategory === 'cakes'
+                    ? t.catCakes || 'Tortlar'
+                    : selectedCategory === 'pastries'
+                    ? t.catPastries || 'Pirojniylar'
+                    : selectedCategory === 'bakery'
+                    ? t.catBakery || 'Pishiriqlar'
+                    : selectedCategory === 'coffee'
+                    ? t.catCoffee || 'Qahva'
+                    : t.catDesserts || 'Shirinliklar'}{' '}
+                  <span className="text-[#8D6B58] font-sans font-normal text-xs sm:text-sm">
+                    ({filteredFoodItems.length})
+                  </span>
                 </h2>
               </div>
 
               {filteredFoodItems.length === 0 ? (
-                <div className="bg-[#18181b] p-8 rounded-3xl border-2 border-dashed border-amber-500/30 text-center space-y-3 my-6">
-                  <div className="text-4xl">🍲</div>
-                  <h3 className="font-serif font-bold text-base text-zinc-200">
-                    Soraǵıńızǵa muwawıq taǵamlar tabılmadı
+                <div className="bg-white p-8 rounded-3xl border border-[#EAE0D4] text-center space-y-2 my-6">
+                  <div className="text-4xl">🍰</div>
+                  <h3 className="font-serif font-bold text-base text-[#2E1E17]">
+                    Taomlar topilmadi
                   </h3>
-                  <p className="text-xs text-zinc-400">
-                    Iltimas, filtrlerdi yamasa izlew sózin ózgertip kórıń.
+                  <p className="text-xs text-[#8D6B58]">
+                    Iltimos, filtrlar yoki qidiruv so'zini o'zgartirib ko'ring.
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
                   {filteredFoodItems.map((food) => {
                     const cartQty =
                       (cartItems || []).find((i) => i?.food?.id === food?.id)?.quantity || 0;
@@ -780,7 +824,46 @@ export default function App() {
         )}
       </main>
 
-      {/* Modals & Drawers */}
+      {/* 4. Floating Bottom Cart Bar (Image 2) */}
+      {!isAdminView && (totalCartCount > 0 || activeUserOrders.length > 0) && (
+        <div className="fixed bottom-4 left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-40 animate-slideUp">
+          <div
+            onClick={() => setIsCartOpen(true)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') setIsCartOpen(true);
+            }}
+            className="w-full bg-[#C0684C] hover:bg-[#B05B3F] text-white p-3 sm:p-3.5 rounded-2xl sm:rounded-3xl shadow-[0_8px_25px_rgba(192,104,76,0.4)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+                <ShoppingBag className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex flex-col text-left">
+                <span className="text-xs text-white/90 font-medium">
+                  {lang === 'qr'
+                    ? `Xarid sebeti (${totalCartCount + activeUserOrders.length})`
+                    : `Xarid savati (${totalCartCount + activeUserOrders.length})`}
+                </span>
+                <span className="font-extrabold text-sm sm:text-base text-white">
+                  {formatPrice(
+                    pendingCartTotal +
+                      activeUserOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0)
+                  )}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1 font-bold text-xs sm:text-sm bg-white/20 px-3 py-1.5 rounded-xl">
+              <span>{t.cartTitle || 'Savat'}</span>
+              <ArrowRight className="w-4 h-4 text-white" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Modals & Drawers */}
       {selectedFood && (
         <FoodDetailModal
           food={selectedFood}
@@ -796,6 +879,8 @@ export default function App() {
         lang={lang}
         tableNumber={tableNumber}
         items={cartItems}
+        activeOrders={activeUserOrders}
+        onDismissOrder={handleDismissActiveOrder}
         isSubmitting={isSubmittingOrder}
         onClose={() => setIsCartOpen(false)}
         onUpdateQuantity={handleUpdateCartQuantity}
@@ -849,7 +934,7 @@ export default function App() {
         />
       )}
 
-      {/* Footer */}
+      {/* 6. Footer */}
       <Footer lang={lang} settings={settings} />
     </div>
   );

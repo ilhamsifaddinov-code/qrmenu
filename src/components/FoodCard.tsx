@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Star, Clock, Flame, Plus, Check, Info } from 'lucide-react';
+import { Star, Plus, Minus } from 'lucide-react';
 import { FoodItem, Language } from '../types';
 import { translations } from '../i18n/translations';
-import { getFoodTitle, getFoodDescription, formatPrice } from '../utils/formatters';
+import { getFoodTitle, formatPrice } from '../utils/formatters';
 
 interface FoodCardProps {
   food: FoodItem;
@@ -27,183 +27,124 @@ export const FoodCard: React.FC<FoodCardProps> = ({
 
   const isAvailable = food.isAvailable !== false;
   const title = getFoodTitle(food, lang);
-  const description = getFoodDescription(food, lang);
 
   return (
-    <div className={`group relative bg-[#18181b] rounded-2xl border transition-all duration-300 overflow-hidden flex flex-col justify-between ${
-      !isAvailable 
-        ? 'border-red-500/30 opacity-85 shadow-[0_0_15px_rgba(239,68,68,0.1)]' 
-        : 'border-amber-500/25 hover:border-amber-400/70 shadow-lg hover:shadow-[0_0_25px_rgba(245,158,11,0.2)]'
-    }`}>
-      {/* Top Badges overlay */}
-      <div className="relative h-48 sm:h-52 w-full overflow-hidden bg-zinc-950 cursor-pointer" onClick={() => onSelect(food)}>
-        {!isAvailable && (
-          <div className="absolute inset-0 bg-black/75 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center p-3 text-center">
-            <span className="bg-red-600/95 text-white font-black text-xs sm:text-sm px-3.5 py-1.5 rounded-xl border border-red-400 shadow-[0_0_20px_rgba(239,68,68,0.7)] flex items-center gap-1.5 animate-pulse">
-              ✕ {lang === 'qr' ? 'Tawsılǵan (Joq)' : 'Tugagan (Qolmagan)'}
-            </span>
-            <span className="text-[10px] text-zinc-300 mt-1.5 font-semibold">
-              {lang === 'qr' ? 'Házirshe buyırtpa berip bolmaydı' : 'Hozircha buyurtma berib bo\'lmaydi'}
-            </span>
-          </div>
-        )}
+    <div
+      className={`group bg-white rounded-2xl sm:rounded-3xl border border-[#F0E7DD] transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-[0_4px_16px_rgba(46,30,23,0.04)] hover:shadow-[0_8px_24px_rgba(46,30,23,0.08)] ${
+        !isAvailable ? 'opacity-80' : ''
+      }`}
+    >
+      {/* Top Image Container */}
+      <div
+        className="relative aspect-square w-full p-2 sm:p-2.5 overflow-hidden cursor-pointer"
+        onClick={() => onSelect(food)}
+      >
+        <div className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden bg-[#F7F2EB]">
+          {/* Out of Stock Overlay */}
+          {!isAvailable && (
+            <div className="absolute inset-0 bg-[#2E1E17]/70 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center p-2 text-center">
+              <span className="bg-[#C0684C] text-white font-bold text-[11px] sm:text-xs px-2.5 py-1 rounded-full shadow-sm">
+                {lang === 'qr' ? 'Tawsılǵan (Joq)' : 'Tugagan (Qolmagan)'}
+              </span>
+            </div>
+          )}
 
-        {!imageLoaded && !imageError && (
-          <div className="absolute inset-0 bg-zinc-900 animate-pulse flex items-center justify-center">
-            <div className="w-10 h-10 border-3 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
-          </div>
-        )}
-        {imageError ? (
-          <div className="w-full h-full bg-gradient-to-br from-zinc-900 to-zinc-950 flex flex-col items-center justify-center p-4 text-center">
-            <span className="text-4xl mb-2">🍽️</span>
-            <span className="text-xs font-serif font-bold text-amber-400">{title}</span>
-          </div>
-        ) : (
-          <img
-            src={food.imageUrl}
-            alt={title}
-            width="320"
-            height="208"
-            onLoad={() => setImageLoaded(true)}
-            onError={() => {
-              setImageError(true);
-              setImageLoaded(true);
-            }}
-            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'} ${!isAvailable ? 'grayscale opacity-50' : ''}`}
-            loading="lazy"
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#18181b] via-transparent to-black/40" />
+          {/* Image skeleton */}
+          {!imageLoaded && !imageError && (
+            <div className="absolute inset-0 bg-[#EFE7DE] animate-pulse flex items-center justify-center">
+              <div className="w-8 h-8 border-2 border-[#C0684C]/30 border-t-[#C0684C] rounded-full animate-spin"></div>
+            </div>
+          )}
 
-        {/* National Special Badge */}
-        {food.isNationalSpecial && (
-          <span className="absolute top-2.5 left-2.5 bg-amber-500 text-zinc-950 text-[11px] font-extrabold px-2.5 py-1 rounded-lg border border-amber-200 shadow-[0_0_10px_rgba(245,158,11,0.5)] flex items-center gap-1">
-            ✨ Milliy Lezzet
-          </span>
-        )}
+          {/* Image Fallback */}
+          {imageError ? (
+            <div className="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-[#F7F2EB]">
+              <span className="text-3xl mb-1">🍰</span>
+              <span className="text-[11px] font-semibold text-[#8D6B58] line-clamp-1">
+                {title}
+              </span>
+            </div>
+          ) : (
+            <img
+              src={food.imageUrl}
+              alt={title}
+              loading="lazy"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => {
+                setImageError(true);
+                setImageLoaded(true);
+              }}
+              className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${
+                !imageLoaded ? 'opacity-0' : 'opacity-100'
+              } ${!isAvailable ? 'grayscale opacity-60' : ''}`}
+            />
+          )}
 
-        {/* Calorie Tag */}
-        <span className="absolute top-2.5 right-2.5 bg-black/75 backdrop-blur-md text-amber-300 text-[11px] font-semibold px-2 py-0.5 rounded-md border border-amber-500/30">
-          🔥 {food.calories} {t.kcal}
-        </span>
-
-        {/* Price Tag Overlay on Image */}
-        <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white">
-          <div className="bg-zinc-950/90 backdrop-blur-md border border-amber-500/40 px-3 py-1 rounded-xl shadow-[0_0_12px_rgba(0,0,0,0.8)]">
-            <span className="text-base sm:text-lg font-extrabold text-amber-400">
-              {food.price.toLocaleString('uz-UZ')} UZS
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1 bg-black/70 backdrop-blur-sm px-2 py-1 rounded-lg text-xs font-bold text-amber-300 border border-amber-500/20">
-            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
-            <span>{food.rating.toFixed(1)}</span>
-            <span className="text-zinc-400 font-normal text-[10px]">({food.ratingCount})</span>
-          </div>
+          {/* Rating tag in top-right */}
+          {food.rating > 0 && (
+            <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-xs px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold text-[#2E1E17] border border-[#EAE0D4] flex items-center gap-1 shadow-2xs">
+              <Star className="w-3 h-3 fill-[#F5A623] text-[#F5A623]" aria-hidden="true" />
+              <span>{food.rating.toFixed(1)}</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Content Area */}
-      <div className="p-3.5 flex-1 flex flex-col justify-between space-y-3 bg-[#18181b]">
-        <div>
-          <div className="flex items-center justify-between gap-1 mb-1">
-            <h3
-              onClick={() => onSelect(food)}
-              className="font-serif font-bold text-base sm:text-lg text-zinc-100 group-hover:text-amber-300 transition line-clamp-1 cursor-pointer"
-            >
-              {title}
-            </h3>
-            <button
-              type="button"
-              onClick={() => onSelect(food)}
-              className="text-amber-400 hover:text-amber-200 p-1"
-              title="Tolıq maǵlıwmat"
-              aria-label={`Tolıq maǵlıwmat: ${title}`}
-            >
-              <Info className="w-4 h-4" aria-hidden="true" />
-            </button>
-          </div>
-
-          <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-            {description}
-          </p>
-
-          {/* Special Diet Tags */}
-          <div className="flex flex-wrap gap-1.5 mt-2.5 text-[10px] font-semibold">
-            {food.isGlutenFree && (
-              <span className="bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded border border-amber-500/40">
-                🌾 Glütensiz
-              </span>
-            )}
-            {food.isVegetarian && (
-              <span className="bg-green-950/80 text-green-300 px-2 py-0.5 rounded border border-green-500/40">
-                🌱 Vegetarian
-              </span>
-            )}
-            {food.spicyLevel > 0 && (
-              <span className="bg-red-950/80 text-red-300 px-2 py-0.5 rounded border border-red-500/40 flex items-center gap-0.5">
-                <Flame className="w-3 h-3 text-red-400" aria-hidden="true" />
-                {'🌶️'.repeat(food.spicyLevel)}
-              </span>
-            )}
-          </div>
+      {/* Card Info & Bottom Action */}
+      <div className="p-3 sm:p-4 pt-1 flex flex-col justify-between flex-1">
+        <div className="mb-2">
+          <h3
+            onClick={() => onSelect(food)}
+            className="font-sans font-bold text-sm sm:text-base text-[#2E1E17] group-hover:text-[#C0684C] transition-colors line-clamp-2 cursor-pointer leading-tight"
+          >
+            {title}
+          </h3>
         </div>
 
-        {/* Footer Bar: Prep time & Add to Cart button */}
-        <div className="pt-2 border-t border-zinc-800 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1 text-xs text-zinc-400">
-            <Clock className="w-3.5 h-3.5 text-amber-400" aria-hidden="true" />
-            <span>{food.prepTime} {t.prepTime}</span>
+        {/* Price & Terracotta Circle Add Button */}
+        <div className="flex items-center justify-between gap-2 pt-1 border-t border-[#F5EFE8]">
+          <div className="flex flex-col">
+            <span className="text-xs sm:text-sm md:text-base font-extrabold text-[#2E1E17]">
+              {formatPrice(food.price)}
+            </span>
           </div>
 
-          {!isAvailable ? (
-            <button
-              type="button"
-              disabled
-              aria-disabled="true"
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl font-bold text-xs bg-zinc-900 text-red-400 border border-red-500/40 cursor-not-allowed opacity-90 shadow"
-            >
-              <span>✕ {lang === 'qr' ? 'Tawsılǵan' : 'Qolmagan'}</span>
-            </button>
-          ) : cartQuantity > 0 ? (
-            <div className="flex items-center gap-1.5 bg-zinc-950 px-2 py-1 rounded-xl border border-amber-400/60 shadow">
+          {/* If already in cart, show quantity controls; otherwise round '+' button */}
+          {cartQuantity > 0 && onUpdateQuantity ? (
+            <div className="flex items-center gap-1 bg-[#F1EAE0] rounded-full p-0.5 border border-[#E6DDD2]">
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onUpdateQuantity?.(food.id, cartQuantity - 1);
-                }}
-                className="w-6 h-6 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-amber-300 font-extrabold text-sm flex items-center justify-center transition active:scale-90"
-                title="1 dana kemeytiw"
-                aria-label={`${title} miqdorini kamaytirish`}
+                onClick={() => onUpdateQuantity(food.id, cartQuantity - 1)}
+                aria-label="Kamaytirish"
+                className="w-7 h-7 rounded-full bg-white text-[#2E1E17] flex items-center justify-center font-bold text-xs shadow-2xs hover:bg-[#FAF5EF] active:scale-95"
               >
-                -
+                <Minus className="w-3.5 h-3.5" />
               </button>
-              <span className="font-extrabold text-xs text-amber-300 px-1 min-w-[16px] text-center">
+              <span className="w-5 text-center text-xs font-black text-[#2E1E17]">
                 {cartQuantity}
               </span>
               <button
                 type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onAddToCart(food);
-                }}
-                className="w-6 h-6 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-extrabold text-sm flex items-center justify-center transition active:scale-90 shadow"
-                title="1 dana qosıw"
-                aria-label={`${title} miqdorini oshirish`}
+                onClick={() => onUpdateQuantity(food.id, cartQuantity + 1)}
+                aria-label="Oshirish"
+                className="w-7 h-7 rounded-full bg-[#C0684C] text-white flex items-center justify-center font-bold text-xs shadow-2xs hover:bg-[#B05B3F] active:scale-95"
               >
-                +
+                <Plus className="w-3.5 h-3.5" />
               </button>
             </div>
           ) : (
             <button
               type="button"
-              onClick={() => onAddToCart(food)}
-              aria-label={`${title} ${t.addToCart}`}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold text-xs shadow transition active:scale-95 bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 hover:from-amber-400 hover:to-amber-500 font-extrabold shadow-[0_0_12px_rgba(245,158,11,0.35)]"
+              disabled={!isAvailable}
+              onClick={() => isAvailable && onAddToCart(food)}
+              aria-label={`${title} savatga qo'shish`}
+              className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-white transition-all duration-200 active:scale-95 shadow-sm ${
+                isAvailable
+                  ? 'bg-[#C0684C] hover:bg-[#B05B3F] cursor-pointer'
+                  : 'bg-zinc-300 cursor-not-allowed'
+              }`}
             >
-              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{t.addToCart}</span>
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" aria-hidden="true" />
             </button>
           )}
         </div>

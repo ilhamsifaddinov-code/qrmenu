@@ -8,461 +8,25 @@ import { neon } from "@neondatabase/serverless";
 
 // src/data/mockData.ts
 var initialFoodItems = [
-  // --- FAST FOOD & CAFE ITEMS ---
+  // --- TORTLAR (CAKES) ---
   {
-    id: "food-lavash-beef",
+    id: "cake-red-velvet",
     title: {
-      qr: "S\u0131y\u0131r go'shli Lavash (Syrmen)",
-      uz: "Mol go'shtli Lavash (Pishloqli)",
-      ru: "\u0421\u043E\u0447\u043D\u044B\u0439 \u041B\u0430\u0432\u0430\u0448 \u0441 \u0433\u043E\u0432\u044F\u0434\u0438\u043D\u043E\u0439 \u0438 \u0441\u044B\u0440\u043E\u043C",
-      en: "Juicy Beef & Cheese Lavash"
+      qr: "Q\u0131z\u0131l Velvet (Red Velvet)",
+      uz: "Qizil Velvet (Red Velvet)",
+      ru: "\u041A\u0440\u0430\u0441\u043D\u044B\u0439 \u0411\u0430\u0440\u0445\u0430\u0442 (Red Velvet)",
+      en: "Red Velvet Cake"
     },
     description: {
-      qr: "Taza s\u0131y\u0131r go'shi, erigen pishloq, q\u0131yar, pomidor h\xE1m xosh boyl\u0131 firmenn\u0131y sous penen oralan\u01F5an \u0131ss\u0131 lavash.",
-      uz: "Qovurilgan mol go'shti, erigan pishloq, bodring, pomidor va maxsus sous bilan oralgan issiq lavash.",
-      ru: "\u0421\u043E\u0447\u043D\u0430\u044F \u043E\u0431\u0436\u0430\u0440\u0435\u043D\u043D\u0430\u044F \u0433\u043E\u0432\u044F\u0434\u0438\u043D\u0430, \u0441\u044B\u0440 \u041C\u043E\u0446\u0430\u0440\u0435\u043B\u043B\u0430, \u0441\u0432\u0435\u0436\u0438\u0435 \u043E\u0433\u0443\u0440\u0446\u044B, \u0442\u043E\u043C\u0430\u0442\u044B \u0438 \u0444\u0438\u0440\u043C\u0435\u043D\u043D\u044B\u0439 \u0441\u043E\u0443\u0441 \u0432 \u0442\u043E\u043D\u043A\u043E\u043C \u043B\u0430\u0432\u0430\u0448\u0435.",
-      en: "Sizzling grilled beef, melted mozzarella, crisp cucumber, tomatoes, and house sauce wrapped in warm lavash."
-    },
-    price: 32e3,
-    category: "fastfood",
-    imageUrl: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=800&q=80",
-    calories: 540,
-    prepTime: 12,
-    spicyLevel: 0,
-    isVegetarian: false,
-    isGlutenFree: false,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["S\u0131y\u0131r go'shi", "Lavash qam\u0131r", "Mozzarella pishloq", "Pomidor", "Q\u0131yar", "Soba sous"],
-      uz: ["Mol go'shti", "Lavash xamiri", "Pishloq", "Pomidor", "Bodring", "Maxsus sous"],
-      ru: ["\u0413\u043E\u0432\u044F\u0434\u0438\u043D\u0430", "\u041B\u0430\u0432\u0430\u0448", "\u0421\u044B\u0440 \u041C\u043E\u0446\u0430\u0440\u0435\u043B\u043B\u0430", "\u041F\u043E\u043C\u0438\u0434\u043E\u0440\u044B", "\u041E\u0433\u0443\u0440\u0446\u044B", "\u0421\u043E\u0443\u0441"],
-      en: ["Beef", "Lavash Bread", "Mozzarella Cheese", "Tomatoes", "Cucumbers", "Special Sauce"]
-    },
-    allergens: ["gluten", "dairy"],
-    rating: 4.9,
-    ratingCount: 240,
-    reviews: [
-      {
-        id: "rev-l1",
-        userName: "Aydos K.",
-        rating: 5,
-        comment: "Lavash juda sotsnyy h\xE1m iri eken, r\xE0xmet!",
-        date: "2026-07-27"
-      }
-    ],
-    nutrition: {
-      protein: 28,
-      fat: 22,
-      carbs: 48
-    }
-  },
-  {
-    id: "food-lavash-chicken",
-    title: {
-      qr: "Taw\u0131q go'shli Lavash (Kartoshka Fri menen)",
-      uz: "Tovuqli Lavash (Fri bilan)",
-      ru: "\u041B\u0430\u0432\u0430\u0448 \u0441 \u043A\u0443\u0440\u0438\u0446\u0435\u0439 \u0438 \u043A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u0435\u043C \u0444\u0440\u0438",
-      en: "Crispy Chicken & Fries Lavash"
-    },
-    description: {
-      qr: "Jumsaq taw\u0131q filest\u0131, ketti qow\u0131r\u0131l\u01F5an fri, sar\u0131msoql\u0131 sous h\xE1m tazalangan sabzavotlar.",
-      uz: "Tovuq filesi, oltinrang kartoshka fri, sarimsoqli sous va yangi sabzavotlar.",
-      ru: "\u041D\u0435\u0436\u043D\u043E\u0435 \u043A\u0443\u0440\u0438\u043D\u043E\u0435 \u0444\u0438\u043B\u0435, \u0445\u0440\u0443\u0441\u0442\u044F\u0449\u0438\u0439 \u043A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u044C \u0444\u0440\u0438, \u0447\u0435\u0441\u043D\u043E\u0447\u043D\u044B\u0439 \u0441\u043E\u0443\u0441 \u0438 \u0441\u0432\u0435\u0436\u0438\u0435 \u043E\u0432\u043E\u0449\u0438.",
-      en: "Tender chicken fillet, golden french fries, garlic aioli, and crunchy fresh vegetables."
-    },
-    price: 28e3,
-    category: "fastfood",
-    imageUrl: "https://images.unsplash.com/photo-1561651823-34feb02250e4?auto=format&fit=crop&w=800&q=80",
-    calories: 490,
-    prepTime: 10,
-    spicyLevel: 0,
-    isVegetarian: false,
-    isGlutenFree: false,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Taw\u0131q go'shi", "Kartoshka fri", "Lavash qam\u0131r", "Sar\u0131msoql\u0131 sous", "Q\u0131yar"],
-      uz: ["Tovuq go'shti", "Kartoshka fri", "Lavash", "Sarimsoqli sous", "Bodring"],
-      ru: ["\u041A\u0443\u0440\u0438\u043D\u043E\u0435 \u0444\u0438\u043B\u0435", "\u041A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u044C \u0444\u0440\u0438", "\u041B\u0430\u0432\u0430\u0448", "\u0427\u0435\u0441\u043D\u043E\u0447\u043D\u044B\u0439 \u0441\u043E\u0443\u0441", "\u041E\u0433\u0443\u0440\u0446\u044B"],
-      en: ["Chicken Fillet", "French Fries", "Lavash", "Garlic Sauce", "Cucumbers"]
-    },
-    allergens: ["gluten", "dairy"],
-    rating: 4.8,
-    ratingCount: 195,
-    reviews: [],
-    nutrition: {
-      protein: 26,
-      fat: 18,
-      carbs: 52
-    }
-  },
-  {
-    id: "food-burger-set",
-    title: {
-      qr: "Double Cheeseburger Set (Fri + Ketchup)",
-      uz: "Chizburger Set (Fri va Ketchup)",
-      ru: "\u0414\u0432\u043E\u0439\u043D\u043E\u0439 \u0427\u0438\u0437\u0431\u0443\u0440\u0433\u0435\u0440 \u0421\u0435\u0442 \u0441 \u041A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u0435\u043C \u0424\u0440\u0438",
-      en: "Double Cheeseburger Combo with Fries"
-    },
-    description: {
-      qr: "Eki qabat sotsnyy s\u0131y\u0131r go'shi kotleti, Cheddar pishlo\u01F5\u0131, marinadlangan q\u0131yar h\xE1m ketti qow\u0131r\u0131l\u01F5an fri.",
-      uz: "Ikki qavat mol go'shti kotleti, Cheddar pishloq, bodring va fri.",
-      ru: "\u0421\u043E\u0447\u043D\u044B\u0435 \u0434\u0432\u0435 \u0433\u043E\u0432\u044F\u0436\u044C\u0438 \u043A\u043E\u0442\u043B\u0435\u0442\u044B, \u043F\u043B\u0430\u0432\u043B\u0435\u043D\u043E-\u0442\u044F\u0433\u0443\u0447\u0438\u0439 \u0441\u044B\u0440 \u0427\u0435\u0434\u0434\u0435\u0440, \u0441\u043E\u043B\u0435\u043D\u044B\u0435 \u043E\u0433\u0443\u0440\u0447\u0438\u043A\u0438 \u0438 \u0437\u043E\u043B\u043E\u0442\u0438\u0441\u0442\u044B\u0439 \u043A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u044C \u0444\u0440\u0438.",
-      en: "Two flame-grilled beef patties, doubled Cheddar cheese, pickles, and crispy golden french fries."
+      qr: "Yumsaq q\u0131z\u0131l biskvit, may\u0131n qaymaql\u0131 pishloq kremi h\xE1m kofe menen ajoyib \xFAylesim.",
+      uz: "Yumshoq qizil biskvit, nozik qaymoqli pishloq kremi va mayin shirinlik uyg'unligi.",
+      ru: "\u041D\u0435\u0436\u043D\u0435\u0439\u0448\u0438\u0439 \u0431\u0430\u0440\u0445\u0430\u0442\u043D\u044B\u0439 \u0431\u0438\u0441\u043A\u0432\u0438\u0442 \u0441 \u0442\u0430\u044E\u0449\u0438\u043C \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E-\u0441\u044B\u0440\u043D\u044B\u043C \u043A\u0440\u0435\u043C\u043E\u043C \u0427\u0438\u0437.",
+      en: "Tender red velvet sponge layered with silky cream cheese frosting."
     },
     price: 45e3,
-    category: "fastfood",
-    imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
-    calories: 780,
-    prepTime: 15,
-    spicyLevel: 1,
-    isVegetarian: false,
-    isGlutenFree: false,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["S\u0131y\u0131r go'shi kotlet", "Cheddar pishloq", "Bulochka", "Marinad q\u0131yar", "Fri"],
-      uz: ["Mol go'shti kotlet", "Cheddar pishloq", "Bulochka", "Tuzlangan bodring", "Fri"],
-      ru: ["\u0413\u043E\u0432\u044F\u0436\u044C\u0438 \u043A\u043E\u0442\u043B\u0435\u0442\u044B", "\u0421\u044B\u0440 \u0427\u0435\u0434\u0434\u0435\u0440", "\u0411\u0443\u043B\u043E\u0447\u043A\u0430 \u0441 \u043A\u0443\u043D\u0436\u0443\u0442\u043E\u043C", "\u0421\u043E\u043B\u0435\u043D\u044B\u0435 \u043E\u0433\u0443\u0440\u0446\u044B", "\u0424\u0440\u0438"],
-      en: ["Beef Patties", "Cheddar Cheese", "Sesame Bun", "Pickles", "French Fries"]
-    },
-    allergens: ["gluten", "dairy", "sesame"],
-    rating: 4.9,
-    ratingCount: 310,
-    reviews: [
-      {
-        id: "rev-b1",
-        userName: "Sardorbek T.",
-        rating: 5,
-        comment: "Nukusdag\u0131 e\u0144 lezzetli burger seti!",
-        date: "2026-07-26"
-      }
-    ],
-    nutrition: {
-      protein: 38,
-      fat: 34,
-      carbs: 64
-    }
-  },
-  {
-    id: "food-pizza-pepperoni",
-    title: {
-      qr: "Pepperoni Pizza (30 cm - Mozzarella)",
-      uz: "Pepperoni Pitssa (30 sm)",
-      ru: "\u041F\u0438\u0446\u0446\u0430 \u041F\u0435\u043F\u043F\u0435\u0440\u043E\u043D\u0438 (30 \u0441\u043C)",
-      en: "Classic Pepperoni Pizza (30cm)"
-    },
-    description: {
-      qr: "Mozzarella pishlo\u01F5\u0131, otl\u0131 pepperoni kolbasas\u0131 h\xE1m pomidor sous\u0131 sol\u0131n\u01F5an \u0131ss\u0131 pizza.",
-      uz: "Motsarella pishlog'i va pepperoni kolbasasi bilan yopilgan xushbo'y pitssa.",
-      ru: "\u0418\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0430\u044F \u043F\u0438\u0446\u0446\u0430 \u0441 \u0441\u043E\u0443\u0441\u043E\u043C \u0438\u0437 \u0442\u043E\u043C\u0430\u0442\u043E\u0432, \u0441\u044B\u0440\u043E\u043C \u041C\u043E\u0446\u0430\u0440\u0435\u043B\u043B\u0430 \u0438 \u043F\u0438\u043A\u0430\u043D\u0442\u043D\u044B\u043C\u0438 \u043A\u043E\u043B\u0431\u0430\u0441\u043A\u0430\u043C\u0438 \u041F\u0435\u043F\u043F\u0435\u0440\u043E\u043D\u0438.",
-      en: "Crispy dough baked with rich tomato sauce, mozzarella, and spicy pepperoni slices."
-    },
-    price: 65e3,
-    category: "fastfood",
-    imageUrl: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=800&q=80",
-    calories: 840,
-    prepTime: 20,
-    spicyLevel: 1,
-    isVegetarian: false,
-    isGlutenFree: false,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Pepperoni kolbasa", "Mozzarella pishloq", "Pomidor sous", "Pizza qam\u0131r"],
-      uz: ["Pepperoni kolbasa", "Mozzarella pishloq", "Pomidor sous", "Xamir"],
-      ru: ["\u041A\u043E\u043B\u0431\u0430\u0441\u043A\u0438 \u041F\u0435\u043F\u043F\u0435\u0440\u043E\u043D\u0438", "\u0421\u044B\u0440 \u041C\u043E\u0446\u0430\u0440\u0435\u043B\u043B\u0430", "\u0422\u043E\u043C\u0430\u0442\u043D\u044B\u0439 \u0441\u043E\u0443\u0441", "\u0422\u0435\u0441\u0442\u043E"],
-      en: ["Pepperoni Slices", "Mozzarella Cheese", "Tomato Sauce", "Pizza Dough"]
-    },
-    allergens: ["gluten", "dairy"],
-    rating: 4.85,
-    ratingCount: 180,
-    reviews: [],
-    nutrition: {
-      protein: 32,
-      fat: 36,
-      carbs: 80
-    }
-  },
-  {
-    id: "food-french-fries",
-    title: {
-      qr: "Kartoshka Fri (Ketchup & Mayonez)",
-      uz: "Kartoshka Fri (Sous bilan)",
-      ru: "\u041A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u044C \u0424\u0440\u0438 \u0441 \u0421\u043E\u0443\u0441\u043E\u043C",
-      en: "Crispy French Fries with Dip"
-    },
-    description: {
-      qr: "Alt\u0131n re\u0144li ketti qow\u0131r\u0131l\u01F5an fri kartoshkas\u0131, firmenn\u0131y ketchup h\xE1m sar\u0131msoql\u0131 mayonez menen.",
-      uz: "Oltinrang qirsillama kartoshka fri va souslar.",
-      ru: "\u0425\u0440\u0443\u0441\u0442\u044F\u0449\u0438\u0439 \u0437\u043E\u043B\u043E\u0442\u0438\u0441\u0442\u044B\u0439 \u043A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u044C \u0444\u0440\u0438 \u0441\u043E \u0441\u043F\u0435\u0446\u0438\u044F\u043C\u0438, \u043A\u0435\u0442\u0447\u0443\u043F\u043E\u043C \u0438 \u0441\u043E\u0443\u0441\u043E\u043C.",
-      en: "Golden crispy french fries lightly salted and served with tomato ketchup and garlic mayo."
-    },
-    price: 18e3,
-    category: "fastfood",
-    imageUrl: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=800&q=80",
-    calories: 340,
-    prepTime: 8,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Kartoshka", "Moy", "Tuz", "Ketchup"],
-      uz: ["Kartoshka", "Yog'", "Tuz", "Ketchup"],
-      ru: ["\u041A\u0430\u0440\u0442\u043E\u0444\u0435\u043B\u044C", "\u0420\u0430\u0441\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0435 \u043C\u0430\u0441\u043B\u043E", "\u0421\u043E\u043B\u044C", "\u041A\u0435\u0442\u0447\u0443\u043F"],
-      en: ["Potatoes", "Vegetable Oil", "Salt", "Ketchup"]
-    },
-    allergens: [],
-    rating: 4.75,
-    ratingCount: 140,
-    reviews: [],
-    nutrition: {
-      protein: 4,
-      fat: 16,
-      carbs: 42
-    }
-  },
-  // --- COCA-COLA, FANTA, ICE TEA & DRINKS ---
-  {
-    id: "food-cola-05",
-    title: {
-      qr: "Coca-Cola Classic (0.5 Litr / Muzday)",
-      uz: "Coca-Cola Classic (0.5L)",
-      ru: "Coca-Cola Classic (0.5 \u043B)",
-      en: "Coca-Cola Classic (0.5L)"
-    },
-    description: {
-      qr: "Salq\u0131n, muzday gazlan\u01F5an klassikal\u0131q Coca-Cola ishimligi.",
-      uz: "Muzdek tetiklashtiruvchi Coca-Cola ichimligi.",
-      ru: "\u041E\u0441\u0432\u0435\u0436\u0430\u044E\u0449\u0438\u0439 \u043E\u0445\u043B\u0430\u0436\u0434\u0435\u043D\u043D\u044B\u0439 \u0433\u0430\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043D\u0430\u043F\u0438\u0442\u043E\u043A Coca-Cola.",
-      en: "Chilled classic refreshing carbonated Coca-Cola beverage."
-    },
-    price: 1e4,
-    category: "drinks",
-    imageUrl: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=800&q=80",
-    calories: 140,
-    prepTime: 2,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Gazlan\u01F5an suw", "Shedre", "Kofeina", "Aromatizatorlar"],
-      uz: ["Gazlangan suv", "Shakar", "Kofein", "Aromatizator"],
-      ru: ["\u0413\u0430\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u0432\u043E\u0434\u0430", "\u0421\u0430\u0445\u0430\u0440", "\u041A\u043E\u0444\u0435\u0438\u043D", "\u0410\u0440\u043E\u043C\u0430\u0442\u0438\u0437\u0430\u0442\u043E\u0440\u044B"],
-      en: ["Carbonated Water", "Sugar", "Caffeine", "Natural Flavors"]
-    },
-    allergens: [],
-    rating: 5,
-    ratingCount: 420,
-    reviews: [
-      {
-        id: "rev-c1",
-        userName: "Temur A.",
-        rating: 5,
-        comment: "Muzday h\xE1m sotsnyy cola!",
-        date: "2026-07-28"
-      }
-    ],
-    nutrition: {
-      protein: 0,
-      fat: 0,
-      carbs: 35
-    }
-  },
-  {
-    id: "food-fanta-05",
-    title: {
-      qr: "Fanta Orange (0.5 Litr / Muzday)",
-      uz: "Fanta Apelsin (0.5L)",
-      ru: "Fanta \u0410\u043F\u0435\u043B\u044C\u0441\u0438\u043D (0.5 \u043B)",
-      en: "Fanta Orange (0.5L)"
-    },
-    description: {
-      qr: "Apelsin lezzetli muzday gazlan\u01F5an ishimlik.",
-      uz: "Apelsin ta'mli muzdek Fanta ichimligi.",
-      ru: "\u042F\u0440\u043A\u0438\u0439 \u0430\u043F\u0435\u043B\u044C\u0441\u0438\u043D\u043E\u0432\u044B\u0439 \u043E\u0445\u043B\u0430\u0436\u0434\u0435\u043D\u043D\u044B\u0439 \u0433\u0430\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043D\u0430\u043F\u0438\u0442\u043E\u043A.",
-      en: "Chilled citrus orange soda beverage with bright fruit flavors."
-    },
-    price: 1e4,
-    category: "drinks",
-    imageUrl: "https://images.unsplash.com/photo-1624517452488-04869289c4ca?auto=format&fit=crop&w=800&q=80",
-    calories: 150,
-    prepTime: 2,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Gazlan\u01F5an suw", "Apelsin sok\u0131", "Shedre"],
-      uz: ["Gazlangan suv", "Apelsin sharbati", "Shakar"],
-      ru: ["\u0413\u0430\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u0432\u043E\u0434\u0430", "\u0410\u043F\u0435\u043B\u044C\u0441\u0438\u043D\u043E\u0432\u044B\u0439 \u0441\u043E\u043A", "\u0421\u0430\u0445\u0430\u0440"],
-      en: ["Carbonated Water", "Orange Juice Concentrate", "Sugar"]
-    },
-    allergens: [],
-    rating: 4.8,
-    ratingCount: 210,
-    reviews: [],
-    nutrition: {
-      protein: 0,
-      fat: 0,
-      carbs: 37
-    }
-  },
-  {
-    id: "food-ice-tea",
-    title: {
-      qr: "Ice Tea Fuse Tea (Limon / Shaftal\u0131 0.5L)",
-      uz: "Ice Tea (Limon yoki Shaftoli 0.5L)",
-      ru: "\u0425\u043E\u043B\u043E\u0434\u043D\u044B\u0439 \u0427\u0430\u0439 Ice Tea (\u041B\u0438\u043C\u043E\u043D / \u041F\u0435\u0440\u0441\u0438\u043A)",
-      en: "Ice Tea Lemon or Peach (0.5L)"
-    },
-    description: {
-      qr: "Muzday, sar\u01F5ay\u01F5an limon yamasa shaftal\u0131 re\u0144li tetikleshtiriwshi muzli shoy.",
-      uz: "Muzdek limon va shaftoli ta'mli salqin shirin chay.",
-      ru: "\u041E\u0441\u0432\u0435\u0436\u0430\u044E\u0449\u0438\u0439 \u0445\u043E\u043B\u043E\u0434\u043D\u044B\u0439 \u0447\u0430\u0439 \u0441\u043E \u0432\u043A\u0443\u0441\u043E\u043C \u0441\u043E\u0447\u043D\u043E\u0433\u043E \u043B\u0438\u043C\u043E\u043D\u0430 \u0438\u043B\u0438 \u0441\u043F\u0435\u043B\u043E\u0433\u043E \u043F\u0435\u0440\u0441\u0438\u043A\u0430.",
-      en: "Refreshing chilled iced tea with natural lemon or sweet peach flavors."
-    },
-    price: 11e3,
-    category: "drinks",
-    imageUrl: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80",
-    calories: 90,
-    prepTime: 2,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Muz", "Shoy ekstrakt\u0131", "Limon/Shaftal\u0131 sok\u0131"],
-      uz: ["Muz", "Choy ekstrakti", "Limon/Shaftoli sharbati"],
-      ru: ["\u041B\u0435\u0434", "\u042D\u043A\u0441\u0442\u0440\u0430\u043A\u0442 \u0447\u0430\u044F", "\u0421\u043E\u043A \u043B\u0438\u043C\u043E\u043D\u0430/\u043F\u0435\u0440\u0441\u0438\u043A\u0430"],
-      en: ["Ice", "Tea Extract", "Lemon/Peach Juice"]
-    },
-    allergens: [],
-    rating: 4.9,
-    ratingCount: 165,
-    reviews: [],
-    nutrition: {
-      protein: 0,
-      fat: 0,
-      carbs: 22
-    }
-  },
-  {
-    id: "food-mojito",
-    title: {
-      qr: "Mojito Fresh (Limon-Jalp\u0131z & Muz)",
-      uz: "Moxito Fresh (Limon-Yalpiz)",
-      ru: "\u0411\u0435\u0437\u0430\u043B\u043A\u043E\u0433\u043E\u043B\u044C\u043D\u044B\u0439 \u041C\u043E\u0445\u0438\u0442\u043E (\u041B\u0438\u043C\u043E\u043D \u0438 \u041C\u044F\u0442\u0430)",
-      en: "Fresh Citrus Mint Virgin Mojito"
-    },
-    description: {
-      qr: "Taza jalp\u0131z xosh iyisi, laym, muz h\xE1m Sprite aralashpas\u0131 menen tayarlan\u01F5an muzday kokteyl.",
-      uz: "Yalpiz, laym, muz va Sprite bilan tayyorlangan salqin ichimlik.",
-      ru: "\u041E\u0441\u0432\u0435\u0436\u0430\u044E\u0449\u0438\u0439 \u0431\u0435\u0437\u0430\u043B\u043A\u043E\u0433\u043E\u043B\u044C\u043D\u044B\u0439 \u043A\u043E\u043A\u0442\u0435\u0439\u043B\u044C \u0441\u043E \u0441\u0432\u0435\u0436\u0435\u0439 \u043C\u044F\u0442\u043E\u0439, \u043B\u0430\u0439\u043C\u043E\u043C, \u0434\u0440\u043E\u0431\u043B\u0435\u043D\u044B\u043C \u043B\u044C\u0434\u043E\u043C \u0438 \u0441\u043F\u0440\u0430\u0439\u0442\u043E\u043C.",
-      en: "Crisp mocktail with crushed ice, fresh mint leaves, zesty lime, and sparkling soda."
-    },
-    price: 18e3,
-    category: "drinks",
-    imageUrl: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80",
-    calories: 110,
-    prepTime: 5,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Laym", "Taza jalp\u0131z", "Muz", "Sprite"],
-      uz: ["Laym", "Yangi yalpiz", "Muz", "Sprite"],
-      ru: ["\u041B\u0430\u0439\u043C", "\u0421\u0432\u0435\u0436\u0430\u044F \u043C\u044F\u0442\u0430", "\u041B\u0435\u0434", "\u0421\u043F\u0440\u0430\u0439\u0442"],
-      en: ["Lime", "Fresh Mint", "Crushed Ice", "Sprite"]
-    },
-    allergens: [],
-    rating: 4.95,
-    ratingCount: 230,
-    reviews: [],
-    nutrition: {
-      protein: 0,
-      fat: 0,
-      carbs: 26
-    }
-  },
-  {
-    id: "food-coffee-cappuccino",
-    title: {
-      qr: "Cappuccino / Americano (Arabica Kofe)",
-      uz: "Kappuchino / Amerikano Kofe",
-      ru: "\u041A\u043E\u0444\u0435 \u041A\u0430\u043F\u0443\u0447\u0438\u043D\u043E / \u0410\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u043E (\u0410\u0440\u0430\u0431\u0438\u043A\u0430)",
-      en: "Fresh Brewed Cappuccino / Americano"
-    },
-    description: {
-      qr: "Taza t\xFAtilgen Arabica kofe d\xE1nlerinen tayarlan\u01F5an h\xE1m quyat s\xFAt ko'pigi menen.",
-      uz: "Yangi tortilgan Arabika kofesi va yumshoq sut ko'pigi.",
-      ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u044B\u0439 \u043A\u043E\u0444\u0435 \u0438\u0437 \u0441\u0432\u0435\u0436\u0435\u043E\u0431\u0436\u0430\u0440\u0435\u043D\u043D\u044B\u0445 \u0437\u0435\u0440\u0435\u043D \u0410\u0440\u0430\u0431\u0438\u043A\u0438 \u0441 \u043D\u0435\u0436\u043D\u043E\u0439 \u043C\u043E\u043B\u043E\u0447\u043D\u043E\u0439 \u043F\u0435\u043D\u043A\u043E\u0439.",
-      en: "Rich aromatic espresso made from 100% Arabica beans topped with silky steamed milk foam."
-    },
-    price: 16e3,
-    category: "drinks",
-    imageUrl: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=800&q=80",
-    calories: 85,
-    prepTime: 5,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Arabica kofe", "Taza s\xFAt", "Sheker"],
-      uz: ["Arabika kofe", "Sut", "Shakar"],
-      ru: ["\u041A\u043E\u0444\u0435 \u0410\u0440\u0430\u0431\u0438\u043A\u0430", "\u041C\u043E\u043B\u043E\u043A\u043E", "\u0421\u0430\u0445\u0430\u0440"],
-      en: ["Arabica Coffee Beans", "Fresh Milk", "Sugar"]
-    },
-    allergens: ["dairy"],
-    rating: 4.9,
-    ratingCount: 175,
-    reviews: [],
-    nutrition: {
-      protein: 4,
-      fat: 3,
-      carbs: 9
-    }
-  },
-  // --- CAKEBUMER CAKES & DESSERTS ---
-  {
-    id: "food-cakebumer-redvelvet",
-    title: {
-      qr: "Cakebumer Red Velvet \u0422\u043E\u0440\u0442 (Krasnyy Barkhat)",
-      uz: "Cakebumer Red Velvet Torti",
-      ru: "\u0422\u043E\u0440\u0442 \u041A\u0440\u0430\u0441\u043D\u044B\u0439 \u0411\u0430\u0440\u0445\u0430\u0442 (Red Velvet Cakebumer)",
-      en: "Cakebumer Red Velvet Cream Cheese Cake"
-    },
-    description: {
-      qr: "Nukus Cakebumer brendining e\u0144 ataqli q\u0131z\u0131l velvet tort\u0131, krem-chiz h\xE1m valinli naq\u0131slar menen.",
-      uz: "Nukus Cakebumer'ning krem-chizli mashhur qizil velvet torti.",
-      ru: "\u041D\u0435\u0436\u043D\u0435\u0439\u0448\u0438\u0439 \u0444\u0438\u0440\u043C\u0435\u043D\u043D\u044B\u0439 \u0442\u043E\u0440\u0442 \u041D\u0443\u043A\u0443\u0441\u0430 \u0441 \u0441\u043E\u0447\u043D\u044B\u043C\u0438 \u0431\u0438\u0441\u043A\u0432\u0438\u0442\u043D\u044B\u043C\u0438 \u043A\u043E\u0440\u0436\u0430\u043C\u0438 \u0438 \u043A\u0440\u0435\u043C\u043E\u043C \u0438\u0437 \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0433\u043E \u0441\u044B\u0440\u0430.",
-      en: "Nukus Cakebumer signature red velvet sponge cake layered with silky cream cheese frosting."
-    },
-    price: 28e3,
-    category: "desserts",
+    category: "cakes",
     imageUrl: "https://images.unsplash.com/photo-1586788680434-30d324b2d46f?auto=format&fit=crop&w=800&q=80",
-    calories: 390,
+    calories: 380,
     prepTime: 5,
     spicyLevel: 0,
     isVegetarian: true,
@@ -471,45 +35,41 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Velvet biskvit", "Krem-chiz pishloq", "S\xFAt qayma\u01F5\u0131", "Vanil"],
-      uz: ["Velvet biskvit", "Krem-chiz", "Sut qaymog'i", "Vanil"],
-      ru: ["\u0411\u0430\u0440\u0445\u0430\u0442\u043D\u044B\u0439 \u0431\u0438\u0441\u043A\u0432\u0438\u0442", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u0441\u044B\u0440 Cream Cheese", "\u0421\u043B\u0438\u0432\u043A\u0438", "\u0412\u0430\u043D\u0438\u043B\u044C"],
-      en: ["Velvet Sponge", "Cream Cheese", "Whipped Cream", "Vanilla"]
+      qr: ["Kakao", "Qaymaql\u0131 pishloq", "Vanil", "Biskvit qam\u0131r"],
+      uz: ["Kakao", "Qaymoqli pishloq", "Vanil", "Biskvit xamiri"],
+      ru: ["\u041A\u0430\u043A\u0430\u043E", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u0441\u044B\u0440", "\u0412\u0430\u043D\u0438\u043B\u044C", "\u0411\u0438\u0441\u043A\u0432\u0438\u0442"],
+      en: ["Cocoa", "Cream Cheese", "Vanilla", "Sponge Flour"]
     },
     allergens: ["gluten", "dairy", "eggs"],
-    rating: 4.95,
-    ratingCount: 380,
+    rating: 5,
+    ratingCount: 312,
     reviews: [
       {
         id: "rev-rv1",
-        userName: "Kamila N.",
+        userName: "Madina A.",
         rating: 5,
-        comment: "Cakebumer Red Velvet neshshe j\u0131ldan berli e\u0144 jaqs\u0131 ko'rgen tort\u0131m!",
-        date: "2026-07-25"
+        comment: "Juda mayin va shirin! Har doim shu yerdan olaman.",
+        date: "2026-11-20"
       }
     ],
-    nutrition: {
-      protein: 6,
-      fat: 18,
-      carbs: 52
-    }
+    nutrition: { protein: 6, fat: 18, carbs: 45 }
   },
   {
-    id: "food-san-sebastian",
+    id: "cake-pistachio-cheesecake",
     title: {
-      qr: "San Sebastian Cheesecake (Shokolad menen)",
-      uz: "San Sebastian Chizkeyk (Issiq shokoladli)",
-      ru: "\u0427\u0438\u0437\u043A\u0435\u0439\u043A \u0421\u0430\u043D-\u0421\u0435\u0431\u0430\u0441\u0442\u044C\u044F\u043D \u0441 \u0433\u043E\u0440\u044F\u0447\u0438\u043C \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u043E\u043C",
-      en: "San Sebastian Burnt Cheesecake with Chocolate"
+      qr: "Pista Cheesecake",
+      uz: "Pista Cheesecake",
+      ru: "\u0424\u0438\u0441\u0442\u0430\u0448\u043A\u043E\u0432\u044B\u0439 \u0427\u0438\u0437\u043A\u0435\u0439\u043A",
+      en: "Pistachio Cheesecake"
     },
     description: {
-      qr: "Ishin jumsaq, \xFAsti q\u0131zargan ispan chizkeyki, \u0131ss\u0131 belgiya shokolad\u0131 tusl\u0131\u01F5\u0131 menen us\u0131n\u0131lad\u0131.",
-      uz: "Issiq shokoladli sous bilan tortiladigan mashhur chizkeyk.",
-      ru: "\u0417\u043D\u0430\u043C\u0435\u043D\u0438\u0442\u044B\u0439 \u0431\u0430\u0441\u043A\u0441\u043A\u0438\u0439 \u043E\u0431\u043E\u0436\u0436\u0435\u043D\u043D\u044B\u0439 \u0447\u0438\u0437\u043A\u0435\u0439\u043A \u0441 \u043D\u0435\u0436\u043D\u043E\u0439 \u0442\u0435\u043A\u0441\u0442\u0443\u0440\u043E\u0439 \u0438 \u0433\u043E\u0440\u044F\u0447\u0438\u043C \u0431\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u0438\u043C \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u043E\u043C.",
-      en: "Rich creamy Basque burnt cheesecake drizzled with warm Belgian chocolate sauce."
+      qr: "Qars\u0131ldaq pista bolekleri, tabiiy pista pastas\u0131 h\xE1m may\u0131n Filadelfiya pishlog'\u0131.",
+      uz: "Qarsildoq pista bo'laklari, tabiiy pista pastasi va nozik Filadelfiya pishlog'i.",
+      ru: "\u0418\u0437\u044B\u0441\u043A\u0430\u043D\u043D\u044B\u0439 \u0447\u0438\u0437\u043A\u0435\u0439\u043A \u0441 \u043D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u043E\u0439 \u0444\u0438\u0441\u0442\u0430\u0448\u043A\u043E\u0432\u043E\u0439 \u043F\u0430\u0441\u0442\u043E\u0439 \u0438 \u043E\u0442\u0431\u043E\u0440\u043D\u044B\u043C\u0438 \u0444\u0438\u0441\u0442\u0430\u0448\u043A\u0430\u043C\u0438.",
+      en: "Creamy cheesecake infused with natural Sicilian pistachio paste and crunchy toppings."
     },
-    price: 34e3,
-    category: "desserts",
+    price: 48e3,
+    category: "cakes",
     imageUrl: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=800&q=80",
     calories: 420,
     prepTime: 5,
@@ -520,38 +80,220 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["S\xFAt pishlo\u01F5\u0131", "Shokolad", "Jumurtqa", "S\xFAt qayma\u01F5\u0131"],
-      uz: ["Pishloq", "Shokolad", "Tuxum", "Sut qaymog'i"],
-      ru: ["\u0422\u0432\u043E\u0440\u043E\u0436\u043D\u044B\u0439 \u0441\u044B\u0440", "\u0411\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u0438\u0439 \u0448\u043E\u043A\u043E\u043B\u0430\u0434", "\u042F\u0439\u0446\u0430", "\u0421\u043B\u0438\u0432\u043A\u0438"],
-      en: ["Cream Cheese", "Belgian Chocolate", "Eggs", "Cream"]
+      qr: ["Taza pista", "Qaymoq", "Filadelfiya pishloq", "Pechenye qumi"],
+      uz: ["Yangi pista", "Qaymoq", "Filadelfiya pishloq", "Pechenye asosi"],
+      ru: ["\u0424\u0438\u0441\u0442\u0430\u0448\u043A\u0438", "\u0421\u043B\u0438\u0432\u043A\u0438", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u0441\u044B\u0440", "\u041F\u0435\u0441\u043E\u0447\u043D\u0430\u044F \u043E\u0441\u043D\u043E\u0432\u0430"],
+      en: ["Pistachios", "Cream", "Cream Cheese", "Cookie Crust"]
+    },
+    allergens: ["dairy", "nuts", "gluten"],
+    rating: 4.9,
+    ratingCount: 265,
+    reviews: [],
+    nutrition: { protein: 8, fat: 24, carbs: 38 }
+  },
+  {
+    id: "cake-san-sebastian",
+    title: {
+      qr: "San Sebastian Cheesecake",
+      uz: "San Sebastian Cheesecake",
+      ru: "\u0427\u0438\u0437\u043A\u0435\u0439\u043A \u0421\u0430\u043D-\u0421\u0435\u0431\u0430\u0441\u0442\u044C\u044F\u043D",
+      en: "San Sebastian Cheesecake"
+    },
+    description: {
+      qr: "Ispancha kuydirilgan karamel qobiqli, o'rtasi kremdek oqib turuvchi nozik cheesecake.",
+      uz: "Ispancha kuydirilgan karamel qobiqli, o'rtasi kremdek oqib turuvchi nozik cheesecake.",
+      ru: "\u0418\u0441\u043F\u0430\u043D\u0441\u043A\u0438\u0439 \u0436\u0436\u0451\u043D\u044B\u0439 \u0447\u0438\u0437\u043A\u0435\u0439\u043A \u0441 \u043A\u0430\u0440\u0430\u043C\u0435\u043B\u044C\u043D\u043E\u0439 \u043A\u043E\u0440\u043E\u0447\u043A\u043E\u0439 \u0438 \u043D\u0435\u0436\u043D\u043E\u0439 \u043A\u0440\u0435\u043C\u043E\u0432\u043E\u0439 \u0441\u0435\u0440\u0434\u0446\u0435\u0432\u0438\u043D\u043E\u0439.",
+      en: "Famous Basque burnt cheesecake with a caramelized crust and gooey molten center."
+    },
+    price: 42e3,
+    category: "cakes",
+    imageUrl: "https://images.unsplash.com/photo-1524351199678-941a58a3df50?auto=format&fit=crop&w=800&q=80",
+    calories: 390,
+    prepTime: 5,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: false,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Smitana", "Pishloq", "Karamel", "Vanil"],
+      uz: ["Smetana", "Pishloq", "Karamel", "Vanil"],
+      ru: ["\u0421\u043C\u0435\u0442\u0430\u043D\u0430", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u0441\u044B\u0440", "\u041A\u0430\u0440\u0430\u043C\u0435\u043B\u044C", "\u0412\u0430\u043D\u0438\u043B\u044C"],
+      en: ["Sour Cream", "Cream Cheese", "Caramel", "Vanilla"]
     },
     allergens: ["dairy", "eggs"],
+    rating: 5,
+    ratingCount: 198,
+    reviews: [],
+    nutrition: { protein: 7, fat: 22, carbs: 32 }
+  },
+  {
+    id: "cake-medovik",
+    title: {
+      qr: "Asall\u0131 Tort (Medovik)",
+      uz: "Asalli Tort (Medovik)",
+      ru: "\u041C\u0435\u0434\u043E\u0432\u0438\u043A \u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439",
+      en: "Honey Cake (Medovik)"
+    },
+    description: {
+      qr: "8 qatlamli xushbo'y asal korjlari va yengil smetana-qaymoqli nozik krem.",
+      uz: "8 qatlamli xushbo'y asal korjlari va yengil smetana-qaymoqli nozik krem.",
+      ru: "\u0412\u043E\u0441\u0435\u043C\u044C \u0442\u043E\u043D\u043A\u0438\u0445 \u043C\u0435\u0434\u043E\u0432\u044B\u0445 \u043A\u043E\u0440\u0436\u0435\u0439 \u0441 \u0432\u043E\u0437\u0434\u0443\u0448\u043D\u044B\u043C \u0441\u043C\u0435\u0442\u0430\u043D\u043D\u043E-\u0437\u0430\u0432\u0430\u0440\u043D\u044B\u043C \u043A\u0440\u0435\u043C\u043E\u043C.",
+      en: "Traditional 8-layer golden honey cake layered with light sour cream frosting."
+    },
+    price: 38e3,
+    category: "cakes",
+    imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+    calories: 360,
+    prepTime: 5,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: false,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Tabiiy asal", "Smetana", "Qaymoq", "Un"],
+      uz: ["Tabiiy asal", "Smetana", "Qaymoq", "Un"],
+      ru: ["\u041D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u043C\u0435\u0434", "\u0421\u043C\u0435\u0442\u0430\u043D\u0430", "\u0421\u043B\u0438\u0432\u043A\u0438", "\u041C\u0443\u043A\u0430"],
+      en: ["Natural Honey", "Sour Cream", "Fresh Cream", "Flour"]
+    },
+    allergens: ["gluten", "dairy", "eggs"],
+    rating: 4.8,
+    ratingCount: 174,
+    reviews: [],
+    nutrition: { protein: 5, fat: 14, carbs: 54 }
+  },
+  {
+    id: "cake-tiramisu",
+    title: {
+      qr: "Klassik Tiramisu",
+      uz: "Klassik Tiramisu",
+      ru: "\u0422\u0438\u0440\u0430\u043C\u0438\u0441\u0443 \u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439",
+      en: "Classic Tiramisu"
+    },
+    description: {
+      qr: "Savoyardi pechenyelari, espresso qahvasi va haqiqiy Maskarpone italyan kremi.",
+      uz: "Savoyardi pechenyelari, espresso qahvasi va haqiqiy Maskarpone italyan kremi.",
+      ru: "\u0418\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0438\u0439 \u0434\u0435\u0441\u0435\u0440\u0442 \u0441 \u043F\u0435\u0447\u0435\u043D\u044C\u0435\u043C \u0421\u0430\u0432\u043E\u044F\u0440\u0434\u0438, \u043F\u0440\u043E\u043F\u0438\u0442\u0430\u043D\u043D\u044B\u043C \u043A\u0440\u0435\u043F\u043A\u0438\u043C \u043A\u043E\u0444\u0435, \u0438 \u0441\u044B\u0440\u043E\u043C \u041C\u0430\u0441\u043A\u0430\u0440\u043F\u043E\u043D\u0435.",
+      en: "Authentic Italian dessert with espresso-dipped ladyfingers and whipped mascarpone cream."
+    },
+    price: 4e4,
+    category: "cakes",
+    imageUrl: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=800&q=80",
+    calories: 340,
+    prepTime: 5,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: false,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Maskarpone", "Espresso", "Savoyardi", "Kakao"],
+      uz: ["Maskarpone", "Espresso", "Savoyardi", "Kakao"],
+      ru: ["\u041C\u0430\u0441\u043A\u0430\u0440\u043F\u043E\u043D\u0435", "\u042D\u0441\u043F\u0440\u0435\u0441\u0441\u043E", "\u0421\u0430\u0432\u043E\u044F\u0440\u0434\u0438", "\u041A\u0430\u043A\u0430\u043E"],
+      en: ["Mascarpone", "Espresso", "Ladyfingers", "Cocoa Powder"]
+    },
+    allergens: ["dairy", "eggs", "gluten"],
     rating: 4.9,
     ratingCount: 220,
     reviews: [],
-    nutrition: {
-      protein: 8,
-      fat: 26,
-      carbs: 38
-    }
+    nutrition: { protein: 6, fat: 18, carbs: 36 }
   },
+  // --- PISHIRIQLAR & KRUASSANLAR (BAKERY & CROISSANTS) ---
   {
-    id: "food-cakebumer-honey",
+    id: "bakery-chocolate-croissant",
     title: {
-      qr: "Cakebumer Special Bal \u0422\u043E\u0440\u0442 (Medovik)",
-      uz: "Cakebumer Asalli Tort (Medovik)",
-      ru: "\u0424\u0438\u0440\u043C\u0435\u043D\u043D\u044B\u0439 \u041C\u0435\u0434\u043E\u0432\u0438\u043A Cakebumer",
-      en: "Cakebumer Signature Honey Cake"
+      qr: "Shokoladli Kruassan",
+      uz: "Shokoladli Kruassan",
+      ru: "\u0428\u043E\u043A\u043E\u043B\u0430\u0434\u043D\u044B\u0439 \u041A\u0440\u0443\u0430\u0441\u0441\u0430\u043D",
+      en: "Chocolate Croissant"
     },
     description: {
-      qr: "Bal qam\u0131r qatlamlar\u0131, t\u0259biy s\xFAt qayma\u01F5\u0131 h\xE1m jan\u01F5aq boylar\u0131 menen juqa tayarlan\u01F5an shirinlik.",
-      uz: "Sut qaymog'i va ionalar bilan tayyorlangan mayin asalli tort.",
-      ru: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u043C\u0435\u0434\u043E\u0432\u0438\u043A \u043D\u0430 \u043D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u043E\u043C \u043C\u0435\u0434\u0435 \u0441\u043E \u0432\u0437\u0431\u0438\u0442\u044B\u043C\u0438 \u0441\u043B\u0438\u0432\u043A\u0430\u043C\u0438 \u0438 \u0433\u0440\u0435\u0446\u043A\u0438\u043C\u0438 \u043E\u0440\u0435\u0445\u0430\u043C\u0438.",
-      en: "Layers of wildflower honey biscuits separated by light whipped cream and crushed walnuts."
+      qr: "Qat-qat qarsildoq fransuz xamiri, ichida qaynoq Belgiya shokoladi.",
+      uz: "Qat-qat qarsildoq fransuz xamiri, ichida qaynoq Belgiya shokoladi.",
+      ru: "\u0425\u0440\u0443\u0441\u0442\u044F\u0449\u0438\u0439 \u0441\u043B\u043E\u0451\u043D\u044B\u0439 \u043A\u0440\u0443\u0430\u0441\u0441\u0430\u043D \u043F\u043E-\u0444\u0440\u0430\u043D\u0446\u0443\u0437\u0441\u043A\u0438 \u0441 \u043D\u0430\u0447\u0438\u043D\u043A\u043E\u0439 \u0438\u0437 \u0442\u0435\u043C\u043D\u043E\u0433\u043E \u0431\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u043E\u0433\u043E \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u0430.",
+      en: "Flaky, buttery French croissant filled with rich melted Belgian chocolate."
     },
-    price: 3e4,
-    category: "desserts",
-    imageUrl: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80",
+    price: 25e3,
+    category: "bakery",
+    imageUrl: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80",
+    calories: 320,
+    prepTime: 3,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: false,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Sariyog'", "Belgiya shokoladi", "Un", "Sut"],
+      uz: ["Sariyog'", "Belgiya shokoladi", "Un", "Sut"],
+      ru: ["\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0435 \u043C\u0430\u0441\u043B\u043E", "\u0411\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u0438\u0439 \u0448\u043E\u043A\u043E\u043B\u0430\u0434", "\u041C\u0443\u043A\u0430", "\u041C\u043E\u043B\u043E\u043A\u043E"],
+      en: ["French Butter", "Belgian Chocolate", "Flour", "Milk"]
+    },
+    allergens: ["gluten", "dairy"],
+    rating: 4.9,
+    ratingCount: 380,
+    reviews: [],
+    nutrition: { protein: 6, fat: 16, carbs: 39 }
+  },
+  {
+    id: "bakery-classic-croissant",
+    title: {
+      qr: "Klassik Kruassan",
+      uz: "Klassik Kruassan",
+      ru: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u041A\u0440\u0443\u0430\u0441\u0441\u0430\u043D",
+      en: "Classic French Croissant"
+    },
+    description: {
+      qr: "82% tabiiy sariyog'dan tayyorlangan, yengil va havodor original fransuz kruassani.",
+      uz: "82% tabiiy sariyog'dan tayyorlangan, yengil va havodor original fransuz kruassani.",
+      ru: "\u0412\u043E\u0437\u0434\u0443\u0448\u043D\u044B\u0439 \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u043A\u0440\u0443\u0430\u0441\u0441\u0430\u043D \u0438\u0437 \u043D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0433\u043E \u043C\u0430\u0441\u043B\u0430 82%.",
+      en: "Golden, crispy, all-butter croissant baked fresh daily."
+    },
+    price: 2e4,
+    category: "bakery",
+    imageUrl: "https://images.unsplash.com/photo-1549903072-7e6e0bedb7fb?auto=format&fit=crop&w=800&q=80",
+    calories: 270,
+    prepTime: 3,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: false,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Fransuz sariyog'i", "Un", "Sut"],
+      uz: ["Fransuz sariyog'i", "Un", "Sut"],
+      ru: ["\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0435 \u043C\u0430\u0441\u043B\u043E 82%", "\u041C\u0443\u043A\u0430", "\u041C\u043E\u043B\u043E\u043A\u043E"],
+      en: ["French Butter", "Flour", "Milk"]
+    },
+    allergens: ["gluten", "dairy"],
+    rating: 4.8,
+    ratingCount: 190,
+    reviews: [],
+    nutrition: { protein: 5, fat: 14, carbs: 31 }
+  },
+  {
+    id: "bakery-cinnabon",
+    title: {
+      qr: "Sinabon (Dolchinli Pishiriq)",
+      uz: "Sinabon (Dolchinli Pishiriq)",
+      ru: "\u0421\u0438\u043D\u043D\u0430\u0431\u043E\u043D \u0441 \u043A\u043E\u0440\u0438\u0446\u0435\u0439",
+      en: "Cinnamon Roll (Cinnabon)"
+    },
+    description: {
+      qr: "Issiq va xushbo'y seylon dolchini hamda erigan qaymoqli krem bilan yopilgan bulochka.",
+      uz: "Issiq va xushbo'y seylon dolchini hamda erigan qaymoqli krem bilan yopilgan bulochka.",
+      ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u0430\u044F \u0431\u0443\u043B\u043E\u0447\u043A\u0430 \u0441 \u0446\u0435\u0439\u043B\u043E\u043D\u0441\u043A\u043E\u0439 \u043A\u043E\u0440\u0438\u0446\u0435\u0439 \u0438 \u0433\u043B\u0430\u0437\u0443\u0440\u044C\u044E \u0438\u0437 \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0433\u043E \u0441\u044B\u0440\u0430.",
+      en: "Warm cinnamon roll topped with rich signature cream cheese icing."
+    },
+    price: 28e3,
+    category: "bakery",
+    imageUrl: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80",
     calories: 410,
     prepTime: 5,
     spicyLevel: 0,
@@ -561,318 +303,277 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["T\xE1biy bal", "S\xFAt qayma\u01F5\u0131", "Jan\u01F5aq", "Un", "Sar\u0131 moy"],
-      uz: ["Asal", "Sut qaymog'i", "Yong'oq", "Un", "Sari yog'"],
-      ru: ["\u041C\u0435\u0434", "\u0421\u043B\u0438\u0432\u043A\u0438", "\u0413\u0440\u0435\u0446\u043A\u0438\u0435 \u043E\u0440\u0435\u0445\u0438", "\u041C\u0443\u043A\u0430", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0435 \u043C\u0430\u0441\u043B\u043E"],
-      en: ["Honey", "Fresh Cream", "Walnuts", "Flour", "Butter"]
+      qr: ["Seylon dolchini", "Qaymoqli glazur", "Sariyog'", "Xamir"],
+      uz: ["Seylon dolchini", "Qaymoqli glazur", "Sariyog'", "Xamir"],
+      ru: ["\u041A\u043E\u0440\u0438\u0446\u0430", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u0430\u044F \u0433\u043B\u0430\u0437\u0443\u0440\u044C", "\u041C\u0430\u0441\u043B\u043E", "\u0421\u0434\u043E\u0431\u043D\u043E\u0435 \u0442\u0435\u0441\u0442\u043E"],
+      en: ["Ceylon Cinnamon", "Cream Cheese Glaze", "Butter", "Dough"]
     },
-    allergens: ["gluten", "dairy", "nuts"],
-    rating: 4.95,
-    ratingCount: 310,
-    reviews: [],
-    nutrition: {
-      protein: 7,
-      fat: 22,
-      carbs: 58
-    }
-  },
-  // --- NATIONAL KARAKALPAK SPECIALTIES ---
-  {
-    id: "food-1",
-    title: {
-      qr: "Qaraqalpaqsha Tughrama",
-      uz: "Qoraqalpoqcha Tug'rama",
-      ru: "\u041A\u0430\u0440\u0430\u043A\u0430\u043B\u043F\u0430\u043A\u0441\u043A\u0430\u044F \u0422\u0443\u0433\u0440\u0430\u043C\u0430",
-      en: "Karakalpak Tughrama"
-    },
-    description: {
-      qr: "D\xE1st\xFArli qaraqalpaq milliy ta\u01F5am\u0131. Maydalangan semiz s\u0131y\u0131r h\xE1m j\u0131lq\u0131 go'shi, qatlama qam\u0131r h\xE1m xosh boyl\u0131 sorpa menen us\u0131n\u0131lad\u0131.",
-      uz: "An'anaviy qoraqalpoq milliy taomi. Maydalangan semiz mol va ot go'shti, qatlama xamir va xushbo'y sho'rva bilan tortiladi.",
-      ru: "\u0422\u0440\u0430\u0434\u0438\u0446\u0438\u043E\u043D\u043D\u043E\u0435 \u043A\u0430\u0440\u0430\u043A\u0430\u043B\u043F\u0430\u043A\u0441\u043A\u043E\u0435 \u0431\u043B\u044E\u0434\u043E. \u041C\u0435\u043B\u043A\u043E \u0440\u0443\u0431\u043B\u0435\u043D\u0430\u044F \u0433\u043E\u0432\u044F\u0434\u0438\u043D\u0430 \u0438 \u043A\u043E\u043D\u0438\u043D\u0430 \u0441 \u0434\u043E\u043C\u0430\u0448\u043D\u0435\u0439 \u043B\u0430\u043F\u0448\u043E\u0439 \u0438 \u0430\u0440\u043E\u043C\u0430\u0442\u043D\u044B\u043C \u0431\u0443\u043B\u044C\u043E\u043D\u043E\u043C.",
-      en: "Authentic Karakalpak delicacy. Finely chopped tender beef and horsemeat served with handmade dough strips and rich broth."
-    },
-    price: 48e3,
-    category: "national",
-    imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80",
-    calories: 620,
-    prepTime: 25,
-    spicyLevel: 0,
-    isVegetarian: false,
-    isGlutenFree: false,
-    isHalal: true,
-    isNationalSpecial: true,
-    isAvailable: true,
-    ingredients: {
-      qr: ["S\u0131y\u0131r go'shi", "J\u0131lq\u0131 go'shi", "Un", "Moy", "Piyaz", "Qara bur\u0131sh", "Zira"],
-      uz: ["Mol go'shti", "Ot go'shti", "Un", "Yog'", "Piyoz", "Murch", "Zira"],
-      ru: ["\u0413\u043E\u0432\u044F\u0434\u0438\u043D\u0430", "\u041A\u043E\u043D\u0438\u043D\u0430", "\u041C\u0443\u043A\u0430", "\u041C\u0430\u0441\u043B\u043E", "\u041B\u0443\u043A", "\u0427\u0435\u0440\u043D\u044B\u0439 \u043F\u0435\u0440\u0435\u0446", "\u0417\u0438\u0440\u0430"],
-      en: ["Beef", "Horsemeat", "Flour", "Butter", "Onion", "Black Pepper", "Cumin"]
-    },
-    allergens: ["gluten"],
+    allergens: ["gluten", "dairy"],
     rating: 4.9,
-    ratingCount: 128,
-    reviews: [
-      {
-        id: "rev-1",
-        userName: "Aydos Qabulov",
-        rating: 5,
-        comment: "Tuwr\u0131 Nukus milliy lezzeti! Tughrama l\u0259zzetli h\xE1m sorpas\u0131 xosh boyl\u0131.",
-        date: "2026-07-20"
-      }
-    ],
-    nutrition: {
-      protein: 42,
-      fat: 28,
-      carbs: 45
-    }
-  },
-  {
-    id: "food-2",
-    title: {
-      qr: "Juwery Gurtuk (J\xFAweri Gurtik)",
-      uz: "Javdari Gurtuk",
-      ru: "\u0414\u0436\u0443\u0432\u0435\u0440\u0438 \u0413\u0443\u0440\u0442\u0443\u043A (\u041F\u0435\u043B\u044C\u043C\u0435\u043D\u0438 \u0438\u0437 \u0441\u043E\u0440\u0433\u043E)",
-      en: "Sorghum Dumplings (Juwery Gurtuk)"
-    },
-    description: {
-      qr: "Qaraqalpaq xalq\u0131n\u0131\u0144 \xE1yyemgi d\xE1st\xFArli j\xFAweri un\u0131nan tayarlan\u01F5an gurtikleri h\xE1m qaynat\u0131l\u01F5an sirke go'shi.",
-      uz: "Qoraqalpoq xalqining qadimiy taomi, makkajo'xori va javdari unidan tayyorlangan gurtuk va go'sht.",
-      ru: "\u0423\u043D\u0438\u043A\u0430\u043B\u044C\u043D\u043E\u0435 \u0441\u0442\u0430\u0440\u0438\u043D\u043D\u043E\u0435 \u0431\u043B\u044E\u0434\u043E \u041A\u0430\u0440\u0430\u043A\u0430\u043B\u043F\u0430\u043A\u0441\u0442\u0430\u043D\u0430 \u0438\u0437 \u0441\u043E\u0440\u0433\u043E\u0432\u043E\u0439 \u043C\u0443\u043A\u0438 \u0441 \u043E\u0442\u0432\u0430\u0440\u043D\u043E\u0439 \u0433\u043E\u0432\u044F\u0434\u0438\u043D\u043E\u0439.",
-      en: "Ancient Karakalpak specialty made with sorghum flour dumplings and tender boiled beef."
-    },
-    price: 42e3,
-    category: "national",
-    imageUrl: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=800&q=80",
-    calories: 510,
-    prepTime: 30,
-    spicyLevel: 0,
-    isVegetarian: false,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: true,
-    isAvailable: true,
-    ingredients: {
-      qr: ["J\xFAweri un\u0131", "S\u0131y\u0131r go'shi", "Qat\u0131q", "Sar\u0131 moy", "Sar\u0131msoq"],
-      uz: ["Javdari un", "Mol go'shti", "Qatiq", "Sari yog'", "Sar\u0131msaq"],
-      ru: ["\u0421\u043E\u0440\u0433\u043E\u0432\u0430\u044F \u043C\u0443\u043A\u0430", "\u0413\u043E\u0432\u044F\u0434\u0438\u043D\u0430", "\u041A\u0430\u0442\u044B\u043A", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0435 \u043C\u0430\u0441\u043B\u043E", "\u0427\u0435\u0441\u043D\u043E\u043A"],
-      en: ["Sorghum Flour", "Beef", "Kefir/Qatiq", "Butter", "Garlic"]
-    },
-    allergens: ["dairy"],
-    rating: 4.8,
-    ratingCount: 94,
+    ratingCount: 230,
     reviews: [],
-    nutrition: {
-      protein: 35,
-      fat: 18,
-      carbs: 52
-    }
+    nutrition: { protein: 6, fat: 18, carbs: 56 }
   },
+  // --- PIROJNIYLAR (PASTRIES) ---
   {
-    id: "food-3",
+    id: "pastry-eclair",
     title: {
-      qr: "Qaraqalpaqsha Beshbaarmak (Qaz\u0131 menen)",
-      uz: "Qoraqalpoqcha Beshbarmoq",
-      ru: "\u0411\u0435\u0448\u0431\u0430\u0440\u043C\u0430\u043A \u043F\u043E-\u043A\u0430\u0440\u0430\u043A\u0430\u043B\u043F\u0430\u043A\u0441\u043A\u0438 \u0441 \u041A\u0430\u0437\u044B",
-      en: "Karakalpak Beshbarmak with Qazy"
+      qr: "Shokoladli Ekler",
+      uz: "Shokoladli Ekler",
+      ru: "\u0428\u043E\u043A\u043E\u043B\u0430\u0434\u043D\u044B\u0439 \u042D\u043A\u043B\u0435\u0440",
+      en: "Chocolate Eclair"
     },
     description: {
-      qr: "S\u0131y\u0131r h\xE1m j\u0131lq\u0131 go'shinen jasal\u01F5an qaz\u0131-qarta, juqa jaz\u0131l\u01F5an qam\u0131r h\xE1m xosh boyl\u0131 sorpa tusl\u0131\u01F5\u0131.",
-      uz: "Mol va ot go'shti, qazi-qarta, yupqa xamir va totli sho'rva.",
-      ru: "\u041F\u0440\u0430\u0437\u0434\u043D\u0438\u0447\u043D\u043E\u0435 \u0431\u043B\u044E\u0434\u043E \u0438\u0437 \u043D\u0435\u0436\u043D\u043E\u0433\u043E \u043C\u044F\u0441\u0430, \u0434\u0435\u043B\u0438\u043A\u0430\u0442\u0435\u0441\u043D\u043E\u0433\u043E \u043A\u0430\u0437\u044B \u0438 \u0434\u043E\u043C\u0430\u0448\u043D\u0435\u0439 \u0441\u043E\u0447\u043D\u043E\u0439 \u043B\u0430\u043F\u0448\u0438.",
-      en: "Feast dish featuring tender beef, gourmet horsemeat qazy sausages, thin pasta ribbons, and onion broth."
+      qr: "Yengil choux xamiri, ichida vanilli nozik zavarnoy krem va qora shokoladli glazur.",
+      uz: "Yengil choux xamiri, ichida vanilli nozik zavarnoy krem va qora shokoladli glazur.",
+      ru: "\u0424\u0440\u0430\u043D\u0446\u0443\u0437\u0441\u043A\u0438\u0439 \u0437\u0430\u0432\u0430\u0440\u043D\u043E\u0439 \u044D\u043A\u043B\u0435\u0440 \u0441 \u043D\u0435\u0436\u043D\u044B\u043C \u0432\u0430\u043D\u0438\u043B\u044C\u043D\u044B\u043C \u043A\u0440\u0435\u043C\u043E\u043C \u0438 \u0431\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u0438\u043C \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u043E\u043C.",
+      en: "Crisp choux pastry filled with vanilla custard and dipped in chocolate ganache."
     },
-    price: 65e3,
-    category: "national",
-    imageUrl: "https://images.unsplash.com/photo-1541544741938-0af808871cc0?auto=format&fit=crop&w=800&q=80",
-    calories: 780,
-    prepTime: 35,
+    price: 2e4,
+    category: "pastries",
+    imageUrl: "https://images.unsplash.com/photo-1612203985729-70726954388c?auto=format&fit=crop&w=800&q=80",
+    calories: 230,
+    prepTime: 3,
     spicyLevel: 0,
-    isVegetarian: false,
+    isVegetarian: true,
     isGlutenFree: false,
     isHalal: true,
-    isNationalSpecial: true,
+    isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Qaz\u0131-qarta", "J\u0131lq\u0131 go'shi", "Un", "Piyaz tusl\u0131\u01F5\u0131", "Gazi boylar"],
-      uz: ["Qazi", "Ot go'shti", "Un", "Piyozli sous", "Ziravorlar"],
-      ru: ["\u041A\u0430\u0437\u044B", "\u041A\u043E\u043D\u0438\u043D\u0430", "\u041C\u0443\u043A\u0430", "\u041B\u0443\u043A\u043E\u0432\u044B\u0439 \u0442\u0443\u0437\u043B\u0443\u043A", "\u0421\u043F\u0435\u0446\u0438\u0438"],
-      en: ["Qazy Sausage", "Horsemeat", "Wheat Flour", "Onion Sauce", "Spices"]
+      qr: ["Zavarnoy xamir", "Zavarnoy krem", "Qora shokolad"],
+      uz: ["Zavarnoy xamir", "Zavarnoy krem", "Qora shokolad"],
+      ru: ["\u0417\u0430\u0432\u0430\u0440\u043D\u043E\u0435 \u0442\u0435\u0441\u0442\u043E", "\u0417\u0430\u0432\u0430\u0440\u043D\u043E\u0439 \u043A\u0440\u0435\u043C \u041F\u0430\u0442\u0438\u0441\u044C\u0435\u0440", "\u0422\u0435\u043C\u043D\u044B\u0439 \u0448\u043E\u043A\u043E\u043B\u0430\u0434"],
+      en: ["Choux Pastry", "Pastry Cream", "Dark Chocolate"]
     },
-    allergens: ["gluten"],
-    rating: 5,
-    ratingCount: 210,
+    allergens: ["gluten", "dairy", "eggs"],
+    rating: 4.8,
+    ratingCount: 160,
     reviews: [],
-    nutrition: {
-      protein: 54,
-      fat: 36,
-      carbs: 60
-    }
+    nutrition: { protein: 4, fat: 12, carbs: 28 }
   },
-  // --- MEATS & KEBABS ---
   {
-    id: "food-tandir-kebap",
+    id: "pastry-strawberry-tart",
     title: {
-      qr: "Tandir Kebap (Qoy go'shinen)",
-      uz: "Tandir Kebab (Qo'y go'shtidan)",
-      ru: "\u0422\u0430\u043D\u0434\u044B\u0440 \u041A\u0435\u0431\u0430\u0431 \u0438\u0437 \u0431\u0430\u0440\u0430\u043D\u0438\u043D\u044B",
-      en: "Tandoor Lamb Kebap"
+      qr: "Qulupnayli Tartaletka",
+      uz: "Qulupnayli Tartaletka",
+      ru: "\u041A\u043B\u0443\u0431\u043D\u0438\u0447\u043D\u0430\u044F \u0422\u0430\u0440\u0442\u0430\u043B\u0435\u0442\u043A\u0430",
+      en: "Strawberry Tart"
     },
     description: {
-      qr: "D\xE1st\xFArli \u0131lay tand\u0131rda arsha tut\u0131n\u0131nda 2 saat pisirilgen jumsaq qoy go'shi h\xE1m piyaz.",
-      uz: "Tandirda pishirilgan yumshoq qo'y go'shti.",
-      ru: "\u041D\u0435\u0436\u043D\u0430\u044F \u0431\u0430\u0440\u0430\u043D\u0438\u043D\u0430, \u0437\u0430\u043F\u0435\u0447\u0435\u043D\u043D\u0430\u044F \u0432 \u0433\u043B\u0438\u043D\u044F\u043D\u043E\u043C \u0442\u0430\u043D\u0434\u044B\u0440\u0435 \u043D\u0430 \u0432\u0435\u0442\u043A\u0430\u0445 \u043C\u043E\u0436\u0436\u0435\u0432\u0435\u043B\u044C\u043D\u0438\u043A\u0430.",
-      en: "Succulent lamb slow-baked in a clay tandoor oven infused with juniper herbs."
+      qr: "Qarsildoq qum xamiri, sitrusli krem Patisser va yangi terilgan shirin qulupnaylar.",
+      uz: "Qarsildoq qum xamiri, sitrusli krem Patisser va yangi terilgan shirin qulupnaylar.",
+      ru: "\u0425\u0440\u0443\u0441\u0442\u044F\u0449\u0430\u044F \u043F\u0435\u0441\u043E\u0447\u043D\u0430\u044F \u0442\u0430\u0440\u0442\u0430\u043B\u0435\u0442\u043A\u0430 \u0441 \u043A\u0440\u0435\u043C\u043E\u043C \u041F\u0430\u0442\u0438\u0441\u044C\u0435\u0440 \u0438 \u0441\u0432\u0435\u0436\u0435\u0439 \u0441\u043E\u0447\u043D\u043E\u0439 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439.",
+      en: "Crisp shortbread tart crust with silky custard and fresh sweet strawberries."
     },
-    price: 58e3,
-    category: "meats",
-    imageUrl: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=800&q=80",
-    calories: 690,
-    prepTime: 25,
-    spicyLevel: 1,
-    isVegetarian: false,
+    price: 28e3,
+    category: "pastries",
+    imageUrl: "https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80",
+    calories: 260,
+    prepTime: 4,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: false,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Yangi qulupnay", "Krem Patisser", "Qum xamir"],
+      uz: ["Yangi qulupnay", "Krem Patisser", "Qum xamir"],
+      ru: ["\u0421\u0432\u0435\u0436\u0430\u044F \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u0430", "\u041A\u0440\u0435\u043C \u041F\u0430\u0442\u0438\u0441\u044C\u0435\u0440", "\u041F\u0435\u0441\u043E\u0447\u043D\u043E\u0435 \u0442\u0435\u0441\u0442\u043E"],
+      en: ["Fresh Strawberries", "Pastry Cream", "Shortcrust Pastry"]
+    },
+    allergens: ["gluten", "dairy", "eggs"],
+    rating: 4.9,
+    ratingCount: 145,
+    reviews: [],
+    nutrition: { protein: 4, fat: 11, carbs: 35 }
+  },
+  {
+    id: "pastry-macarons-set",
+    title: {
+      qr: "Fransuz Makaronlari (3 dona)",
+      uz: "Fransuz Makaronlari (3 dona)",
+      ru: "\u0424\u0440\u0430\u043D\u0446\u0443\u0437\u0441\u043A\u0438\u0435 \u041C\u0430\u043A\u0430\u0440\u0443\u043D\u044B (3 \u0448\u0442)",
+      en: "French Macarons (Set of 3)"
+    },
+    description: {
+      qr: "Bodom unidan tayyorlangan 3 xil lazzat: Pista, Malina va Shokolad.",
+      uz: "Bodom unidan tayyorlangan 3 xil lazzat: Pista, Malina va Shokolad.",
+      ru: "\u041D\u0435\u0436\u043D\u044B\u0435 \u043F\u0438\u0440\u043E\u0436\u043D\u044B\u0435 \u0438\u0437 \u043C\u0438\u043D\u0434\u0430\u043B\u044C\u043D\u043E\u0439 \u043C\u0443\u043A\u0438: \u0444\u0438\u0441\u0442\u0430\u0448\u043A\u0430, \u043C\u0430\u043B\u0438\u043D\u0430 \u0438 \u0448\u043E\u043A\u043E\u043B\u0430\u0434 \u0433\u0430\u043D\u0430\u0448.",
+      en: "Delicate almond meringue cookies with pistachio, raspberry, and chocolate fillings."
+    },
+    price: 3e4,
+    category: "pastries",
+    imageUrl: "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80",
+    calories: 210,
+    prepTime: 2,
+    spicyLevel: 0,
+    isVegetarian: true,
     isGlutenFree: true,
     isHalal: true,
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Qoy go'shi", "Tand\u0131r piyaz\u0131", "Zira", "Kashnich", "Tuz"],
-      uz: ["Qo'y go'shti", "Piyoz", "Zira", "Kashnich", "Tuz"],
-      ru: ["\u0411\u0430\u0440\u0430\u043D\u0438\u043D\u0430", "\u041B\u0443\u043A", "\u0417\u0438\u0440\u0430", "\u041A\u043E\u0440\u0438\u0430\u043D\u0434\u0440", "\u0421\u043E\u043B\u044C"],
-      en: ["Lamb", "Onions", "Cumin", "Coriander", "Salt"]
+      qr: ["Bodom uni", "Oqsil", "Shokolad ganash", "Malina"],
+      uz: ["Bodom uni", "Oqsil", "Shokolad ganash", "Malina"],
+      ru: ["\u041C\u0438\u043D\u0434\u0430\u043B\u044C\u043D\u0430\u044F \u043C\u0443\u043A\u0430", "\u0411\u0435\u043B\u043A\u0438", "\u0413\u0430\u043D\u0430\u0448", "\u041C\u0430\u043B\u0438\u043D\u0430"],
+      en: ["Almond Flour", "Egg Whites", "Ganache", "Raspberry"]
+    },
+    allergens: ["nuts", "dairy", "eggs"],
+    rating: 4.9,
+    ratingCount: 210,
+    reviews: [],
+    nutrition: { protein: 4, fat: 9, carbs: 29 }
+  },
+  // --- QAHVA & ICHIMLIKLAR (COFFEE & BEVERAGES) ---
+  {
+    id: "coffee-spanish-latte",
+    title: {
+      qr: "Ispan Latte (Spanish Latte)",
+      uz: "Ispan Latte (Spanish Latte)",
+      ru: "\u0418\u0441\u043F\u0430\u043D\u0441\u043A\u0438\u0439 \u041B\u0430\u0442\u0442\u0435 \u0441\u043E \u0441\u0433\u0443\u0449\u0435\u043D\u043D\u044B\u043C \u043C\u043E\u043B\u043E\u043A\u043E\u043C",
+      en: "Spanish Iced / Hot Latte"
+    },
+    description: {
+      qr: "Arabika espresso, quyiltirilgan sut (sgushonka) va mayin sut ko'pigi bilan xushbo'y qahva.",
+      uz: "Arabika espresso, quyiltirilgan sut (sgushonka) va mayin sut ko'pigi bilan xushbo'y qahva.",
+      ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u044B\u0439 \u044D\u0441\u043F\u0440\u0435\u0441\u0441\u043E \u0438\u0437 100% \u0430\u0440\u0430\u0431\u0438\u043A\u0438 \u0441\u043E \u0441\u0433\u0443\u0449\u0435\u043D\u043D\u044B\u043C \u043C\u043E\u043B\u043E\u043A\u043E\u043C \u0438 \u0432\u043E\u0437\u0434\u0443\u0448\u043D\u043E\u0439 \u043C\u043E\u043B\u043E\u0447\u043D\u043E\u0439 \u043F\u0435\u043D\u043A\u043E\u0439.",
+      en: "Rich espresso poured over sweet condensed milk and steamed creamy milk."
+    },
+    price: 28e3,
+    category: "coffee",
+    imageUrl: "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=800&q=80",
+    calories: 190,
+    prepTime: 4,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: true,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Arabika espresso", "Sut", "Quyiltirilgan sut"],
+      uz: ["Arabika espresso", "Sut", "Quyiltirilgan sut"],
+      ru: ["\u042D\u0441\u043F\u0440\u0435\u0441\u0441\u043E \u0410\u0440\u0430\u0431\u0438\u043A\u0430", "\u041C\u043E\u043B\u043E\u043A\u043E", "\u0421\u0433\u0443\u0449\u0435\u043D\u043D\u043E\u0435 \u043C\u043E\u043B\u043E\u043A\u043E"],
+      en: ["Arabica Espresso", "Fresh Milk", "Condensed Milk"]
+    },
+    allergens: ["dairy"],
+    rating: 5,
+    ratingCount: 420,
+    reviews: [],
+    nutrition: { protein: 6, fat: 5, carbs: 26 }
+  },
+  {
+    id: "coffee-cappuccino",
+    title: {
+      qr: "Klassik Kapuchino",
+      uz: "Klassik Kapuchino",
+      ru: "\u041A\u0430\u043F\u0443\u0447\u0438\u043D\u043E \u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439",
+      en: "Classic Cappuccino"
+    },
+    description: {
+      qr: "Klassik Italiya retsepti bo'yicha boy espresso va qalin ipakdek sut ko'pigi.",
+      uz: "Klassik Italiya retsepti bo'yicha boy espresso va qalin ipakdek sut ko'pigi.",
+      ru: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0438\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0438\u0439 \u043A\u043E\u0444\u0435 \u0441 \u0433\u0443\u0441\u0442\u043E\u0439 \u0431\u0430\u0440\u0445\u0430\u0442\u0438\u0441\u0442\u043E\u0439 \u043F\u0435\u043D\u043A\u043E\u0439.",
+      en: "Traditional Italian espresso balanced with silky steamed and frothed milk."
+    },
+    price: 22e3,
+    category: "coffee",
+    imageUrl: "https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=800&q=80",
+    calories: 120,
+    prepTime: 3,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: true,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Espresso", "Sut", "Dolchin"],
+      uz: ["Espresso", "Sut", "Dolchin"],
+      ru: ["\u042D\u0441\u043F\u0440\u0435\u0441\u0441\u043E", "\u0412\u0437\u0431\u0438\u0442\u043E\u0435 \u043C\u043E\u043B\u043E\u043A\u043E", "\u041A\u043E\u0440\u0438\u0446\u0430"],
+      en: ["Espresso", "Steamed Milk", "Cinnamon Dust"]
+    },
+    allergens: ["dairy"],
+    rating: 4.8,
+    ratingCount: 310,
+    reviews: [],
+    nutrition: { protein: 5, fat: 4, carbs: 12 }
+  },
+  {
+    id: "coffee-mojito-fresh",
+    title: {
+      qr: "Muzdek Moxito (Limon & Yalpiz)",
+      uz: "Muzdek Moxito (Limon & Yalpiz)",
+      ru: "\u041E\u0441\u0432\u0435\u0436\u0430\u044E\u0449\u0438\u0439 \u041C\u043E\u0445\u0438\u0442\u043E \u0441 \u043C\u044F\u0442\u043E\u0439",
+      en: "Fresh Mint & Lime Mojito"
+    },
+    description: {
+      qr: "Yangi yalpiz barglari, laym sharbati, shirin sirop va muzdek gazlangan suv.",
+      uz: "Yangi yalpiz barglari, laym sharbati, shirin sirop va muzdek gazlangan suv.",
+      ru: "\u041F\u0440\u043E\u0445\u043B\u0430\u0434\u043D\u044B\u0439 \u043B\u0438\u043C\u043E\u043D\u0430\u0434 \u0441\u043E \u0441\u0432\u0435\u0436\u0435\u0439 \u043C\u044F\u0442\u043E\u0439, \u043B\u0430\u0439\u043C\u043E\u043C \u0438 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u043C \u043B\u044C\u0434\u043E\u043C.",
+      en: "Crisp and refreshing cooler with fresh mint leaves, lime juice, and sparkling water."
+    },
+    price: 24e3,
+    category: "coffee",
+    imageUrl: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80",
+    calories: 85,
+    prepTime: 3,
+    spicyLevel: 0,
+    isVegetarian: true,
+    isGlutenFree: true,
+    isHalal: true,
+    isNationalSpecial: false,
+    isAvailable: true,
+    ingredients: {
+      qr: ["Yalpiz", "Laym", "Gazlangan suv", "Muz"],
+      uz: ["Yalpiz", "Laym", "Gazlangan suv", "Muz"],
+      ru: ["\u041C\u044F\u0442\u0430", "\u041B\u0430\u0439\u043C", "\u0413\u0430\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u0432\u043E\u0434\u0430", "\u041B\u0435\u0434"],
+      en: ["Fresh Mint", "Lime Juice", "Soda", "Ice"]
     },
     allergens: [],
     rating: 4.9,
-    ratingCount: 150,
+    ratingCount: 195,
     reviews: [],
-    nutrition: {
-      protein: 48,
-      fat: 38,
-      carbs: 4
-    }
+    nutrition: { protein: 0, fat: 0, carbs: 21 }
   },
   {
-    id: "food-somsa",
+    id: "coffee-berry-tea",
     title: {
-      qr: "Tandir Somsa (Go'shli h\xE1m Piyazl\u0131)",
-      uz: "Tandir Somsa",
-      ru: "\u0422\u0430\u043D\u0434\u044B\u0440\u043D\u0430\u044F \u0421\u0430\u043C\u0441\u0430 \u0441 \u043C\u044F\u0441\u043E\u043C",
-      en: "Crispy Tandoor Somsa"
+      qr: "Mevali Choy (Yalpiz & Qulupnay)",
+      uz: "Mevali Choy (Yalpiz & Qulupnay)",
+      ru: "\u042F\u0433\u043E\u0434\u043D\u044B\u0439 \u0427\u0430\u0439 \u0441 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439 \u0438 \u043C\u044F\u0442\u043E\u0439",
+      en: "Strawberry & Mint Berry Tea"
     },
     description: {
-      qr: "Qatlama juqa qam\u0131r h\xE1m sochli s\u0131y\u0131r go'shi tolt\u0131r\u0131l\u01F5an d\xE1st\xFArli tand\u0131r somsa.",
-      uz: "Yupqa qatlama xamir va mol go'shti solingan tandir somsa.",
-      ru: "\u0425\u0440\u0443\u0441\u0442\u044F\u0449\u0430\u044F \u0441\u043B\u043E\u0435\u043D\u0430\u044F \u0441\u0430\u043C\u0441\u0430 \u0441 \u0441\u043E\u0447\u043D\u043E\u0439 \u0433\u043E\u0432\u044F\u0434\u0438\u043D\u043E\u0439 \u0438 \u043B\u0443\u043A\u043E\u043C \u0438\u0437 \u0442\u0430\u043D\u0434\u044B\u0440\u0430.",
-      en: "Golden layered pastry filled with spiced diced beef and sweet onions."
+      qr: "Tabiiy mevalar, qulupnay va yangi yalpiz bilan damlangan iliq choy.",
+      uz: "Tabiiy mevalar, qulupnay va yangi yalpiz bilan damlangan iliq choy.",
+      ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u044B\u0439 \u0447\u0430\u0439 \u0441\u043E \u0441\u0432\u0435\u0436\u0435\u0439 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439, \u044F\u0433\u043E\u0434\u0430\u043C\u0438 \u0438 \u043C\u044F\u0442\u043E\u0439 \u0432 \u0441\u0442\u0435\u043A\u043B\u044F\u043D\u043D\u043E\u043C \u0447\u0430\u0439\u043D\u0438\u0447\u043A\u0435.",
+      en: "Warm soothing pot of tea infused with sweet strawberries, berry syrup, and mint."
     },
-    price: 12e3,
-    category: "meats",
-    imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=800&q=80",
-    calories: 320,
-    prepTime: 15,
+    price: 2e4,
+    category: "coffee",
+    imageUrl: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=800&q=80",
+    calories: 60,
+    prepTime: 4,
     spicyLevel: 0,
-    isVegetarian: false,
-    isGlutenFree: false,
+    isVegetarian: true,
+    isGlutenFree: true,
     isHalal: true,
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["S\u0131y\u0131r go'shi", "Un", "Sar\u0131 moy", "Piyaz", "Zira"],
-      uz: ["Mol go'shti", "Un", "Sari yog'", "Piyoz", "Zira"],
-      ru: ["\u0413\u043E\u0432\u044F\u0434\u0438\u043D\u0430", "\u041C\u0443\u043A\u0430", "\u041C\u0430\u0441\u043B\u043E", "\u041B\u0443\u043A", "\u0417\u0438\u0440\u0430"],
-      en: ["Beef", "Flour", "Butter", "Onions", "Cumin"]
+      qr: ["Qora/ko'k choy", "Qulupnay", "Yalpiz", "Asal"],
+      uz: ["Qora/ko'k choy", "Qulupnay", "Yalpiz", "Asal"],
+      ru: ["\u0427\u0435\u0440\u043D\u044B\u0439/\u0437\u0435\u043B\u0435\u043D\u044B\u0439 \u0447\u0430\u0439", "\u041A\u043B\u0443\u0431\u043D\u0438\u043A\u0430", "\u041C\u044F\u0442\u0430", "\u041C\u0435\u0434"],
+      en: ["Black/Green Tea", "Strawberries", "Mint", "Honey"]
     },
-    allergens: ["gluten"],
+    allergens: [],
     rating: 4.8,
-    ratingCount: 180,
+    ratingCount: 140,
     reviews: [],
-    nutrition: {
-      protein: 16,
-      fat: 18,
-      carbs: 28
-    }
-  },
-  // --- TRADITIONAL DAIRY DRINKS ---
-  {
-    id: "food-qimiz",
-    title: {
-      qr: "Taza Sh\u0131pal\u0131 Q\u0131m\u0131z (1 Litr)",
-      uz: "Shifobaxsh Qimiz (1 Litr)",
-      ru: "\u041B\u0435\u0447\u0435\u0431\u043D\u044B\u0439 \u041A\u0443\u043C\u044B\u0441 \u0438\u0437 \u043A\u043E\u0431\u044B\u043B\u044C\u0435\u0433\u043E \u043C\u043E\u043B\u043E\u043A\u0430 (1 \u041B)",
-      en: "Fresh Fermented Kumis Mare Milk (1L)"
-    },
-    description: {
-      qr: "Qaraqalpaqstan dalalar\u0131nan keshken taza beye sutinen tayarlan\u01F5an, densawl\u0131qqa paydal\u0131 shiftal\u0131 milliy ishimlik.",
-      uz: "Tabiiy biya sutidan tayyorlangan shifobaxsh milliy ichimlik.",
-      ru: "\u0422\u0440\u0430\u0434\u0438\u0446\u0438\u043E\u043D\u043D\u044B\u0439 \u043E\u0441\u0432\u0435\u0436\u0430\u044E\u0449\u0438\u0439 \u0444\u0435\u0440\u043C\u0435\u043D\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u044B\u0439 \u043D\u0430\u043F\u0438\u0442\u043E\u043A \u0438\u0437 \u0447\u0438\u0441\u0442\u043E\u0433\u043E \u043A\u043E\u0431\u044B\u043B\u044C\u0435\u0433\u043E \u043C\u043E\u043B\u043E\u043A\u0430.",
-      en: "Healthy traditional fermented mare's milk rich in natural vitamins."
-    },
-    price: 22e3,
-    category: "drinks",
-    imageUrl: "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=800&q=80",
-    calories: 180,
-    prepTime: 5,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: true,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Beye s\xFCt\u0131", "Ach\u0131tq\u0131"],
-      uz: ["Biya suti", "Achitqi"],
-      ru: ["\u041A\u043E\u0431\u044B\u043B\u044C\u0435 \u043C\u043E\u043B\u043E\u043A\u043E", "\u0417\u0430\u043A\u0432\u0430\u0441\u043A\u0430"],
-      en: ["Mare's Milk", "Natural Starter Culture"]
-    },
-    allergens: ["dairy"],
-    rating: 4.9,
-    ratingCount: 88,
-    reviews: [],
-    nutrition: {
-      protein: 8,
-      fat: 6,
-      carbs: 12
-    }
-  },
-  {
-    id: "food-shubat",
-    title: {
-      qr: "Qaraqalpaq Shubat (T\xFAye S\xFAt\u0131 - 1 Litr)",
-      uz: "Qoraqalpoq Shubat (Tuya suti - 1 Litr)",
-      ru: "\u0428\u0443\u0431\u0430\u0442 \u0438\u0437 \u0432\u0435\u0440\u0431\u043B\u044E\u0436\u044C\u0435\u0433\u043E \u043C\u043E\u043B\u043E\u043A\u0430 (1 \u041B)",
-      en: "Shubat Fermented Camel Milk (1L)"
-    },
-    description: {
-      qr: "Q\u0131z\u0131lqum dalalar\u0131nda ba\u01F5\u0131l\u01F5an t\xFAyeler s\xFCtinen a\u015F\u0131t\u0131l\u01F5an milliy delikates ishimlik.",
-      uz: "Qizilqum tuya sutidan tayyorlangan shifobaxsh ichimlik.",
-      ru: "\u0413\u0443\u0441\u0442\u043E\u0439 \u043B\u0435\u0447\u0435\u0431\u043D\u044B\u0439 \u043D\u0430\u043F\u0438\u0442\u043E\u043A \u0438\u0437 \u043F\u0430\u0440\u043D\u043E\u0433\u043E \u0432\u0435\u0440\u0431\u043B\u044E\u0436\u044C\u0435\u0433\u043E \u043C\u043E\u043B\u043E\u043A\u0430 \u043F\u0443\u0441\u0442\u044B\u043D\u0438 \u041A\u044B\u0437\u044B\u043B\u043A\u0443\u043C.",
-      en: "Rich creamy fermented camel milk directly from Kyzylkum desert farms."
-    },
-    price: 28e3,
-    category: "drinks",
-    imageUrl: "https://images.unsplash.com/photo-1528498033373-3c6c08e93d79?auto=format&fit=crop&w=800&q=80",
-    calories: 220,
-    prepTime: 5,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: true,
-    isAvailable: true,
-    ingredients: {
-      qr: ["T\xFAye s\xFCt\u0131", "Tabiiy ach\u0131tq\u0131"],
-      uz: ["Tuya suti", "Achitqi"],
-      ru: ["\u0412\u0435\u0440\u0431\u043B\u044E\u0436\u044C\u0435 \u043C\u043E\u043B\u043E\u043A\u043E", "\u0417\u0430\u043A\u0432\u0430\u0441\u043A\u0430"],
-      en: ["Camel Milk", "Natural Culture"]
-    },
-    allergens: ["dairy"],
-    rating: 5,
-    ratingCount: 72,
-    reviews: [],
-    nutrition: {
-      protein: 10,
-      fat: 11,
-      carbs: 14
-    }
+    nutrition: { protein: 0, fat: 0, carbs: 15 }
   }
 ];
 

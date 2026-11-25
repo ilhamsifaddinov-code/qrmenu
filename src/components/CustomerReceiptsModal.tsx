@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, FileText, Printer, Trash2, ChevronRight, Clock, CheckCircle } from 'lucide-react';
+import { X, FileText, Trash2, ChevronRight, Clock } from 'lucide-react';
 import { Order, Language } from '../types';
 import { translations } from '../i18n/translations';
 import { getFoodTitle, formatPrice } from '../utils/formatters';
@@ -42,23 +42,29 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
   };
 
   const handleClearAll = () => {
-    if (window.confirm(lang === 'qr' ? 'Barlıq saqlanǵan çeklerdi óshiresiz be?' : 'Barcha saqlangan cheklarni o\'chirishni xohlaysizmi?')) {
+    if (
+      window.confirm(
+        lang === 'qr'
+          ? 'Barlıq saqlanǵan çeklerdi óshiresiz be?'
+          : "Barcha saqlangan cheklarni o'chirishni xohlaysizmi?"
+      )
+    ) {
       setReceipts([]);
       localStorage.removeItem('cafe_customer_receipts');
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(245,158,11,0.3)] overflow-hidden my-auto max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 z-50 bg-[#2E1E17]/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
+      <div className="relative w-full max-w-lg bg-[#FAF5EF] text-[#2E1E17] rounded-3xl border border-[#EAE0D4] shadow-[0_10px_40px_rgba(46,30,23,0.25)] overflow-hidden my-auto max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="bg-zinc-900 text-zinc-100 p-4 border-b border-amber-500/30 flex items-center justify-between shrink-0">
+        <div className="bg-white p-4 border-b border-[#EAE0D4] flex items-center justify-between shrink-0 shadow-2xs">
           <div className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-amber-400" />
-            <h3 className="font-serif font-bold text-lg text-amber-300">
-              {t.myReceipts || 'Meniń çeklerim'}
+            <FileText className="w-5 h-5 text-[#C0684C]" />
+            <h3 className="font-serif font-bold text-base sm:text-lg text-[#2E1E17]">
+              {t.myReceipts || 'Mening cheklarim'}
             </h3>
-            <span className="bg-amber-500/20 text-amber-300 text-xs px-2.5 py-0.5 rounded-full font-bold border border-amber-500/30">
+            <span className="bg-[#C0684C] text-white text-xs px-2 py-0.5 rounded-full font-bold">
               {receipts.length}
             </span>
           </div>
@@ -68,16 +74,16 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded border border-red-500/30 hover:bg-red-500/10 transition"
+                className="text-xs text-[#C0684C] hover:text-[#A9563C] px-2 py-1 rounded-lg border border-[#C0684C]/30 hover:bg-[#FAF5EF] transition"
               >
-                Tazalaw
+                Tozalash
               </button>
             )}
             <button
               type="button"
               onClick={onClose}
-              aria-label={t.close || 'Jabıw'}
-              className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
+              aria-label={t.close || 'Yopish'}
+              className="p-1.5 rounded-full bg-[#F1EAE0] text-[#2E1E17] hover:bg-[#EAE0D4] transition"
             >
               <X className="w-5 h-5" aria-hidden="true" />
             </button>
@@ -85,17 +91,17 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
         </div>
 
         {/* Body list */}
-        <div className="p-4 overflow-y-auto space-y-3 flex-1 custom-scrollbar">
+        <div className="p-4 overflow-y-auto space-y-3 flex-1">
           {receipts.length === 0 ? (
-            <div className="py-12 text-center text-zinc-400 space-y-3">
-              <div className="w-16 h-16 rounded-full bg-zinc-900 border border-amber-500/30 mx-auto flex items-center justify-center text-3xl">
+            <div className="py-12 text-center text-[#8D6B58] space-y-3">
+              <div className="w-16 h-16 rounded-full bg-white border border-[#EAE0D4] mx-auto flex items-center justify-center text-3xl shadow-xs">
                 🧾
               </div>
-              <p className="font-serif font-bold text-sm text-zinc-300">
-                {t.noSavedReceipts || 'Házirshe saqlanǵan çekler joq.'}
+              <p className="font-serif font-bold text-sm text-[#2E1E17]">
+                {t.noSavedReceipts || 'Hozircha saqlangan cheklar mavjud emas.'}
               </p>
-              <p className="text-xs text-zinc-500 max-w-xs mx-auto">
-                Taǵam buyırtpa berip tastıyıqlaǵanıńızdan keyin, barlıq çeklerińiz usı jerde avtomat saqlanıp baradı.
+              <p className="text-xs text-[#8D6B58] max-w-xs mx-auto">
+                Buyurtma tasdiqlangandan so'ng, barcha cheklaringiz avtomatik tarzda shu yerda saqlanadi.
               </p>
             </div>
           ) : (
@@ -103,32 +109,34 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
               <div
                 key={rec.id}
                 onClick={() => onSelectReceipt(rec)}
-                className="bg-zinc-900 hover:bg-zinc-850 p-4 rounded-2xl border border-amber-500/25 hover:border-amber-400/60 shadow-md cursor-pointer transition flex items-center justify-between gap-3 group"
+                className="bg-white hover:bg-[#FAF5EF] p-4 rounded-2xl border border-[#EAE0D4] hover:border-[#C0684C]/40 shadow-xs cursor-pointer transition flex items-center justify-between gap-3 group"
               >
                 <div className="flex-1 min-w-0 space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="bg-amber-500 text-zinc-950 text-[11px] font-black px-2 py-0.5 rounded font-mono">
+                    <span className="bg-[#2E1E17] text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
                       Stol №{rec.tableNumber}
                     </span>
-                    <span className="font-mono text-xs font-bold text-amber-300">
+                    <span className="font-mono text-xs font-bold text-[#C0684C]">
                       {rec.id}
                     </span>
-                    <span className="text-[10px] text-zinc-400 flex items-center gap-1">
+                    <span className="text-[10px] text-[#8D6B58] flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {rec.createdAt || 'Vaqt belgilanmagan'}
                     </span>
                   </div>
 
-                  <p className="text-xs text-zinc-300 truncate">
-                    {(rec.items || []).map((i) => `${getFoodTitle(i?.food, lang)} x${i?.quantity || 1}`).join(', ')}
+                  <p className="text-xs text-[#6C5343] truncate">
+                    {(rec.items || [])
+                      .map((i) => `${getFoodTitle(i?.food, lang)} x${i?.quantity || 1}`)
+                      .join(', ')}
                   </p>
 
                   <div className="flex items-center gap-2 pt-1">
-                    <span className="text-sm font-extrabold text-amber-400 font-mono">
+                    <span className="text-sm font-extrabold text-[#2E1E17]">
                       {formatPrice(rec.totalAmount)}
                     </span>
-                    <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded font-bold border border-emerald-500/30">
-                      ✓ {t.orderReceivedTitle || 'Buyırtpa qabıllandı'}
+                    <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                      ✓ Qabul qilindi
                     </span>
                   </div>
                 </div>
@@ -137,12 +145,12 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
                   <button
                     type="button"
                     onClick={(e) => handleDeleteReceipt(rec.id, e)}
-                    className="p-2 rounded-xl bg-zinc-950 text-zinc-500 hover:text-red-400 hover:bg-red-500/10 transition"
-                    title="Óshiriw"
+                    className="p-2 rounded-xl text-[#8D6B58] hover:text-[#C0684C] hover:bg-[#FAF5EF] transition"
+                    title="O'chirish"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
-                  <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500 group-hover:text-zinc-950 transition">
+                  <div className="p-2 rounded-xl bg-[#FAF5EF] text-[#C0684C] group-hover:bg-[#C0684C] group-hover:text-white transition">
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>

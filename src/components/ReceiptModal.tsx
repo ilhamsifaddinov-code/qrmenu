@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle, Printer, Check, Download, BookmarkCheck } from 'lucide-react';
+import { X, CheckCircle, Printer, BookmarkCheck } from 'lucide-react';
 import { Order, Language } from '../types';
 import { translations } from '../i18n/translations';
 import { getFoodTitle, formatPrice } from '../utils/formatters';
@@ -18,9 +18,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   onClose,
 }) => {
   const [savedNotification, setSavedNotification] = useState<string | null>(null);
-  const [isSaved, setIsSaved] = useState(false);
 
-  // Auto-save order into customer receipts history
   useEffect(() => {
     if (isOpen && order) {
       try {
@@ -30,7 +28,6 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           const updated = [order, ...list];
           localStorage.setItem('cafe_customer_receipts', JSON.stringify(updated));
         }
-        setIsSaved(true);
       } catch (err) {
         console.warn('Could not auto-save receipt:', err);
       }
@@ -46,24 +43,29 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   };
 
   const handleSaveReceipt = () => {
-    // Copy plain text receipt to clipboard
     const itemsText = (order.items || [])
-      .map((i) => `${getFoodTitle(i?.food, lang)} x${i?.quantity || 1} - ${formatPrice((i?.food?.price || 0) * (i?.quantity || 1))}`)
+      .map(
+        (i) =>
+          `${getFoodTitle(i?.food, lang)} x${i?.quantity || 1} - ${formatPrice(
+            (i?.food?.price || 0) * (i?.quantity || 1)
+          )}`
+      )
       .join('\n');
 
-    const receiptText = `================================\n` +
-      `   CAKEBUMER & QARAQALPAQ MENU   \n` +
+    const receiptText =
       `================================\n` +
-      `ÇEK: ${order.id}\n` +
+      `   LA PÂTISSERIE - DESSERT CAFÉ  \n` +
+      `================================\n` +
+      `CHEK: ${order.id}\n` +
       `STOL: №${order.tableNumber}\n` +
       `VAQT: ${order.createdAt || new Date().toLocaleTimeString()}\n` +
       `--------------------------------\n` +
       `${itemsText}\n` +
       `--------------------------------\n` +
       `JAMI: ${formatPrice(order.totalAmount)}\n` +
-      `HOLATI: QABULLAP ALINDI\n` +
+      `HOLATI: QABUL QILINDI\n` +
       `================================\n` +
-      `Raxmet! Xosh kelipsiz!\n`;
+      `Rahmat! Yoqimli ishtaha!\n`;
 
     try {
       navigator.clipboard.writeText(receiptText);
@@ -71,128 +73,133 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
       console.warn(e);
     }
 
-    setSavedNotification(lang === 'qr' ? 'Çek nusxalandı hám "Meniń çeklerim" bólimine saqlandı!' : 'Chek nusxalandi va "Mening cheklarim" bo\'limiga saqlandi!');
+    setSavedNotification(
+      lang === 'qr'
+        ? 'Çek nusxalandı hám "Meniń çeklerim" bólimine saqlandı!'
+        : 'Chek nusxalandi va "Mening cheklarim" bo\'limiga saqlandi!'
+    );
     setTimeout(() => setSavedNotification(null), 3500);
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 animate-fadeIn overflow-y-auto">
-      <div className="relative w-full max-w-lg bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(0,0,0,0.9)] overflow-hidden my-auto flex flex-col">
+    <div className="fixed inset-0 z-50 bg-[#2E1E17]/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-fadeIn overflow-y-auto">
+      <div className="relative w-full max-w-md bg-[#FAF5EF] text-[#2E1E17] rounded-3xl border border-[#EAE0D4] shadow-[0_10px_40px_rgba(46,30,23,0.25)] overflow-hidden my-auto flex flex-col">
         {/* Header */}
-        <div className="bg-zinc-900 text-zinc-100 p-4 border-b border-amber-500/30 flex items-center justify-between shrink-0">
+        <div className="bg-white p-4 border-b border-[#EAE0D4] flex items-center justify-between shrink-0 shadow-2xs">
           <div className="flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-emerald-400" />
-            <h3 className="font-serif font-bold text-lg text-emerald-400">
-              {lang === 'qr' ? 'Buyırtpa tastıyıqlandı' : t.paymentSuccess || 'Buyurtma tasdiqlandi'}
+            <CheckCircle className="w-5 h-5 text-emerald-600" />
+            <h3 className="font-serif font-bold text-base sm:text-lg text-[#2E1E17]">
+              {t.orderReceivedTitle || 'Buyurtma qabul qilindi!'}
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Jabıw"
-            className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
+            aria-label="Yopish"
+            className="p-1.5 rounded-full bg-[#F1EAE0] text-[#2E1E17] hover:bg-[#EAE0D4] transition"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="p-5 space-y-4 overflow-y-auto custom-scrollbar">
+        <div className="p-5 space-y-4 overflow-y-auto">
           <div className="space-y-3 text-center">
-            <div className="w-14 h-14 rounded-full bg-emerald-950/90 mx-auto flex items-center justify-center text-emerald-400 border-2 border-emerald-500/60 shadow-[0_0_20px_rgba(16,185,129,0.3)]">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 mx-auto flex items-center justify-center text-emerald-700 border border-emerald-300 shadow-2xs">
               <CheckCircle className="w-8 h-8" aria-hidden="true" />
             </div>
 
-            {/* Prominent Order Received Heading as requested */}
             <div>
-              <h4 className="font-serif font-bold text-xl sm:text-2xl text-emerald-400 drop-shadow-[0_0_10px_rgba(16,185,129,0.3)]">
-                {t.orderReceivedTitle || 'Buyırtpa qabıllap alındı!'}
+              <h4 className="font-serif font-bold text-lg sm:text-xl text-[#2E1E17]">
+                {t.orderReceivedTitle || 'Buyurtma qabul qilindi!'}
               </h4>
-              <p className="text-xs sm:text-sm text-zinc-300 mt-1 max-w-md mx-auto leading-relaxed">
-                {t.orderReceivedSub || 'Buyırtpańız tastıyıqlanıp, qabıllap alındı! Asxana hám aficiant komandasına jetkerildi.'}
+              <p className="text-xs text-[#8D6B58] mt-1 max-w-sm mx-auto leading-relaxed">
+                {t.orderReceivedSub ||
+                  "Buyurtmangiz tasdiqlanib, qabul qilindi! Oshxona jamoasiga yetkazildi."}
               </p>
             </div>
 
-            {/* Notification when saved */}
             {savedNotification && (
-              <div className="bg-emerald-500/20 text-emerald-300 text-xs font-bold p-2.5 rounded-xl border border-emerald-500/40 flex items-center justify-center gap-2 animate-fadeIn">
-                <BookmarkCheck className="w-4 h-4 text-emerald-400" />
+              <div className="bg-emerald-50 text-emerald-800 text-xs font-bold p-2.5 rounded-xl border border-emerald-200 flex items-center justify-center gap-2 animate-fadeIn">
+                <BookmarkCheck className="w-4 h-4 text-emerald-600" />
                 <span>{savedNotification}</span>
               </div>
             )}
 
-            {/* Printable Receipt Card */}
-            <div className="bg-zinc-950 p-4 rounded-2xl border border-amber-500/30 text-left text-xs space-y-2.5 font-mono shadow-inner text-zinc-300">
-              <div className="flex justify-between items-center border-b border-zinc-800 pb-2">
-                <span className="font-bold text-zinc-200">{t.receiptTitle || 'TÓLEM ÇEKI'}</span>
-                <span className="text-amber-400 font-extrabold text-sm">{order.id}</span>
+            {/* Receipt Card */}
+            <div className="bg-white p-4 rounded-2xl border border-[#EAE0D4] text-left text-xs space-y-2.5 font-mono shadow-xs text-[#2E1E17]">
+              <div className="flex justify-between items-center border-b border-[#F0E7DD] pb-2">
+                <span className="font-bold text-[#2E1E17]">LA PÂTISSERIE CHEKI</span>
+                <span className="text-[#C0684C] font-extrabold text-sm">{order.id}</span>
               </div>
-              <div className="flex justify-between items-center text-zinc-300">
-                <span>{t.tableNumber || 'Stol nomeri'}:</span>
-                <span className="font-bold text-zinc-100 bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded border border-amber-500/30">
+              <div className="flex justify-between items-center text-[#8D6B58]">
+                <span>{t.tableNumber || 'Stol raqami'}:</span>
+                <span className="font-bold text-[#2E1E17] bg-[#F1EAE0] px-2 py-0.5 rounded border border-[#E6DDD2]">
                   Stol №{order.tableNumber}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-zinc-400 text-[11px]">
+              <div className="flex justify-between items-center text-[#8D6B58] text-[11px]">
                 <span>Vaqt:</span>
                 <span>{order.createdAt || new Date().toLocaleTimeString()}</span>
               </div>
-              
-              <div className="border-t border-zinc-800 pt-2 space-y-1.5">
+
+              <div className="border-t border-[#F0E7DD] pt-2 space-y-1.5">
                 {(order.items || []).map((i, idx) => (
-                  <div key={i?.food?.id || idx} className="flex justify-between text-zinc-300">
+                  <div key={i?.food?.id || idx} className="flex justify-between text-[#2E1E17]">
                     <span className="truncate pr-2">
-                      {getFoodTitle(i?.food, lang)} <span className="text-amber-400 font-bold">x{i?.quantity || 1}</span>
+                      {getFoodTitle(i?.food, lang)}{' '}
+                      <span className="text-[#C0684C] font-bold">x{i?.quantity || 1}</span>
                     </span>
-                    <span className="font-bold text-zinc-200 shrink-0">
+                    <span className="font-bold shrink-0">
                       {formatPrice((i?.food?.price || 0) * (i?.quantity || 1))}
                     </span>
                   </div>
                 ))}
               </div>
 
-              <div className="border-t-2 border-zinc-800 pt-2 flex justify-between font-bold text-sm text-zinc-100">
-                <span className="text-amber-300 font-serif">{t.total || 'Jámi'}:</span>
-                <span className="text-amber-400 font-extrabold text-base">{formatPrice(order.totalAmount)}</span>
+              <div className="border-t border-[#EAE0D4] pt-2 flex justify-between font-bold text-sm text-[#2E1E17]">
+                <span className="font-serif">{t.total || 'Jami'}:</span>
+                <span className="text-[#C0684C] font-extrabold text-base">
+                  {formatPrice(order.totalAmount)}
+                </span>
               </div>
 
-              <div className="pt-1 text-center text-[10px] text-zinc-500 italic">
-                Nukus Cakebumer & Qaraqalpaq Menu. Raxmet!
+              <div className="pt-1 text-center text-[10px] text-[#8D6B58] italic font-sans">
+                La Pâtisserie Dessert & Coffee Café. Rahmat!
               </div>
             </div>
 
-            {/* Info notice about finding receipt later */}
-            <p className="text-[11px] text-amber-400/90 bg-amber-500/10 p-2 rounded-xl border border-amber-500/20">
-              💡 Ushbu chek avtomatik tarzda <b>"Meniń çeklerim"</b> bo'limida saqlandi. Istalgan vaqtda tepada menyudan qayta ochishingiz mumkin!
+            <p className="text-[11px] text-[#8D6B58] bg-white p-2.5 rounded-xl border border-[#EAE0D4]">
+              💡 Ushbu chek avtomatik ravishda <b>"Mening cheklarim"</b> bo'limida saqlandi.
             </p>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-2 pt-1">
+            {/* Actions */}
+            <div className="flex gap-2 pt-1">
               <button
                 type="button"
                 onClick={handlePrint}
-                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-amber-300 py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border border-amber-500/30 transition shadow"
+                className="flex-1 bg-white hover:bg-[#FAF5EF] text-[#2E1E17] py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border border-[#EAE0D4] transition shadow-2xs"
               >
-                <Printer className="w-4 h-4 text-amber-400" aria-hidden="true" />
-                <span>{t.printReceipt || 'Çekti baspadan shıǵarıw'}</span>
+                <Printer className="w-4 h-4 text-[#8D6B58]" aria-hidden="true" />
+                <span>Chop etish</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleSaveReceipt}
-                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border border-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.35)] transition"
+                className="flex-1 bg-[#C0684C] hover:bg-[#B05B3F] text-white py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition"
               >
-                <BookmarkCheck className="w-4 h-4 text-zinc-950" aria-hidden="true" />
-                <span>Nusxalaw & Saqlaw</span>
+                <BookmarkCheck className="w-4 h-4 text-white" aria-hidden="true" />
+                <span>Nusxalash</span>
               </button>
             </div>
 
             <button
               type="button"
               onClick={onClose}
-              className="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 py-2 rounded-xl font-bold text-xs transition border border-zinc-800"
+              className="w-full bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] py-2.5 rounded-xl font-bold text-xs transition border border-[#E6DDD2]"
             >
-              {t.close || 'Jabıw'}
+              {t.close || 'Yopish'}
             </button>
           </div>
         </div>

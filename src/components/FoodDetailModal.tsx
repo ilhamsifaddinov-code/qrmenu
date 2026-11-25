@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Star, Clock, Flame, ShieldAlert, Heart, Send, Check } from 'lucide-react';
+import { X, Star, Clock, ShieldAlert, Send, Check } from 'lucide-react';
 import { FoodItem, Language, Review } from '../types';
 import { translations } from '../i18n/translations';
 import { getFoodTitle, getFoodDescription, getFoodIngredients, formatPrice } from '../utils/formatters';
@@ -38,7 +38,6 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  // Close modal on Escape key press
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -75,33 +74,33 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fadeIn cursor-pointer"
+      className="fixed inset-0 z-50 bg-[#2E1E17]/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto animate-fadeIn cursor-pointer"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-2xl bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(0,0,0,0.95)] overflow-hidden my-auto max-h-[90vh] flex flex-col cursor-default"
+        className="relative w-full max-w-2xl bg-[#FAF5EF] text-[#2E1E17] rounded-3xl border border-[#EAE0D4] shadow-[0_10px_40px_rgba(46,30,23,0.25)] overflow-hidden my-auto max-h-[90vh] flex flex-col cursor-default"
       >
-        {/* Floating Always-Visible Close Button */}
+        {/* Floating Close Button */}
         <button
           type="button"
           onClick={onClose}
-          aria-label={t.close || 'Jabıw (Artqa)'}
-          className="absolute top-3.5 right-3.5 z-30 bg-zinc-950/90 hover:bg-zinc-900 text-amber-300 hover:text-amber-200 p-2 sm:p-2.5 rounded-full border-2 border-amber-500/50 transition-transform active:scale-90 shadow-[0_0_20px_rgba(0,0,0,0.9)] cursor-pointer"
+          aria-label={t.close || 'Yopish'}
+          className="absolute top-3.5 right-3.5 z-30 bg-white/90 hover:bg-white text-[#2E1E17] p-2 rounded-full border border-[#EAE0D4] transition shadow-md cursor-pointer"
         >
-          <X className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
+          <X className="w-5 h-5" aria-hidden="true" />
         </button>
 
-        {/* Header Bar Image */}
-        <div className="relative h-60 sm:h-72 w-full shrink-0">
+        {/* Header Image */}
+        <div className="relative h-56 sm:h-72 w-full shrink-0 bg-[#F7F2EB]">
           {!imageLoaded && !imageError && (
-            <div className="absolute inset-0 bg-zinc-900 animate-pulse flex items-center justify-center">
-              <div className="w-10 h-10 border-3 border-amber-500/20 border-t-amber-500 rounded-full animate-spin"></div>
+            <div className="absolute inset-0 bg-[#EFE7DE] animate-pulse flex items-center justify-center">
+              <div className="w-10 h-10 border-2 border-[#C0684C]/30 border-t-[#C0684C] rounded-full animate-spin"></div>
             </div>
           )}
           {imageError ? (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-900 to-zinc-950 flex flex-col items-center justify-center p-4 text-center">
-              <span className="text-5xl mb-2">🍽️</span>
-              <span className="text-sm font-serif font-bold text-amber-400">{title}</span>
+            <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-[#F7F2EB]">
+              <span className="text-5xl mb-2">🍰</span>
+              <span className="text-sm font-bold text-[#8D6B58]">{title}</span>
             </div>
           ) : (
             <img
@@ -115,152 +114,144 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
               className={`w-full h-full object-cover transition-opacity duration-500 ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#18181b] via-transparent to-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2E1E17]/85 via-black/20 to-transparent" />
 
           {!isAvailable && (
-            <div className="absolute inset-0 bg-black/75 backdrop-blur-[3px] z-10 flex flex-col items-center justify-center p-4 text-center">
-              <span className="bg-red-600/95 text-white font-extrabold text-sm sm:text-base px-4 py-2 rounded-xl border border-red-400 shadow-[0_0_25px_rgba(239,68,68,0.7)] flex items-center gap-2">
+            <div className="absolute inset-0 bg-[#2E1E17]/75 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-4 text-center">
+              <span className="bg-[#C0684C] text-white font-bold text-sm sm:text-base px-4 py-2 rounded-full shadow-md">
                 ✕ {lang === 'qr' ? 'Házirshe bul taǵam tawsılǵan (Joq)' : 'Hozircha bu taom tugagan (Qolmagan)'}
-              </span>
-              <span className="text-xs text-zinc-300 mt-2 font-medium max-w-sm">
-                {lang === 'qr' ? 'Asxanada bul taǵam házirshe tayarlanbaydı. Bólek taǵamlardı tańlap kóriwińiz múmkin.' : 'Oshxonada bu taom hozircha tayyorlanmayapti. Boshqa taomlarni tanlab ko\'rishingiz mumkin.'}
               </span>
             </div>
           )}
 
-          {/* Title & Category overlay */}
-          <div className="absolute bottom-4 left-4 right-4 text-white">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="bg-amber-500 text-zinc-950 text-xs font-extrabold px-2.5 py-0.5 rounded-lg border border-amber-200 shadow">
-                {food.isNationalSpecial ? '✨ Milliy Qaraqalpaq Lezzeti' : 'Nukus Menu'}
-              </span>
-              <span className="bg-black/70 backdrop-blur-md text-amber-300 text-xs px-2.5 py-0.5 rounded-lg border border-amber-500/30">
-                🔥 {food.calories} {t.kcal}
-              </span>
-            </div>
-            <h2 className="font-serif font-bold text-2xl sm:text-3xl text-amber-300 drop-shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+          {/* Title overlay */}
+          <div className="absolute bottom-3 left-4 right-4 text-white">
+            <h2 className="font-serif font-bold text-xl sm:text-3xl text-white drop-shadow-sm leading-tight">
               {title}
             </h2>
           </div>
         </div>
 
         {/* Scrollable Modal Body */}
-        <div className="p-4 sm:p-6 overflow-y-auto space-y-6 text-zinc-200">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-5 text-[#2E1E17]">
           {/* Price & Rating Summary */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-zinc-900 p-3.5 rounded-2xl border border-amber-500/30">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-[#EAE0D4] shadow-2xs">
             <div>
-              <span className="text-xs text-zinc-400 font-medium block">Baha (1 {t.portion})</span>
-              <span className="text-xl sm:text-2xl font-extrabold text-amber-400">
-                {food.price.toLocaleString('uz-UZ')} UZS
+              <span className="text-xs text-[#8D6B58] font-medium block">Narxi (1 {t.portion})</span>
+              <span className="text-xl sm:text-2xl font-extrabold text-[#2E1E17]">
+                {formatPrice(food.price)}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 bg-zinc-950 px-3 py-1.5 rounded-xl border border-amber-500/30 shadow-sm">
-              <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
-              <span className="font-extrabold text-base text-zinc-100">{food.rating.toFixed(1)}</span>
-              <span className="text-xs text-zinc-400 font-medium">({food.ratingCount} {t.ratingAndReviews})</span>
+            <div className="flex items-center gap-1.5 bg-[#FAF5EF] px-3 py-1.5 rounded-xl border border-[#EAE0D4]">
+              <Star className="w-4 h-4 fill-[#F5A623] text-[#F5A623]" />
+              <span className="font-bold text-sm text-[#2E1E17]">{food.rating.toFixed(1)}</span>
+              <span className="text-xs text-[#8D6B58]">({food.ratingCount})</span>
             </div>
           </div>
 
           {/* Description */}
           <div>
-            <p className="text-sm sm:text-base text-zinc-300 leading-relaxed font-sans">
+            <p className="text-sm sm:text-base text-[#6C5343] leading-relaxed font-sans">
               {description}
             </p>
           </div>
 
           {/* Ingredients List */}
-          <div>
-            <h4 className="font-serif font-bold text-base text-amber-300 mb-2 flex items-center gap-2">
-              <span>🍲</span> {t.ingredients}:
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              {ingredients.map((ing, idx) => (
-                <span
-                  key={idx}
-                  className="bg-zinc-900 text-amber-300 text-xs font-semibold px-3 py-1 rounded-xl border border-amber-500/30"
-                >
-                  {ing}
-                </span>
-              ))}
+          {ingredients.length > 0 && (
+            <div>
+              <h4 className="font-serif font-bold text-sm text-[#2E1E17] mb-2">
+                🧁 {t.ingredients}:
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                {ingredients.map((ing, idx) => (
+                  <span
+                    key={idx}
+                    className="bg-white text-[#2E1E17] text-xs font-semibold px-3 py-1 rounded-xl border border-[#EAE0D4] shadow-2xs"
+                  >
+                    {ing}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Nutritional Value & Allergens */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Nutrition & Allergens */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Nutrition */}
-            <div className="bg-zinc-900 p-3.5 rounded-2xl border border-amber-500/30">
-              <h5 className="font-serif font-bold text-xs text-amber-400 uppercase tracking-wider mb-2">
+            <div className="bg-white p-3.5 rounded-2xl border border-[#EAE0D4] shadow-2xs">
+              <h5 className="font-serif font-bold text-xs text-[#8D6B58] uppercase tracking-wider mb-2">
                 📊 {t.nutrition}
               </h5>
               <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="bg-zinc-950 p-2 rounded-xl border border-zinc-800">
-                  <span className="block text-zinc-400">{t.protein}</span>
-                  <span className="font-bold text-amber-300">{food.nutrition.protein}g</span>
+                <div className="bg-[#FAF5EF] p-2 rounded-xl border border-[#EAE0D4]">
+                  <span className="block text-[11px] text-[#8D6B58]">{t.protein}</span>
+                  <span className="font-bold text-[#2E1E17]">{food.nutrition?.protein || 0}g</span>
                 </div>
-                <div className="bg-zinc-950 p-2 rounded-xl border border-zinc-800">
-                  <span className="block text-zinc-400">{t.fat}</span>
-                  <span className="font-bold text-amber-300">{food.nutrition.fat}g</span>
+                <div className="bg-[#FAF5EF] p-2 rounded-xl border border-[#EAE0D4]">
+                  <span className="block text-[11px] text-[#8D6B58]">{t.fat}</span>
+                  <span className="font-bold text-[#2E1E17]">{food.nutrition?.fat || 0}g</span>
                 </div>
-                <div className="bg-zinc-950 p-2 rounded-xl border border-zinc-800">
-                  <span className="block text-zinc-400">{t.carbs}</span>
-                  <span className="font-bold text-amber-300">{food.nutrition.carbs}g</span>
+                <div className="bg-[#FAF5EF] p-2 rounded-xl border border-[#EAE0D4]">
+                  <span className="block text-[11px] text-[#8D6B58]">{t.carbs}</span>
+                  <span className="font-bold text-[#2E1E17]">{food.nutrition?.carbs || 0}g</span>
                 </div>
               </div>
             </div>
 
             {/* Allergens */}
-            <div className="bg-zinc-900 p-3.5 rounded-2xl border border-red-500/30">
-              <h5 className="font-serif font-bold text-xs text-red-400 uppercase tracking-wider mb-2 flex items-center gap-1">
-                <ShieldAlert className="w-4 h-4 text-red-400" />
+            <div className="bg-white p-3.5 rounded-2xl border border-[#EAE0D4] shadow-2xs">
+              <h5 className="font-serif font-bold text-xs text-[#8D6B58] uppercase tracking-wider mb-2 flex items-center gap-1">
+                <ShieldAlert className="w-3.5 h-3.5 text-[#C0684C]" />
                 {t.allergens}
               </h5>
-              {food.allergens.length > 0 ? (
+              {food.allergens && food.allergens.length > 0 ? (
                 <div className="flex flex-wrap gap-1 text-xs">
                   {food.allergens.map((alg) => (
-                    <span key={alg} className="bg-red-950 text-red-300 font-bold px-2 py-0.5 rounded border border-red-500/40">
-                      ⚠️ {alg.toUpperCase()}
+                    <span key={alg} className="bg-[#FAF5EF] text-[#C0684C] font-bold px-2 py-0.5 rounded-lg border border-[#EAE0D4]">
+                      {alg.toUpperCase()}
                     </span>
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-emerald-400 font-semibold">
-                  ✓ Qáwipsiz (Allergenler joq)
+                <p className="text-xs text-emerald-700 font-semibold">
+                  ✓ Allergenlar mavjud emas
                 </p>
               )}
             </div>
           </div>
 
           {/* Customer Reviews Section */}
-          <div className="border-t border-zinc-800 pt-4 space-y-3">
-            <h4 className="font-serif font-bold text-lg text-amber-300 flex items-center gap-2">
-              <span>💬</span> {t.ratingAndReviews} ({food.reviews.length})
+          <div className="border-t border-[#EAE0D4] pt-4 space-y-3">
+            <h4 className="font-serif font-bold text-sm sm:text-base text-[#2E1E17]">
+              💬 {t.ratingAndReviews} ({food.reviews ? food.reviews.length : 0})
             </h4>
 
-            {/* Existing Reviews */}
-            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
-              {food.reviews.map((rev) => (
-                <div key={rev.id} className="bg-zinc-900 p-3 rounded-xl border border-zinc-800 text-xs shadow-sm">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-zinc-100">{rev.userName}</span>
-                    <div className="flex items-center gap-1">
-                      <span className="text-amber-400 font-bold">{'★'.repeat(rev.rating)}</span>
-                      <span className="text-[10px] text-zinc-500">{rev.date}</span>
+            {food.reviews && food.reviews.length > 0 && (
+              <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                {food.reviews.map((rev) => (
+                  <div key={rev.id} className="bg-white p-3 rounded-xl border border-[#EAE0D4] text-xs shadow-2xs">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-bold text-[#2E1E17]">{rev.userName}</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-[#F5A623] font-bold">{'★'.repeat(rev.rating)}</span>
+                        <span className="text-[10px] text-[#8D6B58]">{rev.date}</span>
+                      </div>
                     </div>
+                    <p className="text-[#6C5343] italic">"{rev.comment}"</p>
                   </div>
-                  <p className="text-zinc-400 italic">"{rev.comment}"</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Add Review Form */}
-            <form onSubmit={handleReviewSubmit} className="bg-zinc-900 p-3.5 rounded-2xl border border-amber-500/30 space-y-2 mt-2">
-              <h5 className="font-serif font-bold text-xs text-amber-300">{t.addReview}</h5>
+            <form onSubmit={handleReviewSubmit} className="bg-white p-3.5 rounded-2xl border border-[#EAE0D4] space-y-2 shadow-2xs">
+              <h5 className="font-serif font-bold text-xs text-[#2E1E17]">{t.addReview}</h5>
 
               {reviewSubmitted ? (
-                <div className="bg-amber-500/20 text-amber-300 p-2 rounded-xl text-center text-xs font-bold flex items-center justify-center gap-1 border border-amber-500/40">
-                  <Check className="w-4 h-4 text-amber-400" />
-                  <span>Pikirińiz ushın raxmet! Pikir dizimge qosıldı.</span>
+                <div className="bg-emerald-50 text-emerald-800 p-2 rounded-xl text-center text-xs font-bold flex items-center justify-center gap-1 border border-emerald-200">
+                  <Check className="w-4 h-4 text-emerald-600" />
+                  <span>Fikringiz uchun rahmat!</span>
                 </div>
               ) : (
                 <>
@@ -268,10 +259,9 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                     <input
                       type="text"
                       placeholder={t.firstName}
-                      aria-label={t.firstName || "Ismińiz"}
                       value={reviewerName}
                       onChange={(e) => setReviewerName(e.target.value)}
-                      className="w-1/2 px-2.5 py-1.5 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100 placeholder-zinc-500"
+                      className="w-1/2 px-2.5 py-1.5 rounded-xl border border-[#EAE0D4] bg-[#FAF5EF] text-xs text-[#2E1E17]"
                       required
                     />
                     <div className="flex items-center gap-1">
@@ -279,11 +269,10 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                         <button
                           type="button"
                           key={star}
-                          aria-label={`${star} juldız`}
                           onClick={() => setNewRating(star)}
-                          className="text-lg transition"
+                          className="text-base transition"
                         >
-                          <Star className={`w-4 h-4 ${star <= newRating ? 'fill-amber-400 text-amber-400' : 'text-zinc-700'}`} aria-hidden="true" />
+                          <Star className={`w-4 h-4 ${star <= newRating ? 'fill-[#F5A623] text-[#F5A623]' : 'text-zinc-300'}`} />
                         </button>
                       ))}
                     </div>
@@ -293,18 +282,17 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                     <input
                       type="text"
                       placeholder={t.yourComment}
-                      aria-label={t.yourComment || "Pikirińiz"}
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
-                      className="flex-1 px-2.5 py-1.5 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100 placeholder-zinc-500"
+                      className="flex-1 px-2.5 py-1.5 rounded-xl border border-[#EAE0D4] bg-[#FAF5EF] text-xs text-[#2E1E17]"
                       required
                     />
                     <button
                       type="submit"
-                      aria-label="Pikir jiberiw"
-                      className="bg-amber-500 hover:bg-amber-400 text-zinc-950 px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 shadow"
+                      aria-label="Fikr yuborish"
+                      className="bg-[#C0684C] hover:bg-[#B05B3F] text-white px-3 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 shadow-xs"
                     >
-                      <Send className="w-3.5 h-3.5" aria-hidden="true" />
+                      <Send className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </>
@@ -314,81 +302,62 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
           {/* Special Order Notes */}
           <div>
-            <label htmlFor="food-order-note" className="block text-xs font-serif font-bold text-zinc-300 mb-1">
+            <label htmlFor="food-order-note" className="block text-xs font-bold text-[#8D6B58] mb-1">
               📝 {t.orderNote}:
             </label>
             <input
               id="food-order-note"
               type="text"
-              placeholder="Mısalı: ashshı bolmasın, sarımsaq azraq bolsın..."
-              aria-label={t.orderNote || "Buyırtpa ushın qosımsha eskertpe"}
+              placeholder="Masalan: shakar kamroq bo'lsin..."
               value={orderNote}
               onChange={(e) => setOrderNote(e.target.value)}
-              className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100 placeholder-zinc-500 focus:ring-2 focus:ring-amber-500 outline-none"
+              className="w-full px-3 py-2 rounded-xl border border-[#EAE0D4] bg-white text-xs text-[#2E1E17] outline-none focus:ring-1 focus:ring-[#C0684C]"
             />
           </div>
         </div>
 
-        {/* Modal Footer Controls */}
-        <div className="p-4 bg-zinc-900 border-t border-amber-500/30 flex items-center justify-between gap-3 shrink-0">
+        {/* Modal Footer */}
+        <div className="p-3.5 sm:p-4 bg-white border-t border-[#EAE0D4] flex items-center justify-between gap-3 shrink-0 shadow-sm">
           {!isAvailable ? (
-            <div className="w-full flex flex-col sm:flex-row items-center gap-3">
-              <div className="flex-1 w-full bg-zinc-950 border border-red-500/40 text-red-400 text-xs sm:text-sm font-bold py-3 px-4 rounded-2xl flex items-center justify-center gap-2 shadow-inner text-center">
-                <span>✕ {lang === 'qr' ? 'Bul taǵam tawsılǵan (Joq)' : 'Bu taom qolmagan (Tugagan)'}</span>
-              </div>
+            <div className="w-full flex items-center justify-between gap-3">
+              <span className="text-xs text-[#C0684C] font-bold">Tugagan</span>
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 px-6 py-3 rounded-2xl font-serif font-extrabold text-xs sm:text-sm shadow-[0_0_15px_rgba(245,158,11,0.35)] transition active:scale-95 flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+                className="bg-[#F1EAE0] text-[#2E1E17] px-4 py-2 rounded-xl text-xs font-bold"
               >
-                <span>← {lang === 'qr' ? 'Artqa qaytıw (Jabıw)' : 'Orqaga qaytish (Yopish)'}</span>
+                Yopish
               </button>
             </div>
           ) : (
-            <div className="flex items-center justify-between gap-2.5 w-full">
-              {/* Back button */}
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-3.5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs sm:text-sm transition border border-zinc-700 active:scale-95 flex items-center gap-1 shrink-0 cursor-pointer"
-                title={lang === 'qr' ? 'Artqa' : 'Orqaga'}
-              >
-                <span>←</span>
-                <span className="hidden sm:inline">{lang === 'qr' ? 'Artqa' : 'Orqaga'}</span>
-              </button>
-
-              {/* Quantity Selector */}
-              <div className="flex items-center gap-2 sm:gap-3 bg-zinc-950 px-2.5 sm:px-3 py-1.5 rounded-2xl border border-amber-500/30 shadow-sm shrink-0">
+            <div className="flex items-center justify-between gap-3 w-full">
+              {/* Quantity */}
+              <div className="flex items-center gap-2 bg-[#FAF5EF] px-2 py-1 rounded-full border border-[#EAE0D4]">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  aria-label="1 dana kemeytiw"
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-100 font-bold text-lg flex items-center justify-center transition"
+                  className="w-7 h-7 rounded-full bg-white text-[#2E1E17] font-bold text-xs shadow-2xs hover:bg-[#F1EAE0]"
                 >
                   -
                 </button>
-                <span className="font-extrabold text-sm sm:text-base text-amber-300 w-5 sm:w-6 text-center">{quantity}</span>
+                <span className="font-bold text-sm text-[#2E1E17] w-5 text-center">{quantity}</span>
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => q + 1)}
-                  aria-label="1 dana qosıw"
-                  className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-amber-500 text-zinc-950 font-bold text-lg flex items-center justify-center transition shadow"
+                  className="w-7 h-7 rounded-full bg-[#C0684C] text-white font-bold text-xs shadow-2xs hover:bg-[#B05B3F]"
                 >
                   +
                 </button>
               </div>
 
-              {/* Add Button with calculated total */}
+              {/* Add to Cart button */}
               <button
                 type="button"
                 onClick={handleAdd}
-                aria-label={`${title} ${t.addToCart}`}
-                className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 px-3 sm:px-4 rounded-2xl font-serif font-extrabold text-xs sm:text-base border border-amber-200 shadow-[0_0_20px_rgba(245,158,11,0.45)] transition active:scale-95 flex items-center justify-between cursor-pointer"
+                className="flex-1 bg-[#C0684C] hover:bg-[#B05B3F] text-white py-2.5 px-4 rounded-2xl font-sans font-bold text-xs sm:text-sm shadow-md transition active:scale-95 flex items-center justify-between cursor-pointer"
               >
                 <span>{t.addToCart}</span>
-                <span className="text-zinc-950 font-sans font-extrabold ml-1">
-                  {(food.price * quantity).toLocaleString('uz-UZ')} UZS
-                </span>
+                <span>{formatPrice(food.price * quantity)}</span>
               </button>
             </div>
           )}

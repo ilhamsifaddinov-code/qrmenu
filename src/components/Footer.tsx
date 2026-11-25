@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Phone, Clock, ExternalLink, Send, Instagram, ArrowUpRight } from 'lucide-react';
 import { Language, AppSettings } from '../types';
 import { translations } from '../i18n/translations';
-import { NationalOrnamentHeader } from './NationalOrnament';
 
 interface FooterProps {
   lang: Language;
@@ -28,9 +27,10 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
   }, []);
 
   // Format and clean usernames and URLs robustly
-  const rawTg = settings && typeof settings.telegramUsername === 'string'
-    ? settings.telegramUsername
-    : 'sifaddinov';
+  const rawTg =
+    settings && typeof settings.telegramUsername === 'string'
+      ? settings.telegramUsername
+      : 'sifaddinov';
   const cleanTg = (rawTg || '')
     .replace(/^https?:\/\/(www\.)?t\.me\//i, '')
     .replace(/^https?:\/\/(www\.)?telegram\.me\//i, '')
@@ -41,9 +41,10 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
   const hasTg = cleanTg.length > 0;
   const tgUrl = hasTg ? `https://t.me/${cleanTg}` : '';
 
-  const rawInsta = settings && typeof settings.instagramUsername === 'string'
-    ? settings.instagramUsername
-    : 'sifaddinovv';
+  const rawInsta =
+    settings && typeof settings.instagramUsername === 'string'
+      ? settings.instagramUsername
+      : 'sifaddinovv';
   const cleanInsta = (rawInsta || '')
     .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
     .replace(/^instagram\.com\//i, '')
@@ -70,58 +71,60 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
   };
 
   return (
-    <footer className="mt-12 bg-[#18181b] text-zinc-100 border-t border-amber-500/30">
-      <NationalOrnamentHeader />
-
+    <footer className="mt-12 bg-white text-[#2E1E17] border-t border-[#EAE0D4]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brand & Mission */}
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-500 text-zinc-950 flex items-center justify-center font-serif text-2xl font-bold border border-amber-200 shadow-[0_0_12px_rgba(245,158,11,0.4)]">
-              Q
+            <div className="w-10 h-10 rounded-2xl bg-[#FAF5EF] text-[#2E1E17] flex items-center justify-center font-serif text-xl font-bold border border-[#EAE0D4] shadow-2xs">
+              🍰
             </div>
             <div>
-              <h3 className="font-serif font-bold text-xl text-amber-300 drop-shadow-[0_0_8px_rgba(245,158,11,0.25)]">{t.appName}</h3>
-              <p className="text-xs text-zinc-400">Nukus Cakebumer & Milliy Taǵamlar</p>
+              <h3 className="font-serif font-bold text-lg text-[#2E1E17]">
+                LA PÂTISSERIE
+              </h3>
+              <p className="text-xs text-[#8D6B58]">
+                {t.subTitle || 'Cakebumer Dessert & Coffee Café'}
+              </p>
             </div>
           </div>
-          <p className="text-xs text-zinc-400 leading-relaxed font-sans">
-            Aral boyı hám Qaraqalpaqstan milliy dástúrxan lezzetlerin zamonaviy 3D hám QR-kod online menyu arqalı usınamız.
+          <p className="text-xs text-[#6C5343] leading-relaxed font-sans">
+            Nukus shahridagi shirinliklar, tortlar va premium qahvalar kafesi. Smart QR-menyu orqali qulay va tezkor buyurtma bering.
           </p>
         </div>
 
         {/* Location & Address */}
         <div className="space-y-3">
-          <h4 className="font-serif font-bold text-base text-amber-300 border-b border-amber-500/20 pb-1.5">
-            📍 {t.locationTitle}
+          <h4 className="font-serif font-bold text-sm text-[#2E1E17] border-b border-[#EAE0D4] pb-1.5 uppercase tracking-wide">
+            📍 {t.locationTitle || 'Manzil va Ish vaqti'}
           </h4>
 
-          <div className="space-y-2 text-xs text-zinc-300">
+          <div className="space-y-2 text-xs text-[#6C5343]">
             <div className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
-              <span>{t.address}</span>
+              <MapPin className="w-4 h-4 text-[#C0684C] shrink-0 mt-0.5" aria-hidden="true" />
+              <span>{t.address || 'Nukus shahri, Gárezsizlik kóshesi, 45-jay'}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
-              <span>{t.workingHours}</span>
+              <Clock className="w-4 h-4 text-[#C0684C] shrink-0" aria-hidden="true" />
+              <span>{t.workingHours || '08:00 - 23:00 (Har kuni)'}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
-              <span>{t.phoneContact}</span>
+              <Phone className="w-4 h-4 text-[#C0684C] shrink-0" aria-hidden="true" />
+              <span>{t.phoneContact || '+998 (61) 222 77 88'}</span>
             </div>
           </div>
         </div>
 
-        {/* Map Location Preview & Socials */}
+        {/* Map Preview & Socials */}
         <div className="space-y-3">
-          <h4 className="font-serif font-bold text-base text-amber-300 border-b border-amber-500/20 pb-1.5">
-            🗺️ Karta hám Tarmaqlar
+          <h4 className="font-serif font-bold text-sm text-[#2E1E17] border-b border-[#EAE0D4] pb-1.5 uppercase tracking-wide">
+            🗺️ Xarita va Ijtimoiy tarmoqlar
           </h4>
 
-          {/* Interactive Map card */}
-          <div className="relative h-28 rounded-2xl overflow-hidden border border-amber-500/30 group">
+          {/* Interactive Map Card */}
+          <div className="relative h-28 rounded-2xl overflow-hidden border border-[#EAE0D4] group shadow-2xs">
             <iframe
               title="Nukus Location"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d94828.18844898144!2d59.56388481358988!3d42.46026880000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x41dd9a28db98502d%3A0x868b4efcbe3f0c3a!2sNukus%2C%20Karakalpakstan!5e0!3m2!1sen!2s!4v1700000000000"
@@ -133,16 +136,16 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t.openInMaps || "Google Xaritada ko'rish"}
-              className="absolute bottom-2 right-2 bg-zinc-950/90 text-amber-300 text-[10px] font-bold px-2 py-1 rounded-lg border border-amber-500/40 flex items-center gap-1 shadow"
+              className="absolute bottom-2 right-2 bg-white/95 text-[#2E1E17] text-[10px] font-bold px-2 py-1 rounded-lg border border-[#EAE0D4] flex items-center gap-1 shadow-xs"
             >
-              <span>{t.openInMaps}</span>
-              <ExternalLink className="w-3 h-3" aria-hidden="true" />
+              <span>{t.openInMaps || 'Xaritada'}</span>
+              <ExternalLink className="w-3 h-3 text-[#C0684C]" aria-hidden="true" />
             </a>
           </div>
 
-          {/* Social Icons with Desktop Hover Tooltip & Mobile Tap reveal */}
+          {/* Social Icons */}
           {(hasTg || hasInsta) && (
-            <div ref={socialsRef} className="flex items-center gap-4 pt-2">
+            <div ref={socialsRef} className="flex items-center gap-3 pt-1">
               {/* Telegram Icon Button */}
               {hasTg && (
                 <div className="relative group">
@@ -154,21 +157,21 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
                     onMouseEnter={() => setActiveTooltip('telegram')}
                     onMouseLeave={() => setActiveTooltip(null)}
                     aria-label={`Telegram: @${cleanTg}`}
-                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 to-sky-400 hover:from-sky-500 hover:to-sky-300 text-white flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(56,189,248,0.35)] hover:scale-110 active:scale-95 border border-sky-300/40 cursor-pointer"
+                    className="w-10 h-10 rounded-xl bg-[#2AABEE] text-white flex items-center justify-center transition-all duration-300 shadow-xs hover:scale-105 active:scale-95 cursor-pointer"
                   >
-                    <Send className="w-5 h-5 text-white" aria-hidden="true" />
+                    <Send className="w-4 h-4 text-white" aria-hidden="true" />
                   </a>
 
                   {/* Tooltip */}
                   <div
-                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 z-30 transition-all duration-300 ${
+                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-30 transition-all duration-200 ${
                       activeTooltip === 'telegram'
                         ? 'opacity-100 visible translate-y-0 scale-100 pointer-events-auto'
-                        : 'opacity-0 invisible translate-y-2 scale-95 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto'
+                        : 'opacity-0 invisible translate-y-1 scale-95 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto'
                     }`}
                   >
-                    <div className="bg-zinc-950/95 backdrop-blur-md border border-sky-400/60 shadow-[0_4px_25px_rgba(0,0,0,0.85)] rounded-xl px-3.5 py-2 whitespace-nowrap text-center">
-                      <div className="text-[10px] text-sky-400 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                    <div className="bg-[#2E1E17] text-white shadow-md rounded-xl px-3 py-1.5 whitespace-nowrap text-center">
+                      <div className="text-[10px] text-sky-300 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
                         <Send className="w-3 h-3" />
                         <span>Telegram</span>
                       </div>
@@ -176,16 +179,13 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
                         href={tgUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-mono font-extrabold text-zinc-100 hover:text-sky-300 flex items-center justify-center gap-1 transition mt-0.5"
+                        className="text-xs font-mono font-bold text-white hover:text-sky-300 flex items-center justify-center gap-1 transition mt-0.5"
                       >
                         <span>@{cleanTg}</span>
-                        <ArrowUpRight className="w-3 h-3 text-sky-400" />
+                        <ArrowUpRight className="w-3 h-3 text-sky-300" />
                       </a>
-                      <div className="text-[9px] text-zinc-400 mt-0.5 sm:hidden font-sans">
-                        {lang === 'qr' ? 'Kiriw ushın basıń' : 'Kirish uchun bosing'}
-                      </div>
                     </div>
-                    <div className="w-2.5 h-2.5 bg-zinc-950 border-r border-b border-sky-400/60 transform rotate-45 mx-auto -mt-1.5" />
+                    <div className="w-2 h-2 bg-[#2E1E17] transform rotate-45 mx-auto -mt-1" />
                   </div>
                 </div>
               )}
@@ -201,21 +201,21 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
                     onMouseEnter={() => setActiveTooltip('instagram')}
                     onMouseLeave={() => setActiveTooltip(null)}
                     aria-label={`Instagram: @${cleanInsta}`}
-                    className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-pink-600 to-purple-600 hover:opacity-95 text-white flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(236,72,153,0.35)] hover:scale-110 active:scale-95 border border-pink-300/40 cursor-pointer"
+                    className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#FD5949] via-[#D6249F] to-[#285AEB] text-white flex items-center justify-center transition-all duration-300 shadow-xs hover:scale-105 active:scale-95 cursor-pointer"
                   >
-                    <Instagram className="w-5 h-5 text-white" aria-hidden="true" />
+                    <Instagram className="w-4 h-4 text-white" aria-hidden="true" />
                   </a>
 
                   {/* Tooltip */}
                   <div
-                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2.5 z-30 transition-all duration-300 ${
+                    className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-30 transition-all duration-200 ${
                       activeTooltip === 'instagram'
                         ? 'opacity-100 visible translate-y-0 scale-100 pointer-events-auto'
-                        : 'opacity-0 invisible translate-y-2 scale-95 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto'
+                        : 'opacity-0 invisible translate-y-1 scale-95 pointer-events-none group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto'
                     }`}
                   >
-                    <div className="bg-zinc-950/95 backdrop-blur-md border border-pink-400/60 shadow-[0_4px_25px_rgba(0,0,0,0.85)] rounded-xl px-3.5 py-2 whitespace-nowrap text-center">
-                      <div className="text-[10px] text-pink-400 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
+                    <div className="bg-[#2E1E17] text-white shadow-md rounded-xl px-3 py-1.5 whitespace-nowrap text-center">
+                      <div className="text-[10px] text-pink-300 font-bold uppercase tracking-wider flex items-center justify-center gap-1">
                         <Instagram className="w-3 h-3" />
                         <span>Instagram</span>
                       </div>
@@ -223,16 +223,13 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
                         href={instaUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-mono font-extrabold text-zinc-100 hover:text-pink-300 flex items-center justify-center gap-1 transition mt-0.5"
+                        className="text-xs font-mono font-bold text-white hover:text-pink-300 flex items-center justify-center gap-1 transition mt-0.5"
                       >
                         <span>@{cleanInsta}</span>
-                        <ArrowUpRight className="w-3 h-3 text-pink-400" />
+                        <ArrowUpRight className="w-3 h-3 text-pink-300" />
                       </a>
-                      <div className="text-[9px] text-zinc-400 mt-0.5 sm:hidden font-sans">
-                        {lang === 'qr' ? 'Kiriw ushın basıń' : 'Kirish uchun bosing'}
-                      </div>
                     </div>
-                    <div className="w-2.5 h-2.5 bg-zinc-950 border-r border-b border-pink-400/60 transform rotate-45 mx-auto -mt-1.5" />
+                    <div className="w-2 h-2 bg-[#2E1E17] transform rotate-45 mx-auto -mt-1" />
                   </div>
                 </div>
               )}
@@ -241,8 +238,8 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
         </div>
       </div>
 
-      <div className="bg-zinc-950 text-center py-3.5 text-[11px] text-zinc-400 border-t border-zinc-800 font-mono">
-        © 2026 Qaraqalpaq Menu & Nukus Cakebumer. Barlıq huqıqlar qorǵalǵan.
+      <div className="bg-[#FAF5EF] text-center py-3.5 text-[11px] text-[#8D6B58] border-t border-[#EAE0D4] font-sans">
+        © 2026 La Pâtisserie & Nukus Cakebumer. Barcha huquqlar himoyalangan.
       </div>
     </footer>
   );
