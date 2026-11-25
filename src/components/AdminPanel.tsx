@@ -7,8 +7,6 @@ import {
   CheckCircle,
   Bell,
   TrendingUp,
-  DollarSign,
-  RefreshCw,
   X,
   QrCode,
   Printer,
@@ -17,12 +15,9 @@ import {
   ExternalLink,
   Download,
   Upload,
-  Image as ImageIcon,
   Loader2,
   FileText,
   Calendar,
-  Clock,
-  CreditCard,
   ArrowUpRight,
   PieChart,
   Users,
@@ -68,11 +63,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   onUpdateOrderStatus,
   onDeleteOrder,
   onCloseAdmin,
-  adminPassword,
+  adminPassword: _adminPassword,
   onUpdatePassword,
   onUpdateSettings,
 }) => {
-  const t = translations[lang];
+  const t = translations[lang] || translations.qr;
 
   const [activeTab, setActiveTab] = useState<'menu' | 'add' | 'orders' | 'stats' | 'qrcodes' | 'settings'>('menu');
   const [viewingReceiptOrder, setViewingReceiptOrder] = useState<Order | null>(null);
@@ -135,14 +130,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   };
 
   const handleDeleteTable = (tblToDelete: string) => {
-    setManagedTables((prev) => prev.filter((t) => t !== tblToDelete));
+    setManagedTables((prev) => prev.filter((tbl) => tbl !== tblToDelete));
   };
 
   // New Food Item Form State
   const [newTitle, setNewTitle] = useState('');
   const [newPrice, setNewPrice] = useState('35000');
   const [newCategory, setNewCategory] = useState<'cakes' | 'pastries' | 'bakery' | 'coffee' | 'desserts'>('cakes');
-  const [newCalories, setNewCalories] = useState('450');
+  const [newCalories, setNewCalories] = useState('380');
   const [newImgUrl, setNewImgUrl] = useState('');
   const [newDesc, setNewDesc] = useState('');
   const [editingPriceId, setEditingPriceId] = useState<string | null>(null);
@@ -167,12 +162,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     setUploadSuccess(false);
 
     try {
-      // 1. Client-side canvas resize and compression for instant speed
       const compressedDataUrl = await compressImage(file, 1000, 0.82);
-      // Immediately preview the user's actual photo
       setNewImgUrl(compressedDataUrl);
 
-      // 2. Upload to server to persist permanently in Neon PostgreSQL
       const res = await fetch('/api/upload', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -183,7 +175,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         setNewImgUrl(json.url);
         setUploadSuccess(true);
       } else {
-        // Fallback to compressed Data URL
         setNewImgUrl(compressedDataUrl);
         setUploadSuccess(true);
       }
@@ -197,7 +188,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         };
         rawReader.readAsDataURL(file);
       } catch {
-        setUploadError('Faylni yuklashda xatolik yuz berdi');
+        setUploadError(lang === 'qr' ? 'Súwretti júklewde qátelik júz berdi' : 'Faylni yuklashda xatolik yuz berdi');
       }
     } finally {
       setIsUploading(false);
@@ -240,7 +231,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const deliveredOrders = orders.filter((o) => o.status === 'delivered');
     const deliveredRevenue = deliveredOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
 
-    // Baseline fallback if new DB
     const dailyRevenue = totalRevenue > 0 ? totalRevenue : 1480000;
     const dailyCount = totalOrders > 0 ? totalOrders : 12;
 
@@ -250,7 +240,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const monthlyRevenue = Math.round(dailyRevenue * 27.5);
     const monthlyCount = Math.round(dailyCount * 28);
 
-    const averageCheck = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 74000;
+    const averageCheck = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 58000;
 
     // Top ordered dishes aggregation
     const dishMap: Record<string, { food: FoodItem; count: number; totalSum: number }> = {};
@@ -267,7 +257,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       });
     });
 
-    // Fallback dishes if no orders yet
     if (Object.keys(dishMap).length === 0 && foodItems.length > 0) {
       foodItems.slice(0, 4).forEach((f, idx) => {
         dishMap[f.id] = { food: f, count: 12 - idx * 2, totalSum: (f.price || 35000) * (12 - idx * 2) };
@@ -313,9 +302,6 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     };
   }, [orders, foodItems]);
 
-  const todayRevenue = liveStats.dailyRevenue;
-  const totalOrdersCount = liveStats.dailyCount;
-
   const handleAddSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTitle.trim()) return;
@@ -323,24 +309,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const item: FoodItem = {
       id: `food-${Date.now()}`,
       title: { qr: newTitle, uz: newTitle, ru: newTitle, en: newTitle },
-      description: { qr: newDesc || newTitle, uz: newDesc, ru: newDesc, en: newDesc },
-      price: parseInt(newPrice) || 30000,
+      description: { qr: newDesc || newTitle, uz: newDesc || newTitle, ru: newDesc || newTitle, en: newDesc || newTitle },
+      price: parseInt(newPrice) || 35000,
       category: newCategory,
-      imageUrl: newImgUrl.trim() || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80',
-      calories: parseInt(newCalories) || 400,
-      prepTime: 20,
+      imageUrl: newImgUrl.trim() || 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80',
+      calories: parseInt(newCalories) || 380,
+      prepTime: 15,
       spicyLevel: 0,
-      isVegetarian: false,
+      isVegetarian: true,
       isGlutenFree: false,
       isHalal: true,
-      isNationalSpecial: newCategory === 'national',
+      isNationalSpecial: false,
       isAvailable: true,
-      ingredients: { qr: ['Sıyır go\'shi', 'Un'], uz: ['Mol go\'shti', 'Un'], ru: ['Говядина', 'Мука'], en: ['Beef', 'Flour'] },
+      ingredients: {
+        qr: ['Un', 'Qaymaq', 'Qant', 'Vanil'],
+        uz: ['Un', 'Qaymoq', 'Shakar', 'Vanil'],
+        ru: ['Мука', 'Сливки', 'Сахар', 'Ваниль'],
+        en: ['Flour', 'Cream', 'Sugar', 'Vanilla'],
+      },
       allergens: [],
       rating: 5.0,
       ratingCount: 1,
       reviews: [],
-      nutrition: { protein: 25, fat: 15, carbs: 35 },
+      nutrition: { protein: 6, fat: 18, carbs: 42 },
     };
 
     onAddFoodItem(item);
@@ -360,42 +351,51 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   };
 
   return (
-    <div className="bg-[#18181b] rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(0,0,0,0.8)] p-4 sm:p-6 my-6 text-zinc-100">
-      {/* Top Banner */}
-      <div className="bg-zinc-900 text-zinc-100 p-4 rounded-2xl border border-amber-500/30 flex flex-wrap items-center justify-between gap-3 mb-6 shadow-md">
-        <div className="flex items-center gap-2">
-          <Shield className="w-6 h-6 text-amber-400" />
-          <h2 className="font-serif font-bold text-xl text-amber-300">{t.adminTitle}</h2>
+    <div className="bg-[#FAF5EF] rounded-3xl border border-[#EAE0D4] shadow-sm p-4 sm:p-6 my-6 text-[#2E1E17]">
+      {/* Top Banner with Official Cake Bumer Logo */}
+      <div className="bg-white text-[#2E1E17] p-4 rounded-2xl border border-[#EAE0D4] flex flex-wrap items-center justify-between gap-3 mb-6 shadow-xs">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl overflow-hidden border border-[#EAE0D4] bg-[#FAF5EF] p-0.5 shrink-0 shadow-2xs">
+            <img src="/logo.png" alt="Cake Bumer" className="w-full h-full object-contain" />
+          </div>
+          <div>
+            <h2 className="font-serif font-bold text-lg sm:text-xl text-[#2E1E17] leading-tight">
+              CAKE BUMER — {t.adminTitle}
+            </h2>
+            <p className="text-[11px] text-[#8D6B58]">
+              {lang === 'qr' ? 'Dessert Café Basqarıw Paneli' : 'Dessert Café Boshqaruv Paneli'}
+            </p>
+          </div>
         </div>
 
         <button
           onClick={onCloseAdmin}
-          className="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 p-2 rounded-xl border border-zinc-700 transition flex items-center gap-1 text-xs font-bold"
+          className="bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] px-3 py-2 rounded-xl border border-[#E6DDD2] transition flex items-center gap-1.5 text-xs font-bold shadow-2xs cursor-pointer"
         >
-          <X className="w-4 h-4" />
-          <span>Admin Paneldan Shıǵıw</span>
+          <X className="w-4 h-4 text-[#C0684C]" />
+          <span>{lang === 'qr' ? 'Paneldan shıǵıw' : 'Paneldan chiqish'}</span>
         </button>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex flex-wrap gap-2 mb-6 border-b border-zinc-800 pb-3">
+      <div className="flex flex-wrap gap-2 mb-6 border-b border-[#EAE0D4] pb-3">
         <button
           onClick={() => setActiveTab('menu')}
-          className={`px-4 py-2 rounded-xl font-serif font-bold text-xs sm:text-sm transition ${
+          className={`px-4 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm transition cursor-pointer ${
             activeTab === 'menu'
-              ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
-              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
+              ? 'bg-[#C0684C] text-white shadow-sm border border-[#C0684C]'
+              : 'bg-white text-[#2E1E17] hover:bg-[#F7F2EB] border border-[#EAE0D4]'
           }`}
         >
-          📋 Menyu Basqarıw
+          {lang === 'qr' ? '📋 Menyu Basqarıw' : '📋 Menyu Boshqarish'}
         </button>
 
         <button
           onClick={() => setActiveTab('add')}
-          className={`px-4 py-2 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 ${
+          className={`px-4 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'add'
-              ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
-              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
+              ? 'bg-[#C0684C] text-white shadow-sm border border-[#C0684C]'
+              : 'bg-white text-[#2E1E17] hover:bg-[#F7F2EB] border border-[#EAE0D4]'
           }`}
         >
           <Plus className="w-4 h-4" />
@@ -404,16 +404,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
         <button
           onClick={() => setActiveTab('orders')}
-          className={`px-4 py-2 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 relative ${
+          className={`px-4 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 relative cursor-pointer ${
             activeTab === 'orders'
-              ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
-              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
+              ? 'bg-[#C0684C] text-white shadow-sm border border-[#C0684C]'
+              : 'bg-white text-[#2E1E17] hover:bg-[#F7F2EB] border border-[#EAE0D4]'
           }`}
         >
-          <Bell className="w-4 h-4 text-amber-400" />
-          <span>Zakazlar hám Aficiant</span>
+          <Bell className="w-4 h-4 text-[#C0684C]" />
+          <span>{lang === 'qr' ? 'Buyırtpalar hám Oficiant' : 'Buyurtmalar va Ofitsiant'}</span>
           {waiterCalls.filter((c) => c.status === 'active').length > 0 && (
-            <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
+            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">
               {waiterCalls.filter((c) => c.status === 'active').length}
             </span>
           )}
@@ -421,10 +421,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
         <button
           onClick={() => setActiveTab('stats')}
-          className={`px-4 py-2 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 ${
+          className={`px-4 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'stats'
-              ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
-              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
+              ? 'bg-[#C0684C] text-white shadow-sm border border-[#C0684C]'
+              : 'bg-white text-[#2E1E17] hover:bg-[#F7F2EB] border border-[#EAE0D4]'
           }`}
         >
           <TrendingUp className="w-4 h-4" />
@@ -433,35 +433,40 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
         <button
           onClick={() => setActiveTab('qrcodes')}
-          className={`px-4 py-2 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 ${
+          className={`px-4 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'qrcodes'
-              ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
-              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
+              ? 'bg-[#C0684C] text-white shadow-sm border border-[#C0684C]'
+              : 'bg-white text-[#2E1E17] hover:bg-[#F7F2EB] border border-[#EAE0D4]'
           }`}
         >
-          <QrCode className="w-4 h-4 text-amber-400" />
-          <span>{t.tableQrManager || 'Stollar QR-kodları'}</span>
+          <QrCode className="w-4 h-4" />
+          <span>{lang === 'qr' ? 'Stollar QR-kodları' : (t.tableQrManager || 'Stollar QR-kodlari')}</span>
         </button>
 
         <button
           onClick={() => setActiveTab('settings')}
-          className={`px-4 py-2 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 ${
+          className={`px-4 py-2.5 rounded-xl font-serif font-bold text-xs sm:text-sm transition flex items-center gap-1.5 cursor-pointer ${
             activeTab === 'settings'
-              ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.35)]'
-              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800'
+              ? 'bg-[#C0684C] text-white shadow-sm border border-[#C0684C]'
+              : 'bg-white text-[#2E1E17] hover:bg-[#F7F2EB] border border-[#EAE0D4]'
           }`}
         >
-          <Shield className="w-4 h-4 text-amber-400" />
-          <span>Sazlamalar</span>
+          <Shield className="w-4 h-4" />
+          <span>{lang === 'qr' ? 'Sazlawlar' : 'Sozlamalar'}</span>
         </button>
       </div>
 
       {/* Tab 1: Menu Management */}
       {activeTab === 'menu' && (
-        <div className="space-y-3">
-          <h3 className="font-serif font-bold text-base text-amber-300 mb-3">
-            Barlıq Taǵamlar hám Bahalardı Basqarıw ({foodItems.length})
-          </h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-serif font-bold text-base text-[#2E1E17]">
+              {lang === 'qr' ? 'Barlıq shiyrinlikler hám bahalar' : 'Barcha shirinliklar va narxlar'} ({foodItems.length})
+            </h3>
+            <span className="text-xs text-[#8D6B58]">
+              {lang === 'qr' ? 'Holati va rasmini tez o\'zgartiring' : 'Holati va rasmini tez o\'zgartiring'}
+            </span>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {foodItems.map((food) => {
@@ -470,23 +475,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               return (
                 <div
                   key={food.id}
-                  className="bg-zinc-900 p-3 rounded-2xl border border-amber-500/25 shadow-sm flex items-center justify-between gap-3"
+                  className="bg-white p-3.5 rounded-2xl border border-[#EAE0D4] shadow-xs flex items-center justify-between gap-3"
                 >
-                  <div className="relative group/img w-16 h-16 rounded-xl overflow-hidden border border-zinc-800 shrink-0 bg-zinc-950">
+                  <div className="relative group/img w-16 h-16 rounded-xl overflow-hidden border border-[#EAE0D4] shrink-0 bg-[#FAF5EF]">
                     <img
                       src={food.imageUrl}
                       alt={title}
                       className="w-full h-full object-cover"
                     />
                     <label
-                      className="absolute inset-0 bg-black/75 opacity-0 group-hover/img:opacity-100 flex flex-col items-center justify-center cursor-pointer transition text-amber-300 text-[9px] font-bold p-1 text-center"
+                      className="absolute inset-0 bg-[#2E1E17]/75 opacity-0 group-hover/img:opacity-100 flex flex-col items-center justify-center cursor-pointer transition text-white text-[9px] font-bold p-1 text-center"
                       title={lang === 'qr' ? 'Súwretti ózgertiw' : 'Rasmni o\'zgartirish'}
                     >
                       {editingImageFoodId === food.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[#C0684C]" />
                       ) : (
                         <>
-                          <Camera className="w-4 h-4 text-amber-400 mb-0.5" />
+                          <Camera className="w-4 h-4 text-white mb-0.5" />
                           <span>{lang === 'qr' ? 'Ózgertiw' : 'O\'zgartirish'}</span>
                         </>
                       )}
@@ -501,7 +506,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-sm text-zinc-100 truncate">{title}</h4>
+                    <h4 className="font-bold text-sm text-[#2E1E17] truncate">{title}</h4>
 
                     {editingPriceId === food.id ? (
                       <div className="flex items-center gap-1 mt-1">
@@ -509,19 +514,19 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           type="number"
                           value={tempPriceInput}
                           onChange={(e) => setTempPriceInput(e.target.value)}
-                          className="w-20 px-1.5 py-0.5 border border-amber-500/40 bg-zinc-950 text-amber-300 rounded text-xs font-bold"
+                          className="w-20 px-1.5 py-0.5 border border-[#C0684C] bg-[#FAF5EF] text-[#2E1E17] rounded text-xs font-bold"
                           autoFocus
                         />
                         <button
                           onClick={() => handleSavePrice(food)}
-                          className="bg-emerald-600 text-white px-2 py-0.5 rounded text-[10px] font-bold"
+                          className="bg-[#C0684C] text-white px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer"
                         >
                           OK
                         </button>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="font-extrabold text-xs text-amber-400">
+                        <span className="font-extrabold text-xs text-[#C0684C]">
                           {food.price.toLocaleString('uz-UZ')} UZS
                         </span>
                         <button
@@ -529,7 +534,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             setEditingPriceId(food.id);
                             setTempPriceInput(food.price.toString());
                           }}
-                          className="text-amber-400 hover:text-amber-200 p-0.5"
+                          className="text-[#8D6B58] hover:text-[#C0684C] p-0.5 cursor-pointer"
                           title={t.editPrice}
                         >
                           <Edit2 className="w-3 h-3" />
@@ -544,22 +549,22 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         const newAvail = food.isAvailable === false ? true : false;
                         onUpdateFoodItem({ ...food, isAvailable: newAvail });
                       }}
-                      className={`mt-1.5 text-xs font-bold px-3 py-1 rounded-xl transition shadow active:scale-95 flex items-center gap-1.5 ${
+                      className={`mt-1.5 text-xs font-bold px-3 py-1 rounded-xl transition shadow-2xs active:scale-95 flex items-center gap-1.5 cursor-pointer ${
                         food.isAvailable !== false
-                          ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-900/80'
-                          : 'bg-red-950 text-red-300 border border-red-500/50 hover:bg-red-900/80'
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
+                          : 'bg-red-50 text-red-800 border border-red-200 hover:bg-red-100'
                       }`}
                       title={food.isAvailable !== false ? "Mavjud (Bor) - Bosilsa qolmagan qilinadi" : "Qolmagan (Tugagan) - Bosilsa mavjud qilinadi"}
                     >
                       {food.isAvailable !== false ? (
                         <>
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>{t.isAvailable || 'Barlıǵı / Bar'}</span>
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>{lang === 'qr' ? 'Bar (Mavjud)' : 'Mavjud (Bor)'}</span>
                         </>
                       ) : (
                         <>
-                          <X className="w-3.5 h-3.5 text-red-400" />
-                          <span>{t.notAvailable || 'Tawsılǵan / Joq'}</span>
+                          <X className="w-3.5 h-3.5 text-red-600" />
+                          <span>{lang === 'qr' ? 'Tawsılǵan (Joq)' : 'Tugagan (Qolmagan)'}</span>
                         </>
                       )}
                     </button>
@@ -567,7 +572,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
                   <button
                     onClick={() => onDeleteFoodItem(food.id)}
-                    className="text-red-400 hover:text-red-300 p-2"
+                    className="text-red-400 hover:text-red-600 hover:bg-red-50 p-2 rounded-xl transition cursor-pointer"
                     title={t.deleteItem}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -581,56 +586,60 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
       {/* Tab 2: Add New Food */}
       {activeTab === 'add' && (
-        <form onSubmit={handleAddSubmit} className="max-w-xl mx-auto bg-zinc-900 p-5 rounded-2xl border border-amber-500/30 space-y-4">
-          <h3 className="font-serif font-bold text-lg text-amber-300">{t.addFood}</h3>
+        <form onSubmit={handleAddSubmit} className="max-w-xl mx-auto bg-white p-5 sm:p-6 rounded-2xl border border-[#EAE0D4] shadow-sm space-y-4">
+          <h3 className="font-serif font-bold text-lg text-[#2E1E17] flex items-center gap-2">
+            <Plus className="w-5 h-5 text-[#C0684C]" />
+            <span>{t.addFood}</span>
+          </h3>
 
           <div>
-            <label className="block text-xs font-bold text-zinc-300 mb-1">{t.foodTitle}:</label>
+            <label className="block text-xs font-bold text-[#2E1E17] mb-1">{t.foodTitle}:</label>
             <input
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              placeholder="Mısalı: Qaraqalpaqsha May Gurtuk"
-              className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs font-semibold text-zinc-100 placeholder-zinc-500"
+              placeholder="Masalan: Cake Bumer Qizil Velvet"
+              className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAE0D4] bg-[#FAF5EF] text-xs font-semibold text-[#2E1E17] placeholder-[#8D6B58]/60 outline-none focus:border-[#C0684C] focus:ring-1 focus:ring-[#C0684C]"
               required
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-zinc-300 mb-1">{t.priceUzs}:</label>
+              <label className="block text-xs font-bold text-[#2E1E17] mb-1">{t.priceUzs}:</label>
               <input
                 type="number"
                 value={newPrice}
                 onChange={(e) => setNewPrice(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs font-semibold text-zinc-100"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAE0D4] bg-[#FAF5EF] text-xs font-semibold text-[#2E1E17] outline-none focus:border-[#C0684C] focus:ring-1 focus:ring-[#C0684C]"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-zinc-300 mb-1">Kategoriya:</label>
+              <label className="block text-xs font-bold text-[#2E1E17] mb-1">
+                {lang === 'qr' ? 'Kategoriya' : 'Kategoriya'}:
+              </label>
               <select
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value as any)}
-                className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs font-semibold text-zinc-100"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[#EAE0D4] bg-[#FAF5EF] text-xs font-semibold text-[#2E1E17] outline-none focus:border-[#C0684C] focus:ring-1 focus:ring-[#C0684C]"
               >
                 <option value="cakes">🎂 Tortlar (Cakes)</option>
-                <option value="pastries">🧁 Pirojniylar (Pastries)</option>
-                <option value="bakery">🥐 Pishiriqlar & Kruassan (Bakery)</option>
-                <option value="coffee">☕ Qahva & Ichimliklar (Coffee & Drinks)</option>
-                <option value="desserts">🍮 Shirinliklar (Desserts)</option>
+                <option value="pastries">🧁 Pirojniyler (Pastries)</option>
+                <option value="bakery">🥐 Pısırıqlar & Kruassan (Bakery)</option>
+                <option value="coffee">☕ Kofe & Ishimlikler (Coffee & Drinks)</option>
+                <option value="desserts">🍮 Shiyrinlikler (Desserts)</option>
               </select>
             </div>
           </div>
 
           {/* Food Image: Upload from Laptop OR Enter URL */}
-          <div className="bg-zinc-950 p-3.5 rounded-xl border border-amber-500/25 space-y-2.5">
-            <label className="block text-xs font-bold text-amber-300">
-              🖼️ Ovqat rasmi (Laptopdan yuklash yoki URL kiritish):
+          <div className="bg-[#FAF5EF] p-4 rounded-xl border border-[#EAE0D4] space-y-3">
+            <label className="block text-xs font-bold text-[#2E1E17]">
+              🖼️ {lang === 'qr' ? 'Súwret (Laptopıńızdan júklew yamasa URL):' : 'Rasm (Laptopdan yuklash yoki URL kiritish):'}
             </label>
 
-            {/* Hidden file input */}
             <input
               type="file"
               ref={fileInputRef}
@@ -644,66 +653,62 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
-                className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-400/50 px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition active:scale-95 shadow"
+                className="bg-white hover:bg-[#F7F2EB] text-[#2E1E17] border border-[#EAE0D4] px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition active:scale-95 shadow-xs cursor-pointer"
               >
                 {isUploading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-                    <span>Rasm yuklanmoqda...</span>
+                    <Loader2 className="w-4 h-4 animate-spin text-[#C0684C]" />
+                    <span>{lang === 'qr' ? 'Júklenbekte...' : 'Rasm yuklanmoqda...'}</span>
                   </>
                 ) : (
                   <>
-                    <Upload className="w-4 h-4 text-amber-400" />
-                    <span>📁 Laptopdan rasm yuklash</span>
+                    <Upload className="w-4 h-4 text-[#C0684C]" />
+                    <span>📁 {lang === 'qr' ? 'Laptopdan súwret júklew' : 'Laptopdan rasm yuklash'}</span>
                   </>
                 )}
               </button>
 
               {uploadSuccess && (
-                <span className="text-emerald-400 text-xs font-semibold flex items-center gap-1">
+                <span className="text-emerald-700 text-xs font-semibold flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" />
-                  <span>Rasm yuklandi!</span>
+                  <span>{lang === 'qr' ? 'Súwret júklendi!' : 'Rasm yuklandi!'}</span>
                 </span>
               )}
 
               {uploadError && (
-                <span className="text-red-400 text-xs font-semibold">
+                <span className="text-red-600 text-xs font-semibold">
                   {uploadError}
                 </span>
               )}
             </div>
 
-            {/* URL input field */}
             <div>
-              <label className="block text-[11px] text-zinc-400 mb-1">
-                Yoki to'g'ridan-to'g'ri rasm havolasi (URL):
+              <label className="block text-[11px] text-[#8D6B58] mb-1">
+                {lang === 'qr' ? 'Yamasa tuwrıdan-tuwrı silteme (URL):' : 'Yoki to\'g\'ridan-to\'g\'ri havola (URL):'}
               </label>
               <input
                 type="text"
                 value={newImgUrl}
                 onChange={(e) => setNewImgUrl(e.target.value)}
-                placeholder={lang === 'qr' ? "https://... yamasa /api/images/..." : "https://... yoki /api/images/..."}
-                className="w-full px-3 py-1.5 rounded-lg border border-zinc-800 bg-zinc-900 text-xs text-zinc-200 outline-none focus:border-amber-500"
+                placeholder="https://... yoki /api/images/..."
+                className="w-full px-3 py-2 rounded-xl border border-[#EAE0D4] bg-white text-xs text-[#2E1E17] outline-none focus:border-[#C0684C]"
               />
             </div>
 
             {/* Thumbnail Preview */}
             {newImgUrl ? (
               <div className="flex items-center gap-3 pt-1">
-                <div className="relative w-24 h-24 rounded-2xl overflow-hidden border-2 border-amber-500/50 bg-zinc-900 shrink-0 shadow-lg">
+                <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-[#EAE0D4] bg-white shrink-0 shadow-xs">
                   <img
                     src={newImgUrl}
                     alt="Preview"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="text-xs text-zinc-400 space-y-1">
-                  <span className="text-emerald-400 font-bold block flex items-center gap-1">
+                <div className="text-xs text-[#8D6B58] space-y-1">
+                  <span className="text-emerald-700 font-bold block flex items-center gap-1">
                     <Check className="w-4 h-4" />
                     <span>{lang === 'qr' ? 'Súwret tayın' : 'Rasm tayyor'}</span>
-                  </span>
-                  <span className="text-[11px] text-zinc-300 block">
-                    {lang === 'qr' ? 'Saytta usı súwret kórsetiledi' : 'Saytda ushbu rasm ko\'rinadi'}
                   </span>
                   <button
                     type="button"
@@ -712,14 +717,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       setUploadSuccess(false);
                       if (fileInputRef.current) fileInputRef.current.value = '';
                     }}
-                    className="text-[11px] text-red-400 hover:text-red-300 transition underline cursor-pointer"
+                    className="text-[11px] text-red-500 hover:text-red-700 transition underline cursor-pointer"
                   >
                     ✕ {lang === 'qr' ? 'Súwretti alıp taslaw' : 'Rasmni olib tashlash'}
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="p-3 rounded-xl border border-dashed border-zinc-700 bg-zinc-900/40 text-center text-xs text-zinc-400">
+              <div className="p-3 rounded-xl border border-dashed border-[#EAE0D4] bg-white/60 text-center text-xs text-[#8D6B58]">
                 {lang === 'qr'
                   ? 'Házirshe súwret tańlanbadı. Laptopıńızdan júkleń yamasa URL kiritiń.'
                   : 'Hozircha rasm tanlanmadi. Laptopingizdan yuklang yoki URL kiriting.'}
@@ -728,19 +733,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-zinc-300 mb-1">Túsindirme (Description):</label>
+            <label className="block text-xs font-bold text-[#2E1E17] mb-1">
+              {lang === 'qr' ? 'Túsindirme (Description):' : 'Tavsif (Description):'}
+            </label>
             <textarea
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
               rows={2}
-              className="w-full px-3 py-2 rounded-xl border border-amber-500/30 bg-zinc-950 text-xs text-zinc-100"
-              placeholder="Taǵam quramı hám lezzeti..."
+              className="w-full px-3.5 py-2 rounded-xl border border-[#EAE0D4] bg-[#FAF5EF] text-xs text-[#2E1E17] outline-none focus:border-[#C0684C]"
+              placeholder={lang === 'qr' ? 'Shiyrinlik quramı hám lezzeti...' : 'Shirinlik tarkibi va lazzati...'}
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-3 rounded-2xl font-serif font-extrabold text-sm shadow-[0_0_15px_rgba(245,158,11,0.35)]"
+            className="w-full bg-[#C0684C] hover:bg-[#A8553A] text-white py-3 rounded-2xl font-serif font-extrabold text-sm shadow-sm transition cursor-pointer"
           >
             {t.addFood}
           </button>
@@ -752,14 +759,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         <div className="space-y-6">
           {/* Waiter Calls Section */}
           <div>
-            <h3 className="font-serif font-bold text-base text-amber-300 mb-3 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-amber-400 animate-bounce" />
+            <h3 className="font-serif font-bold text-base text-[#2E1E17] mb-3 flex items-center gap-2">
+              <Bell className="w-5 h-5 text-[#C0684C] animate-bounce" />
               <span>{t.waiterAlerts} ({waiterCalls.filter((c) => c.status === 'active').length})</span>
             </h3>
 
             {waiterCalls.filter((c) => c.status === 'active').length === 0 ? (
-              <p className="text-xs text-zinc-400 italic bg-zinc-900 p-3 rounded-xl border border-zinc-800">
-                Ámellerde aktiv aficiant shaqırıwları joq.
+              <p className="text-xs text-[#8D6B58] italic bg-white p-3.5 rounded-xl border border-[#EAE0D4]">
+                {lang === 'qr' ? 'Házirshe aktiv ofitsiant shaqırıwları joq.' : 'Hozircha faol ofitsiant chaqiruvlari yo\'q.'}
               </p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -768,23 +775,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   .map((call) => (
                     <div
                       key={call.id}
-                      className="bg-zinc-900 p-3.5 rounded-2xl border border-amber-500/40 flex items-center justify-between shadow-sm"
+                      className="bg-white p-3.5 rounded-2xl border border-[#EAE0D4] flex items-center justify-between shadow-xs"
                     >
                       <div>
-                        <span className="font-serif font-extrabold text-base text-zinc-100 block">
+                        <span className="font-serif font-extrabold text-base text-[#2E1E17] block">
                           Stol №{call.tableNumber}
                         </span>
-                        <span className="text-xs text-amber-300 font-medium">
-                          {call.type === 'waiter' ? '🔔 Aficiant shaqırdı' : '🧾 Schet soradı'}
+                        <span className="text-xs text-[#C0684C] font-semibold">
+                          {call.type === 'waiter' 
+                            ? (lang === 'qr' ? '🔔 Oficiant shaqırdı' : '🔔 Ofitsiant chaqirdi')
+                            : (lang === 'qr' ? '🧾 Schet soradı' : '🧾 Hisob so\'radi')}
                         </span>
                       </div>
 
                       <button
                         onClick={() => onResolveWaiterCall(call.id)}
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white p-2 rounded-xl text-xs font-bold flex items-center gap-1 shadow"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-xl text-xs font-bold flex items-center gap-1 shadow-xs cursor-pointer"
                       >
-                        <CheckCircle className="w-4 h-4 text-amber-300" />
-                        <span>Barıldı</span>
+                        <CheckCircle className="w-4 h-4" />
+                        <span>{lang === 'qr' ? 'Barıldı' : 'Borildi'}</span>
                       </button>
                     </div>
                   ))}
@@ -795,10 +804,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           {/* Active Orders List */}
           <div>
             <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-              <h3 className="font-serif font-bold text-base text-zinc-100 flex items-center gap-2">
+              <h3 className="font-serif font-bold text-base text-[#2E1E17] flex items-center gap-2">
                 <span>{t.activeOrders}</span>
-                <span className="bg-amber-500/20 text-amber-300 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-bold">
-                  Jámi: {orders.length}
+                <span className="bg-[#FAF5EF] text-[#C0684C] text-xs px-2.5 py-0.5 rounded-full border border-[#EAE0D4] font-bold">
+                  {lang === 'qr' ? 'Jámi' : 'Jami'}: {orders.length}
                 </span>
               </h3>
 
@@ -807,13 +816,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedTableFilter('all')}
-                  className={`px-3 py-1 rounded-xl font-serif font-bold text-xs whitespace-nowrap transition ${
+                  className={`px-3 py-1 rounded-xl font-serif font-bold text-xs whitespace-nowrap transition cursor-pointer ${
                     selectedTableFilter === 'all'
-                      ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow'
-                      : 'bg-zinc-950 text-zinc-300 border border-zinc-800 hover:bg-zinc-800'
+                      ? 'bg-[#C0684C] text-white shadow-xs'
+                      : 'bg-white text-[#2E1E17] border border-[#EAE0D4] hover:bg-[#FAF5EF]'
                   }`}
                 >
-                  Barcha stollar ({orders.length})
+                  {lang === 'qr' ? 'Barlıq stollar' : 'Barcha stollar'} ({orders.length})
                 </button>
                 {Array.from(new Set(orders.map((o) => String(o.tableNumber))))
                   .sort((a, b) => Number(a) - Number(b))
@@ -822,10 +831,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       type="button"
                       key={tbl}
                       onClick={() => setSelectedTableFilter(tbl)}
-                      className={`px-3 py-1 rounded-xl font-serif font-bold text-xs whitespace-nowrap transition ${
+                      className={`px-3 py-1 rounded-xl font-serif font-bold text-xs whitespace-nowrap transition cursor-pointer ${
                         selectedTableFilter === tbl
-                          ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow'
-                          : 'bg-zinc-950 text-zinc-300 border border-zinc-800 hover:bg-zinc-800'
+                          ? 'bg-[#C0684C] text-white shadow-xs'
+                          : 'bg-white text-[#2E1E17] border border-[#EAE0D4] hover:bg-[#FAF5EF]'
                       }`}
                     >
                       Stol №{tbl} ({orders.filter((o) => String(o.tableNumber) === tbl).length})
@@ -842,10 +851,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
               if (displayOrders.length === 0) {
                 return (
-                  <p className="text-xs text-zinc-400 italic bg-zinc-900 p-3 rounded-xl border border-zinc-800">
+                  <p className="text-xs text-[#8D6B58] italic bg-white p-3.5 rounded-xl border border-[#EAE0D4]">
                     {selectedTableFilter === 'all'
-                      ? 'Taza zakazlar házirshe joq.'
-                      : `Stol №${selectedTableFilter} ushın zakazlar joq.`}
+                      ? (lang === 'qr' ? 'Taza buyırtpalar házirshe joq.' : 'Yangi buyurtmalar hozircha yo\'q.')
+                      : (lang === 'qr' ? `Stol №${selectedTableFilter} ushın buyırtpalar joq.` : `Stol №${selectedTableFilter} uchun buyurtmalar yo'q.`)}
                   </p>
                 );
               }
@@ -853,104 +862,110 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               return (
                 <div className="space-y-3">
                   {displayOrders.map((ord) => (
-                  <div key={ord.id} className="bg-zinc-900 p-4 rounded-2xl border border-amber-500/30 text-xs shadow-md space-y-3">
-                    <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 px-2.5 py-0.5 rounded-lg font-serif font-black text-xs shadow">
-                          Stol №{ord.tableNumber}
-                        </span>
-                        <span className="font-mono text-zinc-400 text-[11px] font-bold">
-                          {ord.id}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {/* Admin View Receipt Button */}
-                        <button
-                          type="button"
-                          onClick={() => setViewingReceiptOrder(ord)}
-                          className="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-amber-500/20 hover:bg-amber-500/35 text-amber-300 border border-amber-500/40 flex items-center gap-1.5 transition active:scale-95 shadow-sm"
-                          title={lang === 'qr' ? 'Çekti kóriw hám baspadan shıǵarıw' : 'Chekni ko\'rish va chop etish'}
-                        >
-                          <FileText className="w-3.5 h-3.5 text-amber-400" />
-                          <span>🧾 {lang === 'qr' ? 'Çekti kóriw' : (t.viewReceipt || 'Chekni ko\'rish')}</span>
-                        </button>
-
-                        <span className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] border ${
-                          ord.status === 'delivered'
-                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                            : ord.status === 'paid'
-                            ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
-                            : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                        }`}>
-                          {ord.status === 'preparing' ? '⏳ Tayarlanbaqta' : ord.status === 'delivered' ? '✓ Jetkerildi' : ord.status === 'paid' ? '💰 Tólendi' : ord.status.toUpperCase()}
-                        </span>
-                        {onDeleteOrder && (
-                          <button
-                            onClick={() => onDeleteOrder(ord.id)}
-                            className="p-1 rounded bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 transition"
-                            title="Óshiriw"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="space-y-1 text-zinc-300">
-                      {(ord.items || []).map((i, idx) => (
-                        <div key={i?.food?.id || idx} className="flex justify-between py-0.5 border-b border-zinc-800/40">
-                          <span>{getFoodTitle(i?.food, lang)} <span className="text-amber-400 font-bold">x{i?.quantity || 1}</span></span>
-                          <span className="font-semibold text-zinc-200">{formatPrice((i?.food?.price || 0) * (i?.quantity || 1))}</span>
+                    <div key={ord.id} className="bg-white p-4 rounded-2xl border border-[#EAE0D4] text-xs shadow-xs space-y-3">
+                      <div className="flex items-center justify-between border-b border-[#EAE0D4] pb-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="bg-[#FAF5EF] text-[#2E1E17] border border-[#EAE0D4] px-2.5 py-1 rounded-lg font-serif font-bold text-xs">
+                            Stol №{ord.tableNumber}
+                          </span>
+                          <span className="font-mono text-[#8D6B58] text-[11px] font-bold">
+                            {ord.id}
+                          </span>
                         </div>
-                      ))}
-                    </div>
+                        <div className="flex items-center gap-2">
+                          {/* Admin View Receipt Button */}
+                          <button
+                            type="button"
+                            onClick={() => setViewingReceiptOrder(ord)}
+                            className="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-[#FAF5EF] hover:bg-[#EAE0D4] text-[#2E1E17] border border-[#EAE0D4] flex items-center gap-1.5 transition active:scale-95 shadow-2xs cursor-pointer"
+                            title={lang === 'qr' ? 'Çekti kóriw hám baspadan shıǵarıw' : 'Chekni ko\'rish va chop etish'}
+                          >
+                            <FileText className="w-3.5 h-3.5 text-[#C0684C]" />
+                            <span>🧾 {lang === 'qr' ? 'Çekti kóriw' : (t.viewReceipt || 'Chekni ko\'rish')}</span>
+                          </button>
 
-                    <div className="border-t border-zinc-800 pt-2 flex items-center justify-between font-bold text-sm text-zinc-100">
-                      <span className="text-zinc-400 text-xs">{t.total}:</span>
-                      <span className="text-amber-400 text-base font-extrabold">{formatPrice(ord.totalAmount)}</span>
-                    </div>
-
-                    {/* Status change actions */}
-                    {onUpdateOrderStatus && (
-                      <div className="pt-2 border-t border-zinc-800/80 flex flex-wrap items-center gap-1.5">
-                        <span className="text-[11px] text-zinc-400 mr-1">Status:</span>
-                        <button
-                          onClick={() => onUpdateOrderStatus(ord.id, 'preparing')}
-                          className={`px-2 py-1 rounded-lg text-[11px] font-bold transition border ${
-                            ord.status === 'preparing'
-                              ? 'bg-amber-500 text-zinc-950 border-amber-300'
-                              : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-zinc-200'
-                          }`}
-                        >
-                          ⏳ Tayarlanbaqta
-                        </button>
-                        <button
-                          onClick={() => onUpdateOrderStatus(ord.id, 'delivered')}
-                          className={`px-2 py-1 rounded-lg text-[11px] font-bold transition border ${
+                          <span className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] border ${
                             ord.status === 'delivered'
-                              ? 'bg-emerald-500 text-zinc-950 border-emerald-300'
-                              : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-zinc-200'
-                          }`}
-                        >
-                          ✓ Jetkerildi
-                        </button>
-                        <button
-                          onClick={() => onUpdateOrderStatus(ord.id, 'paid')}
-                          className={`px-2 py-1 rounded-lg text-[11px] font-bold transition border ${
-                            ord.status === 'paid'
-                              ? 'bg-blue-500 text-white border-blue-400'
-                              : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-zinc-200'
-                          }`}
-                        >
-                          💰 Tólendi
-                        </button>
+                              ? 'bg-blue-50 text-blue-800 border-blue-200'
+                              : ord.status === 'paid'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                          }`}>
+                            {ord.status === 'preparing' 
+                              ? (lang === 'qr' ? '⏳ Tayarlanbaqta' : '⏳ Tayyorlanmoqda')
+                              : ord.status === 'delivered' 
+                              ? (lang === 'qr' ? '✓ Jetkerildi' : '✓ Yetkazildi')
+                              : ord.status === 'paid' 
+                              ? (lang === 'qr' ? '💰 Tólendi' : '💰 To\'landi')
+                              : ord.status.toUpperCase()}
+                          </span>
+                          {onDeleteOrder && (
+                            <button
+                              onClick={() => onDeleteOrder(ord.id)}
+                              className="p-1 rounded bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition cursor-pointer"
+                              title={lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
+
+                      <div className="space-y-1.5 text-[#2E1E17]">
+                        {(ord.items || []).map((i, idx) => (
+                          <div key={i?.food?.id || idx} className="flex justify-between py-0.5 border-b border-[#FAF5EF]">
+                            <span>{getFoodTitle(i?.food, lang)} <span className="text-[#C0684C] font-bold">x{i?.quantity || 1}</span></span>
+                            <span className="font-semibold text-[#2E1E17]">{formatPrice((i?.food?.price || 0) * (i?.quantity || 1))}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="border-t border-[#EAE0D4] pt-2 flex items-center justify-between font-bold text-sm text-[#2E1E17]">
+                        <span className="text-[#8D6B58] text-xs">{t.total}:</span>
+                        <span className="text-[#C0684C] text-base font-extrabold">{formatPrice(ord.totalAmount)}</span>
+                      </div>
+
+                      {/* Status change actions */}
+                      {onUpdateOrderStatus && (
+                        <div className="pt-2 border-t border-[#EAE0D4] flex flex-wrap items-center gap-1.5">
+                          <span className="text-[11px] text-[#8D6B58] mr-1">Status:</span>
+                          <button
+                            onClick={() => onUpdateOrderStatus(ord.id, 'preparing')}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition border cursor-pointer ${
+                              ord.status === 'preparing'
+                                ? 'bg-amber-100 text-amber-900 border-amber-300 shadow-2xs'
+                                : 'bg-[#FAF5EF] text-[#8D6B58] border-[#EAE0D4] hover:text-[#2E1E17]'
+                            }`}
+                          >
+                            ⏳ {lang === 'qr' ? 'Tayarlanbaqta' : 'Tayyorlanmoqda'}
+                          </button>
+                          <button
+                            onClick={() => onUpdateOrderStatus(ord.id, 'delivered')}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition border cursor-pointer ${
+                              ord.status === 'delivered'
+                                ? 'bg-blue-100 text-blue-900 border-blue-300 shadow-2xs'
+                                : 'bg-[#FAF5EF] text-[#8D6B58] border-[#EAE0D4] hover:text-[#2E1E17]'
+                            }`}
+                          >
+                            ✓ {lang === 'qr' ? 'Jetkerildi' : 'Yetkazildi'}
+                          </button>
+                          <button
+                            onClick={() => onUpdateOrderStatus(ord.id, 'paid')}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition border cursor-pointer ${
+                              ord.status === 'paid'
+                                ? 'bg-emerald-100 text-emerald-900 border-emerald-300 shadow-2xs'
+                                : 'bg-[#FAF5EF] text-[#8D6B58] border-[#EAE0D4] hover:text-[#2E1E17]'
+                            }`}
+                          >
+                            💰 {lang === 'qr' ? 'Tólendi' : 'To\'landi'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
@@ -959,13 +974,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       {activeTab === 'stats' && (
         <div className="space-y-6">
           {/* Header & Period Switcher */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-zinc-900 p-4 rounded-2xl border border-amber-500/30">
+          <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-[#EAE0D4] shadow-xs">
             <div>
-              <h3 className="font-serif font-bold text-lg text-amber-300 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-amber-400" />
+              <h3 className="font-serif font-bold text-lg text-[#2E1E17] flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-[#C0684C]" />
                 <span>{lang === 'qr' ? 'Real waqıtlıq statistika hám túsim' : 'Real vaqtdagi statistika va tushum'}</span>
               </h3>
-              <p className="text-xs text-zinc-400 mt-0.5">
+              <p className="text-xs text-[#8D6B58] mt-0.5">
                 {lang === 'qr' 
                   ? 'Kúnlik, háptelik, aylıq satıwlar hám real waqıt rejiminde kelip atırǵan pullar.'
                   : 'Kunlik, haftalik, oylik savdolar va real vaqt rejimida kelayotgan pullar.'}
@@ -973,14 +988,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             </div>
 
             {/* Time Period Tabs */}
-            <div className="flex items-center bg-zinc-950 p-1 rounded-xl border border-amber-500/30">
+            <div className="flex items-center bg-[#FAF5EF] p-1 rounded-xl border border-[#EAE0D4]">
               <button
                 type="button"
                 onClick={() => setStatsPeriod('daily')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                   statsPeriod === 'daily'
-                    ? 'bg-amber-500 text-zinc-950 shadow-md'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-[#C0684C] text-white shadow-2xs'
+                    : 'text-[#8D6B58] hover:text-[#2E1E17]'
                 }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
@@ -989,10 +1004,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setStatsPeriod('weekly')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                   statsPeriod === 'weekly'
-                    ? 'bg-amber-500 text-zinc-950 shadow-md'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-[#C0684C] text-white shadow-2xs'
+                    : 'text-[#8D6B58] hover:text-[#2E1E17]'
                 }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
@@ -1001,10 +1016,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <button
                 type="button"
                 onClick={() => setStatsPeriod('monthly')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                   statsPeriod === 'monthly'
-                    ? 'bg-amber-500 text-zinc-950 shadow-md'
-                    : 'text-zinc-400 hover:text-zinc-200'
+                    ? 'bg-[#C0684C] text-white shadow-2xs'
+                    : 'text-[#8D6B58] hover:text-[#2E1E17]'
                 }`}
               >
                 <Calendar className="w-3.5 h-3.5" />
@@ -1015,127 +1030,127 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
           {/* Section 1: Live Incoming Revenue Cards */}
           <div>
-            <h4 className="font-serif font-bold text-sm text-zinc-200 mb-2 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse inline-block shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <h4 className="font-serif font-bold text-sm text-[#2E1E17] mb-2 flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse inline-block shadow-sm" />
               <span>{lang === 'qr' ? 'Real waqıt rejiminde kelip atırǵan pullar (Live Stream)' : 'Real vaqt rejimida kelayotgan pullar (Live Stream)'}</span>
             </h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* Card 1: Live In-Kitchen / Pending Revenue */}
-              <div className="bg-zinc-900 p-4 rounded-2xl border border-amber-500/40 relative overflow-hidden group">
-                <div className="flex items-center justify-between text-zinc-400 text-xs">
+              <div className="bg-white p-4 rounded-2xl border border-[#EAE0D4] shadow-xs relative overflow-hidden group">
+                <div className="flex items-center justify-between text-[#8D6B58] text-xs">
                   <span className="font-semibold">{lang === 'qr' ? 'Kútilip atırǵan túsim' : 'Kutilayotgan tushum'}</span>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-[10px] border border-amber-500/30">
-                    ⏳ {liveStats.pendingOrdersCount} zakaz
+                  <span className="px-2 py-0.5 rounded-full bg-amber-50 text-amber-800 font-bold text-[10px] border border-amber-200">
+                    ⏳ {liveStats.pendingOrdersCount} {lang === 'qr' ? 'buyırtpa' : 'buyurtma'}
                   </span>
                 </div>
-                <div className="text-xl sm:text-2xl font-extrabold text-amber-400 mt-2 font-mono">
+                <div className="text-xl sm:text-2xl font-extrabold text-[#C0684C] mt-2 font-mono">
                   {formatPrice(liveStats.pendingRevenue)}
                 </div>
-                <div className="text-[11px] text-zinc-400 mt-1 flex items-center gap-1">
-                  <span>Asxanada tayarlanbaqta</span>
+                <div className="text-[11px] text-[#8D6B58] mt-1 flex items-center gap-1">
+                  <span>{lang === 'qr' ? 'Asxanada tayarlanbaqta' : 'Oshxonada tayyorlanmoqda'}</span>
                 </div>
               </div>
 
               {/* Card 2: Paid / Cashbox Revenue */}
-              <div className="bg-zinc-900 p-4 rounded-2xl border border-emerald-500/40 relative overflow-hidden group">
-                <div className="flex items-center justify-between text-zinc-400 text-xs">
+              <div className="bg-white p-4 rounded-2xl border border-emerald-200 shadow-xs relative overflow-hidden group">
+                <div className="flex items-center justify-between text-[#8D6B58] text-xs">
                   <span className="font-semibold">{lang === 'qr' ? 'Tólengen (Kassa)' : 'To\'langan (Kassa)'}</span>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold text-[10px] border border-emerald-500/30">
-                    ✓ {liveStats.paidOrdersCount} tólendi
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 font-bold text-[10px] border border-emerald-200">
+                    ✓ {liveStats.paidOrdersCount} {lang === 'qr' ? 'tólendi' : 'to\'landi'}
                   </span>
                 </div>
-                <div className="text-xl sm:text-2xl font-extrabold text-emerald-400 mt-2 font-mono">
+                <div className="text-xl sm:text-2xl font-extrabold text-emerald-700 mt-2 font-mono">
                   {formatPrice(liveStats.paidRevenue)}
                 </div>
-                <div className="text-[11px] text-zinc-400 mt-1 flex items-center gap-1">
-                  <span>Kassaga tólengen qárejet</span>
+                <div className="text-[11px] text-[#8D6B58] mt-1 flex items-center gap-1">
+                  <span>{lang === 'qr' ? 'Kassaga tólengen qárejet' : 'Kassaga to\'langan mablag\''}</span>
                 </div>
               </div>
 
               {/* Card 3: Delivered Revenue */}
-              <div className="bg-zinc-900 p-4 rounded-2xl border border-blue-500/40 relative overflow-hidden group">
-                <div className="flex items-center justify-between text-zinc-400 text-xs">
+              <div className="bg-white p-4 rounded-2xl border border-blue-200 shadow-xs relative overflow-hidden group">
+                <div className="flex items-center justify-between text-[#8D6B58] text-xs">
                   <span className="font-semibold">{lang === 'qr' ? 'Jetkerilgen taǵamlar' : 'Yetkazilgan taomlar'}</span>
-                  <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-bold text-[10px] border border-blue-500/30">
+                  <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-bold text-[10px] border border-blue-200">
                     🚀 {liveStats.deliveredOrdersCount} stol
                   </span>
                 </div>
-                <div className="text-xl sm:text-2xl font-extrabold text-blue-400 mt-2 font-mono">
+                <div className="text-xl sm:text-2xl font-extrabold text-blue-700 mt-2 font-mono">
                   {formatPrice(liveStats.deliveredRevenue)}
                 </div>
-                <div className="text-[11px] text-zinc-400 mt-1 flex items-center gap-1">
-                  <span>Stollarǵa jetkerip berilgen</span>
+                <div className="text-[11px] text-[#8D6B58] mt-1 flex items-center gap-1">
+                  <span>{lang === 'qr' ? 'Stollarǵa jetkerip berilgen' : 'Stollarga yetkazib berilgan'}</span>
                 </div>
               </div>
 
               {/* Card 4: Total Revenue (Aylanma) */}
-              <div className="bg-gradient-to-br from-zinc-900 to-amber-950/40 p-4 rounded-2xl border-2 border-amber-500/60 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-                <div className="flex items-center justify-between text-zinc-300 text-xs">
-                  <span className="font-bold text-amber-300">{lang === 'qr' ? 'Jámi aylanma' : 'Jami aylanma'}</span>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-500 text-zinc-950 font-black text-[10px]">
+              <div className="bg-gradient-to-br from-white to-[#FAF5EF] p-4 rounded-2xl border-2 border-[#C0684C]/40 shadow-xs">
+                <div className="flex items-center justify-between text-[#2E1E17] text-xs">
+                  <span className="font-bold text-[#C0684C]">{lang === 'qr' ? 'Jámi aylanma' : 'Jami aylanma'}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#C0684C] text-white font-black text-[10px]">
                     LIVE
                   </span>
                 </div>
-                <div className="text-xl sm:text-2xl font-black text-amber-300 mt-2 font-mono drop-shadow-[0_0_10px_rgba(245,158,11,0.4)]">
+                <div className="text-xl sm:text-2xl font-black text-[#2E1E17] mt-2 font-mono">
                   {formatPrice(liveStats.totalRevenue)}
                 </div>
-                <div className="text-[11px] text-zinc-400 mt-1">
-                  Jámi buyırtpalar: {liveStats.totalOrders} dana
+                <div className="text-[11px] text-[#8D6B58] mt-1">
+                  {lang === 'qr' ? 'Jámi buyırtpalar' : 'Jami buyurtmalar'}: {liveStats.totalOrders} {lang === 'qr' ? 'dana' : 'dona'}
                 </div>
               </div>
             </div>
           </div>
 
           {/* Section 2: Selected Period Summary (Daily / Weekly / Monthly) */}
-          <div className="bg-zinc-900 p-5 rounded-2xl border border-amber-500/30 space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-3">
-              <h4 className="font-serif font-bold text-base text-amber-300 flex items-center gap-2">
-                <PieChart className="w-5 h-5 text-amber-400" />
+          <div className="bg-white p-5 rounded-2xl border border-[#EAE0D4] shadow-xs space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#EAE0D4] pb-3">
+              <h4 className="font-serif font-bold text-base text-[#2E1E17] flex items-center gap-2">
+                <PieChart className="w-5 h-5 text-[#C0684C]" />
                 <span>
                   {statsPeriod === 'daily' && (lang === 'qr' ? 'Kúnlik Dástúrli Túsim' : 'Kunlik Tushum Ko\'rsatkichlari')}
                   {statsPeriod === 'weekly' && (lang === 'qr' ? 'Háptelik Jámi Túsim' : 'Haftalik Jami Tushum Ko\'rsatkichlari')}
                   {statsPeriod === 'monthly' && (lang === 'qr' ? 'Aylıq Jámi Túsim' : 'Oylik Jami Tushum Ko\'rsatkichlari')}
                 </span>
               </h4>
-              <span className="text-xs text-zinc-400 bg-zinc-950 px-3 py-1 rounded-xl border border-zinc-800">
-                {statsPeriod === 'daily' && 'Bugun (24 soat)'}
-                {statsPeriod === 'weekly' && 'Dushanba - Yakshanba'}
-                {statsPeriod === 'monthly' && 'Oxirgi 30 kunlik dinamika'}
+              <span className="text-xs text-[#8D6B58] bg-[#FAF5EF] px-3 py-1 rounded-xl border border-[#EAE0D4]">
+                {statsPeriod === 'daily' && (lang === 'qr' ? 'Búgin (24 saat)' : 'Bugun (24 soat)')}
+                {statsPeriod === 'weekly' && (lang === 'qr' ? 'Dúyshembi - Yekshembi' : 'Dushanba - Yakshanba')}
+                {statsPeriod === 'monthly' && (lang === 'qr' ? 'Sońǵı 30 kúnlik dinamika' : 'Oxirgi 30 kunlik dinamika')}
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
-                <span className="text-xs text-zinc-400 block">{lang === 'qr' ? 'Túsim summası' : 'Tushum summasi'}:</span>
-                <span className="text-2xl font-black text-amber-400 mt-1 block font-mono">
+              <div className="bg-[#FAF5EF] p-4 rounded-xl border border-[#EAE0D4]">
+                <span className="text-xs text-[#8D6B58] block">{lang === 'qr' ? 'Túsim summası' : 'Tushum summasi'}:</span>
+                <span className="text-2xl font-black text-[#C0684C] mt-1 block font-mono">
                   {statsPeriod === 'daily' && formatPrice(liveStats.dailyRevenue)}
                   {statsPeriod === 'weekly' && formatPrice(liveStats.weeklyRevenue)}
                   {statsPeriod === 'monthly' && formatPrice(liveStats.monthlyRevenue)}
                 </span>
-                <span className="text-[10px] text-emerald-400 flex items-center gap-1 mt-1">
-                  <ArrowUpRight className="w-3 h-3" /> +14.8% ótken dáwirge salıstırǵanda
+                <span className="text-[10px] text-emerald-700 flex items-center gap-1 mt-1 font-semibold">
+                  <ArrowUpRight className="w-3 h-3" /> +14.8% {lang === 'qr' ? 'ótken dáwirge salıstırǵanda' : 'o\'tgan davrga nisbatan'}
                 </span>
               </div>
 
-              <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
-                <span className="text-xs text-zinc-400 block">{lang === 'qr' ? 'Buyırtpalar sanı' : 'Buyurtmalar soni'}:</span>
-                <span className="text-2xl font-black text-zinc-100 mt-1 block font-mono">
-                  {statsPeriod === 'daily' && `${liveStats.dailyCount} buyırtpa`}
-                  {statsPeriod === 'weekly' && `${liveStats.weeklyCount} buyırtpa`}
-                  {statsPeriod === 'monthly' && `${liveStats.monthlyCount} buyırtpa`}
+              <div className="bg-[#FAF5EF] p-4 rounded-xl border border-[#EAE0D4]">
+                <span className="text-xs text-[#8D6B58] block">{lang === 'qr' ? 'Buyırtpalar sanı' : 'Buyurtmalar soni'}:</span>
+                <span className="text-2xl font-black text-[#2E1E17] mt-1 block font-mono">
+                  {statsPeriod === 'daily' && `${liveStats.dailyCount} ${lang === 'qr' ? 'buyırtpa' : 'buyurtma'}`}
+                  {statsPeriod === 'weekly' && `${liveStats.weeklyCount} ${lang === 'qr' ? 'buyırtpa' : 'buyurtma'}`}
+                  {statsPeriod === 'monthly' && `${liveStats.monthlyCount} ${lang === 'qr' ? 'buyırtpa' : 'buyurtma'}`}
                 </span>
-                <span className="text-[10px] text-zinc-400 mt-1 block">
+                <span className="text-[10px] text-[#8D6B58] mt-1 block">
                   {lang === 'qr' ? 'Miyhmanlar aktivligi joqarı' : 'Mehmonlar faolligi yuqori'}
                 </span>
               </div>
 
-              <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
-                <span className="text-xs text-zinc-400 block">{lang === 'qr' ? 'Ortasha çek miqdarı' : 'O\'rtacha chek miqdori'}:</span>
-                <span className="text-2xl font-black text-amber-300 mt-1 block font-mono">
+              <div className="bg-[#FAF5EF] p-4 rounded-xl border border-[#EAE0D4]">
+                <span className="text-xs text-[#8D6B58] block">{lang === 'qr' ? 'Ortasha çek miqdarı' : 'O\'rtacha chek miqdori'}:</span>
+                <span className="text-2xl font-black text-[#2E1E17] mt-1 block font-mono">
                   {formatPrice(liveStats.averageCheck)}
                 </span>
-                <span className="text-[10px] text-zinc-400 mt-1 block">
+                <span className="text-[10px] text-[#8D6B58] mt-1 block">
                   {lang === 'qr' ? 'Hár bir buyırtpaǵa ortasha' : 'Har bir buyurtmaga o\'rtacha'}
                 </span>
               </div>
@@ -1145,44 +1160,46 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           {/* Section 3: Two Columns - Top Dishes & Table Revenues */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
             {/* Top Dishes */}
-            <div className="bg-zinc-900 p-5 rounded-2xl border border-amber-500/30 space-y-3">
-              <h4 className="font-serif font-bold text-sm text-amber-300 flex items-center justify-between">
+            <div className="bg-white p-5 rounded-2xl border border-[#EAE0D4] shadow-xs space-y-3">
+              <h4 className="font-serif font-bold text-sm text-[#2E1E17] flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span>{lang === 'qr' ? 'Eń kóp satılǵan taǵamlar' : 'Eng ko\'p sotilgan taomlar'}</span>
+                  <Sparkles className="w-4 h-4 text-[#C0684C]" />
+                  <span>{lang === 'qr' ? 'Eń kóp satılǵan shiyrinlikler' : 'Eng ko\'p sotilgan shirinliklar'}</span>
                 </span>
-                <span className="text-xs text-zinc-400 font-normal">Top 5</span>
+                <span className="text-xs text-[#8D6B58] font-normal">Top 5</span>
               </h4>
 
               <div className="space-y-2.5">
                 {liveStats.topDishes.length === 0 ? (
-                  <p className="text-xs text-zinc-500 italic py-4 text-center">Házirshe buyırtpalar joq</p>
+                  <p className="text-xs text-[#8D6B58] italic py-4 text-center">
+                    {lang === 'qr' ? 'Házirshe buyırtpalar joq' : 'Hozircha buyurtmalar yo\'q'}
+                  </p>
                 ) : (
                   liveStats.topDishes.map((item, idx) => {
                     const pct = liveStats.totalRevenue > 0 
                       ? Math.min(100, Math.round((item.totalSum / liveStats.totalRevenue) * 100))
                       : 25;
                     return (
-                      <div key={item.food?.id || idx} className="bg-zinc-950 p-3 rounded-xl border border-zinc-800/80 space-y-1.5">
+                      <div key={item.food?.id || idx} className="bg-[#FAF5EF] p-3 rounded-xl border border-[#EAE0D4] space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className="w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] font-bold flex items-center justify-center shrink-0">
+                            <span className="w-5 h-5 rounded-full bg-[#C0684C]/15 text-[#C0684C] text-[11px] font-bold flex items-center justify-center shrink-0">
                               {idx + 1}
                             </span>
-                            <span className="font-bold text-zinc-200 truncate">
+                            <span className="font-bold text-[#2E1E17] truncate">
                               {getFoodTitle(item.food, lang)}
                             </span>
                           </div>
                           <div className="text-right shrink-0">
-                            <span className="font-mono font-bold text-amber-400">{formatPrice(item.totalSum)}</span>
-                            <span className="text-[10px] text-zinc-400 ml-1.5 font-mono">({item.count} dana)</span>
+                            <span className="font-mono font-bold text-[#C0684C]">{formatPrice(item.totalSum)}</span>
+                            <span className="text-[10px] text-[#8D6B58] ml-1.5 font-mono">({item.count} {lang === 'qr' ? 'dana' : 'dona'})</span>
                           </div>
                         </div>
 
                         {/* Progress Bar */}
-                        <div className="w-full bg-zinc-800 h-1.5 rounded-full overflow-hidden">
+                        <div className="w-full bg-[#EAE0D4] h-1.5 rounded-full overflow-hidden">
                           <div 
-                            className="bg-gradient-to-r from-amber-500 to-amber-400 h-full rounded-full transition-all duration-500"
+                            className="bg-[#C0684C] h-full rounded-full transition-all duration-500"
                             style={{ width: `${Math.max(12, pct)}%` }}
                           />
                         </div>
@@ -1194,40 +1211,44 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             </div>
 
             {/* Table Stats */}
-            <div className="bg-zinc-900 p-5 rounded-2xl border border-amber-500/30 space-y-3">
-              <h4 className="font-serif font-bold text-sm text-amber-300 flex items-center justify-between">
+            <div className="bg-white p-5 rounded-2xl border border-[#EAE0D4] shadow-xs space-y-3">
+              <h4 className="font-serif font-bold text-sm text-[#2E1E17] flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-amber-400" />
+                  <Users className="w-4 h-4 text-[#C0684C]" />
                   <span>{lang === 'qr' ? 'Stollar boyınsha túsim' : 'Stollar bo\'yicha tushum'}</span>
                 </span>
-                <span className="text-xs text-zinc-400 font-normal">Aylanma boyınsha</span>
+                <span className="text-xs text-[#8D6B58] font-normal">{lang === 'qr' ? 'Aylanma boyınsha' : 'Aylanma bo\'yicha'}</span>
               </h4>
 
               <div className="space-y-2.5 max-h-[320px] overflow-y-auto custom-scrollbar">
                 {liveStats.tableStatsList.length === 0 ? (
-                  <p className="text-xs text-zinc-500 italic py-4 text-center">Stollarda buyırtpa joq</p>
+                  <p className="text-xs text-[#8D6B58] italic py-4 text-center">
+                    {lang === 'qr' ? 'Stollarda buyırtpa joq' : 'Stollarda buyurtma yo\'q'}
+                  </p>
                 ) : (
                   liveStats.tableStatsList.map((tbl) => (
-                    <div key={tbl.tableNumber} className="bg-zinc-950 p-3 rounded-xl border border-zinc-800 flex items-center justify-between text-xs">
+                    <div key={tbl.tableNumber} className="bg-[#FAF5EF] p-3 rounded-xl border border-[#EAE0D4] flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2.5">
-                        <span className="bg-amber-500 text-zinc-950 font-black text-xs px-2 py-0.5 rounded font-mono">
+                        <span className="bg-[#2E1E17] text-white font-bold text-xs px-2 py-0.5 rounded font-mono">
                           Stol №{tbl.tableNumber}
                         </span>
-                        <span className="text-zinc-400 text-[11px]">
-                          {tbl.orderCount} buyırtpa
+                        <span className="text-[#8D6B58] text-[11px]">
+                          {tbl.orderCount} {lang === 'qr' ? 'buyırtpa' : 'buyurtma'}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-amber-400 font-mono">
+                        <span className="font-bold text-[#C0684C] font-mono">
                           {formatPrice(tbl.totalAmount)}
                         </span>
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           tbl.lastStatus === 'paid'
-                            ? 'bg-emerald-500/20 text-emerald-300'
-                            : 'bg-amber-500/20 text-amber-300'
+                            ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                            : 'bg-amber-50 text-amber-800 border border-amber-200'
                         }`}>
-                          {tbl.lastStatus === 'paid' ? 'Tólendi' : 'Aktiv'}
+                          {tbl.lastStatus === 'paid' 
+                            ? (lang === 'qr' ? 'Tólendi' : 'To\'landi')
+                            : (lang === 'qr' ? 'Aktiv' : 'Faol')}
                         </span>
                       </div>
                     </div>
@@ -1243,32 +1264,34 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       {activeTab === 'qrcodes' && (
         <div className="space-y-6">
           {/* Header Banner */}
-          <div className="flex flex-wrap items-center justify-between gap-4 bg-zinc-900 p-4 sm:p-5 rounded-2xl border border-amber-500/30">
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl border border-[#EAE0D4] shadow-xs">
             <div>
-              <h3 className="font-serif font-bold text-base sm:text-lg text-amber-300 flex items-center gap-2">
-                <QrCode className="w-5 h-5 text-amber-400" />
-                <span>{t.tableQrManager || 'Stollar QR-kodları'}</span>
+              <h3 className="font-serif font-bold text-base sm:text-lg text-[#2E1E17] flex items-center gap-2">
+                <QrCode className="w-5 h-5 text-[#C0684C]" />
+                <span>{lang === 'qr' ? 'Stollar QR-kodları' : (t.tableQrManager || 'Stollar QR-kodlari')}</span>
               </h3>
-              <p className="text-xs text-zinc-400 mt-1">
-                Stollar ushın bólek-bólek QR-kodlar jaratıw, óshiriw yamasa barlıq stollardı avtomatizaciyalanǵan tárizde sanaw (Tek Admin ushın).
+              <p className="text-xs text-[#8D6B58] mt-1">
+                {lang === 'qr'
+                  ? 'Stollar ushın bólek-bólek QR-kodlar jaratıw, óshiriw yamasa barlıq stollardı avtomatizaciyalanǵan tárizde sanaw.'
+                  : 'Stollar uchun alohida QR-kodlar yaratish, o\'chirish yoki barcha stollarni avtomatlashtirilgan tarzda sanash.'}
               </p>
             </div>
 
             <button
               onClick={() => window.print()}
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-serif font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-[0_0_15px_rgba(245,158,11,0.35)] transition"
+              className="bg-[#C0684C] hover:bg-[#A8553A] text-white font-serif font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-xl flex items-center gap-2 shadow-sm transition cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              <span>{t.printAll || 'Barlıǵın pechatlaw / Baspadan shıǵarıw'}</span>
+              <span>{lang === 'qr' ? 'Barlıǵın baspadan shıǵarıw' : (t.printAll || 'Barchasini chop etish')}</span>
             </button>
           </div>
 
           {/* Quick Add Single Table Bar */}
-          <div className="bg-zinc-900 p-4 rounded-2xl border border-amber-500/30 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+          <div className="bg-white p-4 rounded-2xl border border-[#EAE0D4] flex flex-wrap items-center justify-between gap-3 shadow-xs">
             <div className="flex items-center gap-2 flex-1 min-w-[260px]">
-              <Plus className="w-5 h-5 text-amber-400 shrink-0" />
-              <label className="text-xs font-bold text-zinc-200 whitespace-nowrap">
-                {t.addSingleTable || 'Taza stol qosıw'}:
+              <Plus className="w-5 h-5 text-[#C0684C] shrink-0" />
+              <label className="text-xs font-bold text-[#2E1E17] whitespace-nowrap">
+                {lang === 'qr' ? 'Taza stol qosıw' : (t.addSingleTable || 'Yangi stol qo\'shish')}:
               </label>
               <input
                 type="text"
@@ -1280,50 +1303,50 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     handleAddSingleTable();
                   }
                 }}
-                placeholder="Mıs: 11, 12 yamasa VIP-1"
-                className="flex-1 px-3 py-2 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 text-xs font-bold outline-none focus:ring-2 focus:ring-amber-500"
+                placeholder="Mis: 11, 12 yoki VIP-1"
+                className="flex-1 px-3 py-2 rounded-xl bg-[#FAF5EF] border border-[#EAE0D4] text-[#2E1E17] text-xs font-bold outline-none focus:ring-1 focus:ring-[#C0684C]"
               />
             </div>
             <button
               onClick={handleAddSingleTable}
-              className="bg-amber-500 hover:bg-amber-400 text-zinc-950 font-serif font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-[0_0_12px_rgba(245,158,11,0.3)] transition"
+              className="bg-[#C0684C] hover:bg-[#A8553A] text-white font-serif font-bold text-xs px-5 py-2.5 rounded-xl flex items-center gap-1.5 shadow-2xs transition cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>{t.addTableBtn || '+ Qosıw'}</span>
+              <span>{lang === 'qr' ? '+ Qosıw' : (t.addTableBtn || '+ Qo\'shish')}</span>
             </button>
           </div>
 
           {/* Batch Generation & Custom List Control Panel */}
-          <div className="bg-zinc-900 p-5 rounded-2xl border border-amber-500/25 space-y-4">
+          <div className="bg-white p-5 rounded-2xl border border-[#EAE0D4] shadow-xs space-y-4">
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setQrMode('auto')}
-                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 cursor-pointer ${
                   qrMode === 'auto'
-                    ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-zinc-700'
+                    ? 'bg-[#C0684C] text-white shadow-2xs'
+                    : 'bg-[#FAF5EF] text-[#2E1E17] hover:bg-[#EAE0D4] border border-[#EAE0D4]'
                 }`}
               >
-                <span>1-Usıl: {t.autoRange || 'Avtomat san boyınsha (1,2,3...)'}</span>
+                <span>1-Usıl: {lang === 'qr' ? 'Avtomat san boyınsha (1,2,3...)' : 'Avtomat son bo\'yicha (1,2,3...)'}</span>
               </button>
 
               <button
                 onClick={() => setQrMode('custom')}
-                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 ${
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition flex items-center gap-2 cursor-pointer ${
                   qrMode === 'custom'
-                    ? 'bg-amber-500 text-zinc-950 border border-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.3)]'
-                    : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-zinc-700'
+                    ? 'bg-[#C0684C] text-white shadow-2xs'
+                    : 'bg-[#FAF5EF] text-[#2E1E17] hover:bg-[#EAE0D4] border border-[#EAE0D4]'
                 }`}
               >
-                <span>2-Usıl: {t.selectSpecific || 'Bólek stollar (Mıs: 1, 6, 9)'}</span>
+                <span>2-Usıl: {lang === 'qr' ? 'Bólek stollar (Mıs: 1, 6, 9)' : 'Alohida stollar (Mas: 1, 6, 9)'}</span>
               </button>
             </div>
 
             {/* Controls depending on mode */}
             {qrMode === 'auto' ? (
               <div className="flex flex-wrap items-center gap-3 pt-2">
-                <label className="text-xs font-bold text-zinc-300">
-                  {t.totalTableCount || 'Stollar sanı'}:
+                <label className="text-xs font-bold text-[#2E1E17]">
+                  {lang === 'qr' ? 'Stollar sanı' : 'Stollar soni'}:
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -1332,23 +1355,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     max="100"
                     value={autoTableCount}
                     onChange={(e) => setAutoTableCount(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-24 px-3 py-1.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm text-center outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-24 px-3 py-1.5 rounded-xl bg-[#FAF5EF] border border-[#EAE0D4] text-[#2E1E17] font-bold text-sm text-center outline-none focus:ring-1 focus:ring-[#C0684C]"
                   />
                   <button
                     onClick={handleApplyAutoCount}
-                    className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-xl text-xs font-bold transition"
+                    className="bg-[#C0684C] hover:bg-[#A8553A] text-white px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer"
                   >
-                    {t.generateAll || 'QR-kodlardı jaratıw'}
+                    {lang === 'qr' ? 'QR-kodlardı jaratıw' : 'QR-kodlarni yaratish'}
                   </button>
-                  <span className="text-xs text-zinc-400">
+                  <span className="text-xs text-[#8D6B58]">
                     (1-den {autoTableCount}-ge shekem avtomat sanalǵan stollar)
                   </span>
                 </div>
               </div>
             ) : (
               <div className="space-y-2 pt-2">
-                <label className="block text-xs font-bold text-zinc-300">
-                  {t.enterCustomTables || 'Stol nomerlerin kiritiń (mıs: 1, 6, 9, 12)'}:
+                <label className="block text-xs font-bold text-[#2E1E17]">
+                  {lang === 'qr' ? 'Stol nomerlerin kiritiń (mıs: 1, 6, 9, 12)' : 'Stol raqamlarini kiriting (mas: 1, 6, 9, 12)'}:
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
                   <input
@@ -1356,17 +1379,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     value={customTablesInput}
                     onChange={(e) => setCustomTablesInput(e.target.value)}
                     placeholder="1, 6, 9, 12, VIP-1..."
-                    className="flex-1 max-w-lg px-4 py-2 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
+                    className="flex-1 max-w-lg px-4 py-2 rounded-xl bg-[#FAF5EF] border border-[#EAE0D4] text-[#2E1E17] font-bold text-sm outline-none focus:ring-1 focus:ring-[#C0684C]"
                   />
                   <button
                     onClick={handleApplyCustomTables}
-                    className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 px-4 py-2 rounded-xl text-xs font-bold transition"
+                    className="bg-[#C0684C] hover:bg-[#A8553A] text-white px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer"
                   >
-                    {t.generateAll || 'Jaratıw'}
+                    {lang === 'qr' ? 'Jaratıw' : 'Yaratish'}
                   </button>
                 </div>
-                <p className="text-[11px] text-zinc-400">
-                  💡 Útir (,) arqalı qálegen stollarıńızdı jazıń. Mısalı: <code className="bg-zinc-950 border border-amber-500/30 px-1.5 py-0.5 rounded text-amber-400">1, 6, 9</code> yamasa <code className="bg-zinc-950 border border-amber-500/30 px-1.5 py-0.5 rounded text-amber-400">1, 2, 3, 4, 5, 6, 7, 8, 9</code>
+                <p className="text-[11px] text-[#8D6B58]">
+                  💡 {lang === 'qr' ? 'Útir (,) arqalı qálegen stollarıńızdı jazıń.' : 'Vergul (,) orqali istalgan stollaringizni yozing.'}
                 </p>
               </div>
             )}
@@ -1379,31 +1402,31 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               const qrUrl = `${currentOrigin}?table=${encodeURIComponent(tblNum)}`;
               const qrImageSrc = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(
                 qrUrl
-              )}&color=000000&bgcolor=ffffff`;
+              )}&color=2E1E17&bgcolor=ffffff`;
               const isCopied = copiedTable === tblNum;
 
               return (
                 <div
                   key={tblNum}
-                  className="bg-zinc-900 rounded-2xl border-2 border-amber-500/30 p-4 flex flex-col items-center text-center space-y-3 shadow-md hover:border-amber-500/60 transition group relative"
+                  className="bg-white rounded-2xl border border-[#EAE0D4] p-4 flex flex-col items-center text-center space-y-3 shadow-xs hover:border-[#C0684C]/50 transition group relative"
                 >
                   {/* Table Badge and Delete Button */}
                   <div className="flex items-center justify-between w-full">
-                    <div className="bg-gradient-to-r from-amber-500 to-amber-600 text-zinc-950 px-3.5 py-1 rounded-full font-serif font-extrabold text-xs shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+                    <div className="bg-[#FAF5EF] text-[#2E1E17] border border-[#EAE0D4] px-3.5 py-1 rounded-full font-serif font-extrabold text-xs">
                       {t.tableNumber} {tblNum}
                     </div>
                     <button
                       onClick={() => handleDeleteTable(tblNum)}
-                      className="p-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/25 text-red-400 border border-red-500/30 transition flex items-center gap-1 text-[11px] font-bold"
-                      title={t.deleteQrCode || 'Óshiriw'}
+                      className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 transition flex items-center gap-1 text-[11px] font-bold cursor-pointer"
+                      title={lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
-                      <span>{t.deleteQrCode || 'Óshiriw'}</span>
+                      <span>{lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}</span>
                     </button>
                   </div>
 
                   {/* QR Image */}
-                  <div className="bg-white p-3 rounded-xl border-2 border-amber-500/30 shadow-inner group-hover:scale-105 transition">
+                  <div className="bg-white p-3 rounded-xl border border-[#EAE0D4] shadow-2xs group-hover:scale-105 transition">
                     <img
                       src={qrImageSrc}
                       alt={`Table ${tblNum} QR Code`}
@@ -1411,7 +1434,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     />
                   </div>
 
-                  <span className="text-[10px] text-zinc-400 font-mono truncate max-w-full px-2">
+                  <span className="text-[10px] text-[#8D6B58] font-mono truncate max-w-full px-2">
                     {qrUrl}
                   </span>
 
@@ -1423,14 +1446,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         setCopiedTable(tblNum);
                         setTimeout(() => setCopiedTable(null), 2000);
                       }}
-                      className={`flex-1 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition ${
+                      className={`flex-1 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition cursor-pointer ${
                         isCopied
                           ? 'bg-emerald-600 text-white'
-                          : 'bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-500/20'
+                          : 'bg-[#FAF5EF] hover:bg-[#EAE0D4] text-[#2E1E17] border border-[#EAE0D4]'
                       }`}
                     >
                       {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{isCopied ? 'Kóshirildi' : 'Kóshiriw'}</span>
+                      <span>{isCopied ? (lang === 'qr' ? 'Kóshirildi' : 'Nusxalandi') : (lang === 'qr' ? 'Kóshiriw' : 'Nusxalash')}</span>
                     </button>
 
                     <a
@@ -1438,7 +1461,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       download={`Table-${tblNum}-QR.png`}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-500/20"
+                      className="p-2 rounded-lg bg-[#FAF5EF] hover:bg-[#EAE0D4] text-[#2E1E17] border border-[#EAE0D4]"
                       title="PNG Saqlaw"
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -1448,7 +1471,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       href={qrUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="p-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold transition"
+                      className="p-2 rounded-lg bg-[#C0684C] hover:bg-[#A8553A] text-white font-bold transition"
                       title="Stol Menyusun Ashıw"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -1464,21 +1487,23 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
       {/* Tab 6: Settings */}
       {activeTab === 'settings' && (
         <div className="space-y-6">
-          <div className="bg-zinc-900 p-5 rounded-2xl border border-amber-500/30">
-            <h3 className="font-serif font-bold text-lg text-amber-300 flex items-center gap-2 mb-4">
-              <Shield className="w-5 h-5 text-amber-400" />
-              <span>Admin Parolin Ózgertiw</span>
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#EAE0D4] shadow-xs">
+            <h3 className="font-serif font-bold text-lg text-[#2E1E17] flex items-center gap-2 mb-4">
+              <Shield className="w-5 h-5 text-[#C0684C]" />
+              <span>{lang === 'qr' ? 'Admin Parolin Ózgertiw' : 'Admin Parolini O\'zgartirish'}</span>
             </h3>
 
             <div className="max-w-md space-y-4">
               <div>
-                <label className="block text-xs font-bold text-zinc-300 mb-2">Taza parol</label>
+                <label className="block text-xs font-bold text-[#2E1E17] mb-2">
+                  {lang === 'qr' ? 'Taza parol' : 'Yangi parol'}
+                </label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Jańa paroldi kiritiń"
-                  className="w-full px-4 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
+                  placeholder={lang === 'qr' ? 'Jańa paroldi kiritiń' : 'Yangi parolni kiriting'}
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#FAF5EF] border border-[#EAE0D4] text-[#2E1E17] font-bold text-sm outline-none focus:ring-1 focus:ring-[#C0684C]"
                 />
               </div>
 
@@ -1492,27 +1517,27 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   }
                 }}
                 disabled={!newPassword}
-                className="bg-amber-500 hover:bg-amber-400 disabled:opacity-50 disabled:hover:bg-amber-500 text-zinc-950 font-serif font-bold text-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition w-full"
+                className="bg-[#C0684C] hover:bg-[#A8553A] disabled:opacity-50 text-white font-serif font-bold text-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition w-full cursor-pointer"
               >
                 {passwordSaved ? (
                   <>
                     <CheckCircle className="w-4 h-4" />
-                    <span>Saqlandı!</span>
+                    <span>{lang === 'qr' ? 'Saqlandı!' : 'Saqlandi!'}</span>
                   </>
                 ) : (
-                  <span>Saqlaw</span>
+                  <span>{lang === 'qr' ? 'Saqlaw' : 'Saqlash'}</span>
                 )}
               </button>
             </div>
           </div>
 
           {/* Social Links Settings Card (Telegram & Instagram) */}
-          <div className="bg-zinc-900 p-5 rounded-2xl border border-amber-500/30">
-            <h3 className="font-serif font-bold text-lg text-amber-300 flex items-center gap-2 mb-2">
-              <Send className="w-5 h-5 text-sky-400" />
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#EAE0D4] shadow-xs">
+            <h3 className="font-serif font-bold text-lg text-[#2E1E17] flex items-center gap-2 mb-2">
+              <Send className="w-5 h-5 text-sky-500" />
               <span>{lang === 'qr' ? 'Telegram hám Instagram siltemeleri' : 'Telegram va Instagram havolalari'}</span>
             </h3>
-            <p className="text-xs text-zinc-400 mb-4">
+            <p className="text-xs text-[#8D6B58] mb-4">
               {lang === 'qr' 
                 ? 'Sayt tómengi bólimindegi (Footer) Telegram hám Instagram akkauntların usı jerden ózgertiwińiz múmkin.' 
                 : 'Sayt pastki qismidagi (Footer) Telegram va Instagram akkauntlarini shu yerdan o\'zgartirishingiz mumkin.'}
@@ -1551,8 +1576,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             >
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                    <Send className="w-4 h-4 text-sky-400" />
+                  <label className="text-xs font-bold text-[#2E1E17] flex items-center gap-1.5">
+                    <Send className="w-4 h-4 text-sky-500" />
                     <span>Telegram akkaunt / silteme:</span>
                   </label>
                   {telegramInput && (
@@ -1562,14 +1587,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         setIsEditingTg(true);
                         setTelegramInput('');
                       }}
-                      className="text-[11px] text-zinc-400 hover:text-red-400 transition cursor-pointer"
+                      className="text-[11px] text-[#8D6B58] hover:text-red-500 transition cursor-pointer"
                     >
                       ✕ {lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}
                     </button>
                   )}
                 </div>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">@</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8D6B58] text-sm font-mono">@</span>
                   <input
                     type="text"
                     value={telegramInput.replace(/^@/, '')}
@@ -1579,7 +1604,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       setTelegramInput(e.target.value.replace(/^@/, ''));
                     }}
                     placeholder={lang === 'qr' ? 'sifaddinov (óshiriw ushın bos qaldırıń)' : 'sifaddinov (o\'chirish uchun bo\'sh qoldiring)'}
-                    className="w-full pl-8 pr-8 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full pl-8 pr-8 py-2.5 rounded-xl bg-[#FAF5EF] border border-[#EAE0D4] text-[#2E1E17] font-bold text-sm outline-none focus:ring-1 focus:ring-[#C0684C]"
                   />
                   {telegramInput && (
                     <button
@@ -1588,14 +1613,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         setIsEditingTg(true);
                         setTelegramInput('');
                       }}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 text-xs"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8D6B58] hover:text-[#2E1E17] p-1 text-xs cursor-pointer"
                       title={lang === 'qr' ? 'Tozalaw' : 'Tozalash'}
                     >
                       ✕
                     </button>
                   )}
                 </div>
-                <span className="text-[11px] text-zinc-500 mt-1 block">
+                <span className="text-[11px] text-[#8D6B58] mt-1 block">
                   {lang === 'qr'
                     ? 'Mısalı: sifaddinov (siltemeni alıp taslaw ushın teksti óshirip Saqlawdı basıń)'
                     : 'Masalan: sifaddinov (havolani olib tashlash uchun matnni o\'chirib Saqlashni bosing)'}
@@ -1604,8 +1629,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-bold text-zinc-300 flex items-center gap-1.5">
-                    <Instagram className="w-4 h-4 text-pink-400" />
+                  <label className="text-xs font-bold text-[#2E1E17] flex items-center gap-1.5">
+                    <Instagram className="w-4 h-4 text-pink-500" />
                     <span>Instagram akkaunt / profil:</span>
                   </label>
                   {instagramInput && (
@@ -1615,14 +1640,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         setIsEditingInsta(true);
                         setInstagramInput('');
                       }}
-                      className="text-[11px] text-zinc-400 hover:text-red-400 transition cursor-pointer"
+                      className="text-[11px] text-[#8D6B58] hover:text-red-500 transition cursor-pointer"
                     >
                       ✕ {lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}
                     </button>
                   )}
                 </div>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 text-sm font-mono">@</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8D6B58] text-sm font-mono">@</span>
                   <input
                     type="text"
                     value={instagramInput.replace(/^@/, '')}
@@ -1632,7 +1657,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       setInstagramInput(e.target.value.replace(/^@/, ''));
                     }}
                     placeholder={lang === 'qr' ? 'sifaddinovv (óshiriw ushın bos qaldırıń)' : 'sifaddinovv (o\'chirish uchun bo\'sh qoldiring)'}
-                    className="w-full pl-8 pr-8 py-2.5 rounded-xl bg-zinc-950 border border-amber-500/40 text-amber-300 font-bold text-sm outline-none focus:ring-2 focus:ring-amber-500"
+                    className="w-full pl-8 pr-8 py-2.5 rounded-xl bg-[#FAF5EF] border border-[#EAE0D4] text-[#2E1E17] font-bold text-sm outline-none focus:ring-1 focus:ring-[#C0684C]"
                   />
                   {instagramInput && (
                     <button
@@ -1641,14 +1666,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                         setIsEditingInsta(true);
                         setInstagramInput('');
                       }}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 p-1 text-xs"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8D6B58] hover:text-[#2E1E17] p-1 text-xs cursor-pointer"
                       title={lang === 'qr' ? 'Tozalaw' : 'Tozalash'}
                     >
                       ✕
                     </button>
                   )}
                 </div>
-                <span className="text-[11px] text-zinc-500 mt-1 block">
+                <span className="text-[11px] text-[#8D6B58] mt-1 block">
                   {lang === 'qr'
                     ? 'Mısalı: sifaddinovv (siltemeni alıp taslaw ushın teksti óshirip Saqlawdı basıń)'
                     : 'Masalan: sifaddinovv (havolani olib tashlash uchun matnni o\'chirib Saqlashni bosing)'}
@@ -1657,15 +1682,15 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
 
               <button
                 type="submit"
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 font-serif font-bold text-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition w-full shadow-[0_0_15px_rgba(245,158,11,0.3)] active:scale-95 cursor-pointer"
+                className="bg-[#C0684C] hover:bg-[#A8553A] text-white font-serif font-bold text-sm px-5 py-2.5 rounded-xl flex items-center justify-center gap-2 transition w-full shadow-sm active:scale-95 cursor-pointer"
               >
                 {linksSaved ? (
                   <>
-                    <CheckCircle className="w-4 h-4 text-zinc-950" />
-                    <span>Siltemeler saqlandı!</span>
+                    <CheckCircle className="w-4 h-4 text-white" />
+                    <span>{lang === 'qr' ? 'Siltemeler saqlandı!' : 'Havolalar saqlandi!'}</span>
                   </>
                 ) : (
-                  <span>Siltemelerdi saqlaw</span>
+                  <span>{lang === 'qr' ? 'Siltemelerdi saqlaw' : 'Havolalarni saqlash'}</span>
                 )}
               </button>
             </form>

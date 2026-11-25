@@ -793,10 +793,10 @@ export default function App() {
                 <div className="bg-white p-8 rounded-3xl border border-[#EAE0D4] text-center space-y-2 my-6">
                   <div className="text-4xl">🍰</div>
                   <h3 className="font-serif font-bold text-base text-[#2E1E17]">
-                    Taomlar topilmadi
+                    {t.noFoodsFound || 'Shiyrinlikler tabılmadı'}
                   </h3>
                   <p className="text-xs text-[#8D6B58]">
-                    Iltimos, filtrlar yoki qidiruv so'zini o'zgartirib ko'ring.
+                    {t.noFoodsFoundSub || 'Iltimas, filtrlerdi yamasa izlew sózin ózgertip kóriń.'}
                   </p>
                 </div>
               ) : (
@@ -842,9 +842,7 @@ export default function App() {
               </div>
               <div className="flex flex-col text-left">
                 <span className="text-xs text-white/90 font-medium">
-                  {lang === 'qr'
-                    ? `Xarid sebeti (${totalCartCount + activeUserOrders.length})`
-                    : `Xarid savati (${totalCartCount + activeUserOrders.length})`}
+                  {t.cartFloating || t.cartTitle} ({totalCartCount + activeUserOrders.length})
                 </span>
                 <span className="font-extrabold text-sm sm:text-base text-white">
                   {formatPrice(

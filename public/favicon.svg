@@ -1,12 +1,21 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <defs>
-    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fbbf24" />
-      <stop offset="50%" stop-color="#f59e0b" />
-      <stop offset="100%" stop-color="#d97706" />
-    </linearGradient>
-  </defs>
-  <rect width="64" height="64" rx="16" fill="#18181b" />
-  <circle cx="32" cy="32" r="26" fill="none" stroke="url(#goldGrad)" stroke-width="3" />
-  <text x="32" y="44" font-family="serif, Georgia, Times, serif" font-size="34" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle">Q</text>
+  <rect width="64" height="64" rx="16" fill="#FAF5EF" />
+  <!-- Cake slice line art from Cake Bumer logo -->
+  <g transform="translate(8, 6) scale(0.8)">
+    <!-- Swirl on top -->
+    <path d="M30 6 C28 2 24 6 22 10 C20 14 24 16 28 14 C32 12 34 8 30 6 Z" fill="#C0684C" stroke="#2E1E17" stroke-width="2.5" stroke-linejoin="round" />
+    <path d="M26 9 C25 11 26 13 28 12" stroke="#FAF5EF" stroke-width="1.5" stroke-linecap="round" />
+    
+    <!-- Cake body -->
+    <!-- Top triangular surface -->
+    <path d="M12 28 L30 14 L50 22 L26 34 Z" fill="#FFFFFF" stroke="#2E1E17" stroke-width="3" stroke-linejoin="round" />
+    <!-- Back curve -->
+    <path d="M30 14 Q40 16 50 22" stroke="#2E1E17" stroke-width="3" fill="none" />
+    <!-- Front side / Cut side -->
+    <path d="M12 28 L26 34 V52 L12 44 Z" fill="#FFFFFF" stroke="#2E1E17" stroke-width="3" stroke-linejoin="round" />
+    <!-- Right side -->
+    <path d="M26 34 L50 22 V40 L26 52 Z" fill="#FFFFFF" stroke="#2E1E17" stroke-width="3" stroke-linejoin="round" />
+    <!-- Terracotta cream filling layer -->
+    <path d="M12 36 L26 43 L50 31" stroke="#C0684C" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
 </svg>

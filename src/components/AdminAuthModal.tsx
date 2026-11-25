@@ -75,13 +75,15 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-      <div className="relative w-full max-w-sm bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/50 shadow-[0_0_50px_rgba(245,158,11,0.3)] overflow-hidden my-auto">
+    <div className="fixed inset-0 z-50 bg-[#2E1E17]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+      <div className="relative w-full max-w-sm bg-[#FAF5EF] text-[#2E1E17] rounded-3xl border border-[#EAE0D4] shadow-[0_10px_40px_rgba(46,30,23,0.25)] overflow-hidden my-auto">
         {/* Header */}
-        <div className="bg-zinc-900 text-zinc-100 p-4 border-b border-amber-500/30 flex items-center justify-between">
+        <div className="bg-white text-[#2E1E17] p-4 border-b border-[#EAE0D4] flex items-center justify-between shadow-2xs">
           <div className="flex items-center gap-2">
-            <Lock className="w-5 h-5 text-amber-400" />
-            <h3 className="font-serif font-bold text-lg text-amber-300">
+            <div className="w-8 h-8 rounded-lg overflow-hidden border border-[#EAE0D4] bg-[#FAF5EF] p-0.5 shrink-0 shadow-2xs">
+              <img src="/logo.png" alt="Cake Bumer" className="w-full h-full object-contain" />
+            </div>
+            <h3 className="font-serif font-bold text-base text-[#2E1E17]">
               {getTitle()}
             </h3>
           </div>
@@ -89,21 +91,21 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Jabıw"
-            className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
+            className="p-1.5 rounded-full bg-[#F1EAE0] text-[#2E1E17] hover:bg-[#EAE0D4] transition cursor-pointer"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <p className="text-xs text-zinc-300 leading-relaxed">
+        <form onSubmit={handleSubmit} className="p-5 space-y-4">
+          <p className="text-xs text-[#8D6B58] leading-relaxed">
             {getSub()}
           </p>
 
           <div>
             <div className="relative">
-              <KeyRound className="w-4 h-4 text-amber-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
+              <KeyRound className="w-4 h-4 text-[#C0684C] absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
               <input
                 type="password"
                 value={password}
@@ -113,13 +115,13 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
                 }}
                 placeholder="******"
                 aria-label="Admin paroli"
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-amber-500/40 bg-zinc-950 text-sm text-zinc-100 placeholder-zinc-500 focus:ring-2 focus:ring-amber-500 outline-none"
+                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-[#EAE0D4] bg-white text-sm text-[#2E1E17] placeholder-[#8D6B58]/60 focus:ring-1 focus:ring-[#C0684C] focus:border-[#C0684C] outline-none"
                 autoFocus
                 required
               />
             </div>
             {error && (
-              <div className="mt-2 text-xs text-red-400 flex items-center gap-1 bg-red-500/10 p-2 rounded-lg border border-red-500/30">
+              <div className="mt-2 text-xs text-red-600 flex items-center gap-1.5 bg-red-50 p-2.5 rounded-xl border border-red-200">
                 <ShieldAlert className="w-4 h-4 shrink-0" />
                 <span>{getErrorText()}</span>
               </div>
@@ -130,15 +132,15 @@ export const AdminAuthModal: React.FC<AdminAuthModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 py-2.5 rounded-xl font-bold text-xs transition"
+              className="flex-1 bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] py-2.5 rounded-xl font-bold text-xs transition border border-[#E6DDD2] cursor-pointer"
             >
               {t.close || 'Jabıw'}
             </button>
             <button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-zinc-950 py-2.5 rounded-xl font-serif font-extrabold text-xs shadow-[0_0_15px_rgba(245,158,11,0.35)] transition"
+              className="flex-1 bg-[#C0684C] hover:bg-[#A8553A] text-white py-2.5 rounded-xl font-serif font-extrabold text-xs shadow-sm transition cursor-pointer"
             >
-              Kiriw / Вход
+              {lang === 'qr' ? 'Kiriw' : 'Kirish'}
             </button>
           </div>
         </form>

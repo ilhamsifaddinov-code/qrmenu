@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, QrCode, Copy, Check, Download, Share2 } from 'lucide-react';
+import { X, QrCode, Copy, Check, Download } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../i18n/translations';
 
@@ -21,12 +21,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   const t = translations[lang] || translations.qr;
   const [copied, setCopied] = useState(false);
 
-  // Construct current URL with table query parameter
   const currentOrigin = window.location.origin;
   const qrUrl = `${currentOrigin}?table=${encodeURIComponent(tableNumber)}`;
   const qrImageSrc = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(
     qrUrl
-  )}&color=000000&bgcolor=ffffff`;
+  )}&color=2E1E17&bgcolor=ffffff`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(qrUrl);
@@ -45,21 +44,21 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-fadeIn">
-      <div className="relative w-full max-w-sm bg-[#18181b] text-zinc-100 rounded-3xl border-2 border-amber-500/40 shadow-[0_0_50px_rgba(245,158,11,0.25)] overflow-hidden my-auto">
+    <div className="fixed inset-0 z-50 bg-[#2E1E17]/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+      <div className="relative w-full max-w-sm bg-[#FAF5EF] text-[#2E1E17] rounded-3xl border border-[#EAE0D4] shadow-[0_10px_40px_rgba(46,30,23,0.25)] overflow-hidden my-auto">
         {/* Header */}
-        <div className="bg-zinc-900 text-zinc-100 p-4 border-b border-amber-500/30 flex items-center justify-between">
+        <div className="bg-white text-[#2E1E17] p-4 border-b border-[#EAE0D4] flex items-center justify-between shadow-2xs">
           <div className="flex items-center gap-2">
-            <QrCode className="w-5 h-5 text-amber-400" />
-            <h3 className="font-serif font-bold text-lg text-amber-300">
-              {t.qrModalTitle || 'Stolıńızdıń QR-kodı'}
+            <QrCode className="w-5 h-5 text-[#C0684C]" />
+            <h3 className="font-serif font-bold text-lg text-[#2E1E17]">
+              {t.qrModalTitle || (lang === 'qr' ? 'Stolıńızdıń QR-kodı' : 'Stolingizning QR-kodi')}
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label={t.close || 'Jabıw'}
-            className="p-1.5 rounded-lg bg-zinc-800 text-zinc-300 hover:bg-zinc-700 transition"
+            className="p-1.5 rounded-full bg-[#F1EAE0] text-[#2E1E17] hover:bg-[#EAE0D4] transition cursor-pointer"
           >
             <X className="w-5 h-5" aria-hidden="true" />
           </button>
@@ -68,22 +67,24 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
         {/* Modal Body */}
         <div className="p-6 text-center space-y-4">
           {/* Table Badge */}
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-amber-600/20 px-4 py-1.5 rounded-full border border-amber-500/40">
-            <span className="font-serif font-bold text-amber-300 text-sm">
+          <div className="inline-flex items-center gap-2 bg-[#F1EAE0] px-4 py-1.5 rounded-full border border-[#EAE0D4]">
+            <span className="font-serif font-bold text-[#2E1E17] text-sm">
               {t.tableNumber} {tableNumber}
             </span>
-            <span className="text-[10px] bg-amber-500 text-zinc-950 font-extrabold px-2 py-0.5 rounded-full">
-              {t.tableDetected || 'Anıqlanǵan'}
+            <span className="text-[10px] bg-[#C0684C] text-white font-extrabold px-2 py-0.5 rounded-full">
+              {t.tableDetected || (lang === 'qr' ? 'Anıqlanǵan' : 'Aniqlangan')}
             </span>
           </div>
 
-          <p className="text-xs text-zinc-300 leading-relaxed px-2">
+          <p className="text-xs text-[#8D6B58] leading-relaxed px-2">
             {t.qrModalSub ||
-              'Dostlarıńız usı QR-kodtı skanerlew arqalı siz otırǵan stol menyusına tikeley kire aladı.'}
+              (lang === 'qr' 
+                ? 'Dostlarıńız usı QR-kodtı skanerlew arqalı siz otırǵan stol menyusına tikeley kire aladı.'
+                : 'Do\'stlaringiz ushbu QR-kodni skanerlash orqali siz o\'tirgan stol menyusiga to\'g\'ridan-to\'g\'ri kira oladi.')}
           </p>
 
           {/* QR Code Container */}
-          <div className="bg-white p-4 rounded-2xl border-4 border-amber-500/50 shadow-2xl inline-block mx-auto relative group">
+          <div className="bg-white p-4 rounded-2xl border border-[#EAE0D4] shadow-md inline-block mx-auto relative group">
             <img
               src={qrImageSrc}
               alt={`QR Code for Table ${tableNumber}`}
@@ -94,7 +95,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
           </div>
 
           {/* Direct URL text display */}
-          <div className="bg-zinc-950 p-2.5 rounded-xl border border-zinc-800 text-[11px] font-mono text-zinc-400 truncate">
+          <div className="bg-white p-2.5 rounded-xl border border-[#EAE0D4] text-[11px] font-mono text-[#8D6B58] truncate">
             {qrUrl}
           </div>
 
@@ -103,22 +104,22 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
             <button
               type="button"
               onClick={handleCopyLink}
-              aria-label={t.copyLink || 'Siltemeni kóshiriw'}
-              className={`flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition ${
+              aria-label={t.copyLink || (lang === 'qr' ? 'Siltemeni kóshiriw' : 'Havolani nusxalash')}
+              className={`flex-1 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer ${
                 copied
                   ? 'bg-emerald-600 text-white border border-emerald-400'
-                  : 'bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-500/30'
+                  : 'bg-white hover:bg-[#FAF5EF] text-[#2E1E17] border border-[#EAE0D4] shadow-2xs'
               }`}
             >
               {copied ? (
                 <>
                   <Check className="w-4 h-4 text-white" aria-hidden="true" />
-                  <span>{t.linkCopied || 'Kóshirildi!'}</span>
+                  <span>{t.linkCopied || (lang === 'qr' ? 'Kóshirildi!' : 'Nusxalandi!')}</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4 text-amber-400" aria-hidden="true" />
-                  <span>{t.copyLink || 'Siltemeni kóshiriw'}</span>
+                  <Copy className="w-4 h-4 text-[#C0684C]" aria-hidden="true" />
+                  <span>{t.copyLink || (lang === 'qr' ? 'Siltemeni kóshiriw' : 'Havolani nusxalash')}</span>
                 </>
               )}
             </button>
@@ -126,9 +127,9 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
             <button
               type="button"
               onClick={handleDownloadQr}
-              aria-label={t.downloadQr || 'QR-kodtı saqlaw'}
-              className="py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold text-xs flex items-center justify-center gap-1 shadow-[0_0_15px_rgba(245,158,11,0.35)] transition"
-              title={t.downloadQr || 'QR-kodtı saqlaw'}
+              aria-label={t.downloadQr || (lang === 'qr' ? 'QR-kodtı saqlaw' : 'QR-kodni saqlash')}
+              className="py-2.5 px-3 rounded-xl bg-[#C0684C] hover:bg-[#A8553A] text-white font-bold text-xs flex items-center justify-center gap-1 shadow-xs transition cursor-pointer"
+              title={t.downloadQr || (lang === 'qr' ? 'QR-kodtı saqlaw' : 'QR-kodni saqlash')}
             >
               <Download className="w-4 h-4" aria-hidden="true" />
             </button>
@@ -136,10 +137,10 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-3 bg-zinc-900 border-t border-amber-500/20 text-center">
+        <div className="p-3 bg-white border-t border-[#EAE0D4] text-center">
           <button
             onClick={onClose}
-            className="w-full bg-zinc-800 hover:bg-zinc-700 text-zinc-200 py-2 rounded-xl text-xs font-bold transition"
+            className="w-full bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] py-2 rounded-xl text-xs font-bold transition border border-[#E6DDD2] cursor-pointer"
           >
             {t.close || 'Jabıw'}
           </button>

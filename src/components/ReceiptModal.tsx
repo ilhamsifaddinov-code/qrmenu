@@ -54,7 +54,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
 
     const receiptText =
       `================================\n` +
-      `   LA PÂTISSERIE - DESSERT CAFÉ  \n` +
+      `   CAKE BUMER - DESSERT CAFÉ    \n` +
       `================================\n` +
       `CHEK: ${order.id}\n` +
       `STOL: №${order.tableNumber}\n` +
@@ -65,7 +65,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
       `JAMI: ${formatPrice(order.totalAmount)}\n` +
       `HOLATI: QABUL QILINDI\n` +
       `================================\n` +
-      `Rahmat! Yoqimli ishtaha!\n`;
+      `Cake Bumer Dessert Café. Rahmat!\n`;
 
     try {
       navigator.clipboard.writeText(receiptText);
@@ -129,17 +129,22 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
             {/* Receipt Card */}
             <div className="bg-white p-4 rounded-2xl border border-[#EAE0D4] text-left text-xs space-y-2.5 font-mono shadow-xs text-[#2E1E17]">
               <div className="flex justify-between items-center border-b border-[#F0E7DD] pb-2">
-                <span className="font-bold text-[#2E1E17]">LA PÂTISSERIE CHEKI</span>
+                <div className="flex items-center gap-1.5">
+                  <img src="/logo.png" alt="Cake Bumer" className="w-5 h-5 object-contain" />
+                  <span className="font-bold text-[#2E1E17] font-sans">
+                    {lang === 'qr' ? 'CAKE BUMER ÇEKI' : 'CAKE BUMER CHEKI'}
+                  </span>
+                </div>
                 <span className="text-[#C0684C] font-extrabold text-sm">{order.id}</span>
               </div>
               <div className="flex justify-between items-center text-[#8D6B58]">
-                <span>{t.tableNumber || 'Stol raqami'}:</span>
+                <span>{t.tableNumber || (lang === 'qr' ? 'Stol nomeri' : 'Stol raqami')}:</span>
                 <span className="font-bold text-[#2E1E17] bg-[#F1EAE0] px-2 py-0.5 rounded border border-[#E6DDD2]">
                   Stol №{order.tableNumber}
                 </span>
               </div>
               <div className="flex justify-between items-center text-[#8D6B58] text-[11px]">
-                <span>Vaqt:</span>
+                <span>{lang === 'qr' ? 'Waqıt:' : 'Vaqt:'}</span>
                 <span>{order.createdAt || new Date().toLocaleTimeString()}</span>
               </div>
 
@@ -165,12 +170,15 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
               </div>
 
               <div className="pt-1 text-center text-[10px] text-[#8D6B58] italic font-sans">
-                La Pâtisserie Dessert & Coffee Café. Rahmat!
+                Cake Bumer Dessert Café. {lang === 'qr' ? 'Raxmet!' : 'Rahmat!'}
               </div>
             </div>
 
             <p className="text-[11px] text-[#8D6B58] bg-white p-2.5 rounded-xl border border-[#EAE0D4]">
-              💡 Ushbu chek avtomatik ravishda <b>"Mening cheklarim"</b> bo'limida saqlandi.
+              {t.receiptAutoSavedHint ||
+                (lang === 'qr'
+                  ? '💡 Bul çek avtomat túrde "Meniń çeklerim" bóliminde saqlandı.'
+                  : '💡 Ushbu chek avtomatik ravishda "Mening cheklarim" bo\'limida saqlandi.')}
             </p>
 
             {/* Actions */}
@@ -178,19 +186,19 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
               <button
                 type="button"
                 onClick={handlePrint}
-                className="flex-1 bg-white hover:bg-[#FAF5EF] text-[#2E1E17] py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border border-[#EAE0D4] transition shadow-2xs"
+                className="flex-1 bg-white hover:bg-[#FAF5EF] text-[#2E1E17] py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 border border-[#EAE0D4] transition shadow-2xs cursor-pointer"
               >
                 <Printer className="w-4 h-4 text-[#8D6B58]" aria-hidden="true" />
-                <span>Chop etish</span>
+                <span>{t.printReceipt || (lang === 'qr' ? 'Baspadan shıǵarıw' : 'Chop etish')}</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleSaveReceipt}
-                className="flex-1 bg-[#C0684C] hover:bg-[#B05B3F] text-white py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition"
+                className="flex-1 bg-[#C0684C] hover:bg-[#B05B3F] text-white py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer"
               >
                 <BookmarkCheck className="w-4 h-4 text-white" aria-hidden="true" />
-                <span>Nusxalash</span>
+                <span>{t.copyReceipt || (lang === 'qr' ? 'Nusxalaw & Saqlaw' : 'Nusxalash & Saqlash')}</span>
               </button>
             </div>
 

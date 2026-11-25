@@ -73,23 +73,29 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
   return (
     <footer className="mt-12 bg-white text-[#2E1E17] border-t border-[#EAE0D4]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Brand & Mission */}
+        {/* Brand & Mission with Cake Bumer Logo */}
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#FAF5EF] text-[#2E1E17] flex items-center justify-center font-serif text-xl font-bold border border-[#EAE0D4] shadow-2xs">
-              🍰
+            <div className="w-11 h-11 rounded-2xl overflow-hidden bg-[#FAF5EF] border border-[#EAE0D4] shadow-xs shrink-0 flex items-center justify-center p-0.5">
+              <img
+                src="/logo.png"
+                alt="Cake Bumer"
+                className="w-full h-full object-contain rounded-xl"
+              />
             </div>
             <div>
-              <h3 className="font-serif font-bold text-lg text-[#2E1E17]">
-                LA PÂTISSERIE
+              <h3 className="font-sans font-black text-lg text-[#2E1E17] tracking-wide">
+                CAKE BUMER
               </h3>
-              <p className="text-xs text-[#8D6B58]">
-                {t.subTitle || 'Cakebumer Dessert & Coffee Café'}
+              <p className="text-xs text-[#C0684C] font-bold uppercase tracking-wider">
+                {t.subTitle || 'Dessert Café'}
               </p>
             </div>
           </div>
           <p className="text-xs text-[#6C5343] leading-relaxed font-sans">
-            Nukus shahridagi shirinliklar, tortlar va premium qahvalar kafesi. Smart QR-menyu orqali qulay va tezkor buyurtma bering.
+            {lang === 'qr'
+              ? 'Nókis qalasındaǵı eksklyuziv tortlar, pirojniyler, kruassanlar hám premium kofe kafesi. Smart QR-menyu arqalı qolay hám tez buyırtpa beriń.'
+              : 'Nukus shahridagi eksklyuziv tortlar, pirojniylar, kruassanlar va premium qahva kafesi. Smart QR-menyu orqali qulay va tezkor buyurtma bering.'}
           </p>
         </div>
 
@@ -120,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
         {/* Map Preview & Socials */}
         <div className="space-y-3">
           <h4 className="font-serif font-bold text-sm text-[#2E1E17] border-b border-[#EAE0D4] pb-1.5 uppercase tracking-wide">
-            🗺️ Xarita va Ijtimoiy tarmoqlar
+            {lang === 'qr' ? '🗺️ Karta hám Tarmaqlar' : '🗺️ Xarita va Ijtimoiy tarmoqlar'}
           </h4>
 
           {/* Interactive Map Card */}
@@ -239,7 +245,9 @@ export const Footer: React.FC<FooterProps> = ({ lang, settings }) => {
       </div>
 
       <div className="bg-[#FAF5EF] text-center py-3.5 text-[11px] text-[#8D6B58] border-t border-[#EAE0D4] font-sans">
-        © 2026 La Pâtisserie & Nukus Cakebumer. Barcha huquqlar himoyalangan.
+        {lang === 'qr'
+          ? '© 2026 Cake Bumer Dessert Café. Barlıq huqıqlar qorǵalǵan.'
+          : '© 2026 Cake Bumer Dessert Café. Barcha huquqlar himoyalangan.'}
       </div>
     </footer>
   );

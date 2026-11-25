@@ -33,7 +33,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const t = translations[lang] || translations.qr;
+  const t = translations[lang] || translations.uz;
 
   // Total for newly added / unconfirmed items
   const newItemsTotal = (items || []).reduce(
@@ -48,14 +48,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 shadow-2xs">
             <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>{t.statusPaid || "To'landi"}</span>
+            <span>{t.statusPaid}</span>
           </span>
         );
       case 'delivered':
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-300 shadow-2xs">
             <Truck className="w-3.5 h-3.5 text-blue-600" />
-            <span>{t.statusDelivered || 'Yetkazilmoqda'}</span>
+            <span>{t.statusDelivered}</span>
           </span>
         );
       case 'preparing':
@@ -64,7 +64,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         return (
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 animate-pulse shadow-2xs">
             <Clock className="w-3.5 h-3.5 text-amber-700" />
-            <span>{t.statusPreparing || 'Tayyorlanmoqda'}</span>
+            <span>{t.statusPreparing}</span>
           </span>
         );
     }
@@ -75,14 +75,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   return (
     <div className="fixed inset-0 z-50 bg-[#2E1E17]/60 backdrop-blur-xs flex justify-end animate-fadeIn">
       <div className="relative w-full max-w-md bg-[#FAF5EF] text-[#2E1E17] h-full shadow-[0_0_40px_rgba(46,30,23,0.2)] border-l border-[#EAE0D4] flex flex-col justify-between overflow-hidden">
-        {/* Drawer Header */}
+        {/* Drawer Header with Cake Bumer Logo */}
         <div className="bg-white p-4 border-b border-[#EAE0D4] flex items-center justify-between shadow-2xs">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#FAF5EF] flex items-center justify-center border border-[#EAE0D4]">
-              <ShoppingBag className="w-4 h-4 text-[#C0684C]" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-2xl overflow-hidden bg-[#FAF5EF] border border-[#EAE0D4] flex items-center justify-center p-0.5 shrink-0">
+              <img src="/logo.png" alt="Cake Bumer" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h3 className="font-serif font-bold text-base sm:text-lg text-[#2E1E17]">
+              <h3 className="font-sans font-black text-base text-[#2E1E17]">
                 {t.cartTitle}
               </h3>
               <p className="text-[11px] text-[#8D6B58] font-medium">
@@ -94,7 +94,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           <button
             type="button"
             onClick={onClose}
-            aria-label={t.close || 'Savatni yopish'}
+            aria-label={t.close}
             className="p-2 rounded-full bg-[#F1EAE0] text-[#2E1E17] hover:bg-[#EAE0D4] transition"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -108,7 +108,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <div className="w-16 h-16 rounded-full bg-white border border-[#EAE0D4] flex items-center justify-center text-3xl shadow-xs">
                 🍰
               </div>
-              <p className="font-serif font-semibold text-sm leading-relaxed max-w-xs text-[#2E1E17]">
+              <p className="font-semibold text-sm leading-relaxed max-w-xs text-[#2E1E17]">
                 {t.emptyCart}
               </p>
             </div>
@@ -118,11 +118,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               {activeOrders.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between pb-1 border-b border-[#EAE0D4]">
-                    <h4 className="font-serif font-bold text-xs sm:text-sm text-[#2E1E17] tracking-wide uppercase">
-                      {t.confirmedOrdersTitle || 'Faol buyurtmalaringiz'} ({activeOrders.length})
+                    <h4 className="font-sans font-bold text-xs sm:text-sm text-[#2E1E17] tracking-wide uppercase">
+                      {t.confirmedOrdersTitle} ({activeOrders.length})
                     </h4>
                     <span className="text-[10px] text-[#8D6B58] font-medium">
-                      Oshxonada
+                      {t.inKitchen}
                     </span>
                   </div>
 
@@ -145,10 +145,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             type="button"
                             onClick={() => onDismissOrder(order.id)}
                             className="text-xs text-[#C0684C] hover:text-[#A9563C] font-semibold flex items-center gap-1 px-2 py-0.5 rounded-lg hover:bg-[#F1EAE0] transition"
-                            title={t.removeFromCart || "Savatdan o'chirish"}
+                            title={t.removeFromCart}
                           >
                             <Trash2 className="w-3.5 h-3.5" />
-                            <span className="text-[11px]">{t.removeFromCart || "O'chirish"}</span>
+                            <span className="text-[11px]">{t.removeFromCart}</span>
                           </button>
                         )}
                       </div>
@@ -169,7 +169,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                                   {title}
                                 </h5>
                                 <div className="flex items-center gap-2 text-xs text-[#8D6B58] mt-0.5">
-                                  <span>{item.quantity} dona</span>
+                                  <span>{item.quantity} {t.portion}</span>
                                   <span>•</span>
                                   <span className="font-bold text-[#2E1E17]">
                                     {formatPrice(item.food.price * item.quantity)}
@@ -188,9 +188,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                       {/* Order Footer Summary */}
                       <div className="flex items-center justify-between text-xs pt-1 border-t border-[#F5EFE8] text-[#8D6B58]">
-                        <span>Vaqt: {order.createdAt}</span>
+                        <span>{order.createdAt}</span>
                         <span className="font-extrabold text-[#2E1E17]">
-                          Jami: {formatPrice(order.totalAmount)}
+                          {t.total}: {formatPrice(order.totalAmount)}
                         </span>
                       </div>
                     </div>
@@ -203,8 +203,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 <div className="space-y-3 pt-2">
                   {activeOrders.length > 0 && (
                     <div className="flex items-center justify-between pb-1 border-b border-[#EAE0D4]">
-                      <h4 className="font-serif font-bold text-xs sm:text-sm text-[#2E1E17] tracking-wide uppercase">
-                        Yangi tanlangan taomlar ({items.length})
+                      <h4 className="font-sans font-bold text-xs sm:text-sm text-[#2E1E17] tracking-wide uppercase">
+                        {t.newSelectedItems} ({items.length})
                       </h4>
                     </div>
                   )}
@@ -245,7 +245,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                               onClick={() =>
                                 onUpdateQuantity(item?.food?.id, item.quantity - 1)
                               }
-                              aria-label={`${title} kamaytirish`}
+                              aria-label={`${title} -`}
                               className="w-6 h-6 rounded-full bg-white hover:bg-[#F1EAE0] text-[#2E1E17] font-bold text-xs flex items-center justify-center shadow-2xs"
                             >
                               -
@@ -258,7 +258,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                               onClick={() =>
                                 onUpdateQuantity(item?.food?.id, item.quantity + 1)
                               }
-                              aria-label={`${title} oshirish`}
+                              aria-label={`${title} +`}
                               className="w-6 h-6 rounded-full bg-[#C0684C] text-white font-bold text-xs flex items-center justify-center shadow-2xs hover:bg-[#B05B3F]"
                             >
                               +
@@ -269,8 +269,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             type="button"
                             onClick={() => onRemoveItem(item?.food?.id)}
                             className="text-[#8D6B58] hover:text-[#C0684C] p-1"
-                            title={t.deleteItem || "O'chirish"}
-                            aria-label={`${title} o'chirish`}
+                            title={t.deleteItem}
+                            aria-label={`${title} ${t.deleteItem}`}
                           >
                             <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
@@ -284,7 +284,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           )}
         </div>
 
-        {/* Drawer Footer - Total & Payment (only for new unconfirmed items) */}
+        {/* Drawer Footer - Total & Payment */}
         {items.length > 0 && (
           <div className="p-4 bg-white border-t border-[#EAE0D4] space-y-3 shadow-lg">
             <div className="flex items-center justify-between text-base font-bold text-[#2E1E17]">
@@ -304,7 +304,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin text-white" />
-                  <span>Buyurtma yuborilmoqda...</span>
+                  <span>{t.submittingOrder}</span>
                 </>
               ) : (
                 <>

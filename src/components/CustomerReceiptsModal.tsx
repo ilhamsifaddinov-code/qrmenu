@@ -74,9 +74,9 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
               <button
                 type="button"
                 onClick={handleClearAll}
-                className="text-xs text-[#C0684C] hover:text-[#A9563C] px-2 py-1 rounded-lg border border-[#C0684C]/30 hover:bg-[#FAF5EF] transition"
+                className="text-xs text-[#C0684C] hover:text-[#A9563C] px-2 py-1 rounded-lg border border-[#C0684C]/30 hover:bg-[#FAF5EF] transition cursor-pointer"
               >
-                Tozalash
+                {t.clearAll || (lang === 'qr' ? 'Tazalaw' : 'Tozalash')}
               </button>
             )}
             <button
@@ -101,7 +101,10 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
                 {t.noSavedReceipts || 'Hozircha saqlangan cheklar mavjud emas.'}
               </p>
               <p className="text-xs text-[#8D6B58] max-w-xs mx-auto">
-                Buyurtma tasdiqlangandan so'ng, barcha cheklaringiz avtomatik tarzda shu yerda saqlanadi.
+                {t.noSavedReceiptsSub ||
+                  (lang === 'qr'
+                    ? 'Buyırtpa berip tastıyıqlaǵanıńızdan keyin, barlıq çeklerińiz usı jerde avtomat saqlanıp baradı.'
+                    : 'Buyurtma tasdiqlangandan so\'ng, barcha cheklaringiz avtomatik tarzda shu yerda saqlanadi.')}
               </p>
             </div>
           ) : (
@@ -121,7 +124,7 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
                     </span>
                     <span className="text-[10px] text-[#8D6B58] flex items-center gap-1">
                       <Clock className="w-3 h-3" />
-                      {rec.createdAt || 'Vaqt belgilanmagan'}
+                      {rec.createdAt || (lang === 'qr' ? 'Waqıt belgilengen' : 'Vaqt belgilanmagan')}
                     </span>
                   </div>
 
@@ -136,7 +139,7 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
                       {formatPrice(rec.totalAmount)}
                     </span>
                     <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
-                      ✓ Qabul qilindi
+                      {lang === 'qr' ? '✓ Qabıllandı' : '✓ Qabul qilindi'}
                     </span>
                   </div>
                 </div>
@@ -145,8 +148,8 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
                   <button
                     type="button"
                     onClick={(e) => handleDeleteReceipt(rec.id, e)}
-                    className="p-2 rounded-xl text-[#8D6B58] hover:text-[#C0684C] hover:bg-[#FAF5EF] transition"
-                    title="O'chirish"
+                    className="p-2 rounded-xl text-[#8D6B58] hover:text-[#C0684C] hover:bg-[#FAF5EF] transition cursor-pointer"
+                    title={lang === 'qr' ? 'Óshiriw' : 'O\'chirish'}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
