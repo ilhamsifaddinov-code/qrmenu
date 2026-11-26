@@ -342,6 +342,58 @@ app.put('/api/settings', async (req, res) => {
   }
 });
 
+// --- TABLES (CAFE STOLLAR) API ---
+app.get('/api/tables', async (req, res) => {
+  try {
+    const tables = await db.getTables();
+    res.json(tables);
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to fetch tables' });
+  }
+});
+
+app.post('/api/tables', async (req, res) => {
+  const { tableNumber } = req.body;
+  if (!tableNumber) {
+    return res.status(400).json({ error: 'tableNumber is required' });
+  }
+  try {
+    const tables = await db.addTable(String(tableNumber));
+    console.log(`[TABLE ADDED TO NEON DB] Stol №${tableNumber}`);
+    res.status(201).json({ success: true, tables });
+  } catch (err: any) {
+    console.error('Failed to add table:', err);
+    res.status(500).json({ error: 'Failed to add table' });
+  }
+});
+
+app.post('/api/tables/batch', async (req, res) => {
+  const { tables } = req.body;
+  if (!Array.isArray(tables)) {
+    return res.status(400).json({ error: 'Expected array of table numbers' });
+  }
+  try {
+    const saved = await db.setTablesBatch(tables);
+    console.log(`[TABLES BATCH SAVED IN NEON DB] Count: ${saved.length}`);
+    res.json({ success: true, tables: saved });
+  } catch (err: any) {
+    console.error('Failed to save tables batch:', err);
+    res.status(500).json({ error: 'Failed to save tables batch' });
+  }
+});
+
+app.delete('/api/tables/:tableNumber', async (req, res) => {
+  const { tableNumber } = req.params;
+  try {
+    const tables = await db.deleteTable(decodeURIComponent(tableNumber));
+    console.log(`[TABLE DELETED FROM NEON DB] Stol №${tableNumber}`);
+    res.json({ success: true, tables });
+  } catch (err: any) {
+    console.error('Failed to delete table:', err);
+    res.status(500).json({ error: 'Failed to delete table' });
+  }
+});
+
 // ==========================================
 // VITE / STATIC SERVING
 // ==========================================

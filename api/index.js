@@ -583,6 +583,7 @@ var sql = neon(connectionString);
 var cachedFoods = [...initialFoodItems];
 var cachedOrders = [];
 var cachedCalls = [];
+var cachedTables = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 var cachedSettings = {
   telegramUsername: "sifaddinov",
   instagramUsername: "sifaddinovv"
@@ -784,6 +785,101 @@ async function deleteWaiterCall(id) {
     throw err;
   }
 }
+async function getTables() {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS cafe_tables (
+        table_number TEXT PRIMARY KEY,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    const rows = await sql`
+      SELECT table_number 
+      FROM cafe_tables 
+      ORDER BY sort_order ASC, created_at ASC;
+    `;
+    if (rows && rows.length > 0) {
+      cachedTables = rows.map((r) => String(r.table_number));
+    } else {
+      const defaults = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+      for (let i = 0; i < defaults.length; i++) {
+        await sql`
+          INSERT INTO cafe_tables (table_number, sort_order)
+          VALUES (${defaults[i]}, ${i + 1})
+          ON CONFLICT (table_number) DO NOTHING;
+        `;
+      }
+      cachedTables = defaults;
+    }
+    return cachedTables;
+  } catch (err) {
+    console.error("[NEON DB] Failed to fetch tables, using cache:", err);
+    return cachedTables;
+  }
+}
+async function addTable(tableNumber) {
+  const trimmed = tableNumber.trim();
+  if (!trimmed) return cachedTables;
+  try {
+    const num = parseInt(trimmed);
+    const sortOrder = !isNaN(num) ? num : 999;
+    await sql`
+      INSERT INTO cafe_tables (table_number, sort_order)
+      VALUES (${trimmed}, ${sortOrder})
+      ON CONFLICT (table_number) DO NOTHING;
+    `;
+    return await getTables();
+  } catch (err) {
+    console.error("[NEON DB] Failed to add table:", err);
+    if (!cachedTables.includes(trimmed)) {
+      cachedTables.push(trimmed);
+    }
+    return cachedTables;
+  }
+}
+async function deleteTable(tableNumber) {
+  const trimmed = tableNumber.trim();
+  try {
+    await sql`DELETE FROM cafe_tables WHERE table_number = ${trimmed};`;
+    cachedTables = cachedTables.filter((t) => t !== trimmed);
+    return cachedTables;
+  } catch (err) {
+    console.error("[NEON DB] Failed to delete table:", err);
+    cachedTables = cachedTables.filter((t) => t !== trimmed);
+    return cachedTables;
+  }
+}
+async function setTablesBatch(tablesList) {
+  const cleaned = Array.from(new Set(tablesList.map((t) => String(t).trim()).filter(Boolean)));
+  if (cleaned.length === 0) return cachedTables;
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS cafe_tables (
+        table_number TEXT PRIMARY KEY,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    await sql`DELETE FROM cafe_tables;`;
+    for (let i = 0; i < cleaned.length; i++) {
+      const tbl = cleaned[i];
+      const num = parseInt(tbl);
+      const sortOrder = !isNaN(num) ? num : i + 1;
+      await sql`
+        INSERT INTO cafe_tables (table_number, sort_order)
+        VALUES (${tbl}, ${sortOrder})
+        ON CONFLICT (table_number) DO NOTHING;
+      `;
+    }
+    cachedTables = cleaned;
+    return cachedTables;
+  } catch (err) {
+    console.error("[NEON DB] Failed to save tables batch:", err);
+    cachedTables = cleaned;
+    return cachedTables;
+  }
+}
 async function getSettings() {
   try {
     await sql`
@@ -841,11 +937,12 @@ async function updateSettings(settings) {
 }
 async function getSyncData() {
   try {
-    const [ordersRows, callsRows, foodsRows, settingsRows] = await Promise.all([
+    const [ordersRows, callsRows, foodsRows, settingsRows, tablesRows] = await Promise.all([
       sql`SELECT data FROM orders ORDER BY created_at DESC;`,
       sql`SELECT data FROM waiter_calls ORDER BY created_at DESC;`,
       sql`SELECT data FROM foods ORDER BY created_at ASC;`,
-      sql`SELECT key, value FROM settings;`.catch(() => [])
+      sql`SELECT key, value FROM settings;`.catch(() => []),
+      sql`SELECT table_number FROM cafe_tables ORDER BY sort_order ASC, created_at ASC;`.catch(() => [])
     ]);
     const orders = ordersRows.map((r) => r.data);
     const waiterCalls = callsRows.map((r) => r.data);
@@ -856,6 +953,9 @@ async function getSyncData() {
         if (r.key === "instagram_username") cachedSettings.instagramUsername = r.value;
       });
     }
+    if (tablesRows && tablesRows.length > 0) {
+      cachedTables = tablesRows.map((r) => String(r.table_number));
+    }
     cachedOrders = orders;
     cachedCalls = waiterCalls;
     cachedFoods = foods;
@@ -864,6 +964,7 @@ async function getSyncData() {
       waiterCalls,
       foods,
       settings: cachedSettings,
+      tables: cachedTables,
       serverTime: Date.now()
     };
   } catch (err) {
@@ -873,6 +974,7 @@ async function getSyncData() {
       waiterCalls: cachedCalls,
       foods: cachedFoods,
       settings: cachedSettings,
+      tables: cachedTables,
       serverTime: Date.now()
     };
   }
@@ -1205,6 +1307,53 @@ app.put("/api/settings", async (req, res) => {
     res.json(settings);
   } catch (err) {
     res.status(500).json({ error: "Failed to update settings" });
+  }
+});
+app.get("/api/tables", async (req, res) => {
+  try {
+    const tables = await getTables();
+    res.json(tables);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch tables" });
+  }
+});
+app.post("/api/tables", async (req, res) => {
+  const { tableNumber } = req.body;
+  if (!tableNumber) {
+    return res.status(400).json({ error: "tableNumber is required" });
+  }
+  try {
+    const tables = await addTable(String(tableNumber));
+    console.log(`[TABLE ADDED TO NEON DB] Stol \u2116${tableNumber}`);
+    res.status(201).json({ success: true, tables });
+  } catch (err) {
+    console.error("Failed to add table:", err);
+    res.status(500).json({ error: "Failed to add table" });
+  }
+});
+app.post("/api/tables/batch", async (req, res) => {
+  const { tables } = req.body;
+  if (!Array.isArray(tables)) {
+    return res.status(400).json({ error: "Expected array of table numbers" });
+  }
+  try {
+    const saved = await setTablesBatch(tables);
+    console.log(`[TABLES BATCH SAVED IN NEON DB] Count: ${saved.length}`);
+    res.json({ success: true, tables: saved });
+  } catch (err) {
+    console.error("Failed to save tables batch:", err);
+    res.status(500).json({ error: "Failed to save tables batch" });
+  }
+});
+app.delete("/api/tables/:tableNumber", async (req, res) => {
+  const { tableNumber } = req.params;
+  try {
+    const tables = await deleteTable(decodeURIComponent(tableNumber));
+    console.log(`[TABLE DELETED FROM NEON DB] Stol \u2116${tableNumber}`);
+    res.json({ success: true, tables });
+  } catch (err) {
+    console.error("Failed to delete table:", err);
+    res.status(500).json({ error: "Failed to delete table" });
   }
 });
 async function start() {

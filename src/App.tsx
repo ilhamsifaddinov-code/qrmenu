@@ -89,6 +89,17 @@ export default function App() {
     };
   });
 
+  const [tables, setTables] = useState<string[]>(() => {
+    try {
+      const stored = localStorage.getItem('cafe_tables');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+  });
+
   // 4. UI Views & Modals
   const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -217,13 +228,22 @@ export default function App() {
             return data.settings;
           });
         }
+        if (data.tables && Array.isArray(data.tables) && data.tables.length > 0) {
+          setTables((prev) => {
+            if (JSON.stringify(prev) === JSON.stringify(data.tables)) return prev;
+            try {
+              localStorage.setItem('cafe_tables', JSON.stringify(data.tables));
+            } catch {}
+            return data.tables;
+          });
+        }
       }
     } catch (err) {
       // Fallback silently if offline or server booting
     }
   };
 
-  // Initial load of foods and settings
+  // Initial load of foods, settings, and tables
   useEffect(() => {
     fetch('/api/foods')
       .then((res) => res.json())
@@ -246,6 +266,18 @@ export default function App() {
         }
       })
       .catch(() => {});
+
+    fetch('/api/tables')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setTables(data);
+          try {
+            localStorage.setItem('cafe_tables', JSON.stringify(data));
+          } catch {}
+        }
+      })
+      .catch((e) => console.warn('Could not fetch initial tables:', e));
 
     syncWithServer();
     const interval = setInterval(syncWithServer, 2000);
@@ -557,6 +589,67 @@ export default function App() {
     }
   };
 
+  const handleAddTable = async (tableNum: string) => {
+    const trimmed = tableNum.trim();
+    if (!trimmed) return;
+    setTables((prev) => {
+      if (prev.includes(trimmed)) return prev;
+      const updated = [...prev, trimmed];
+      try {
+        localStorage.setItem('cafe_tables', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    try {
+      await fetch('/api/tables', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tableNumber: trimmed }),
+      });
+      syncWithServer();
+    } catch (e) {
+      console.error('Failed to save table to server:', e);
+    }
+  };
+
+  const handleDeleteTable = async (tableNum: string) => {
+    const trimmed = tableNum.trim();
+    setTables((prev) => {
+      const updated = prev.filter((t) => t !== trimmed);
+      try {
+        localStorage.setItem('cafe_tables', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    try {
+      await fetch(`/api/tables/${encodeURIComponent(trimmed)}`, {
+        method: 'DELETE',
+      });
+      syncWithServer();
+    } catch (e) {
+      console.error('Failed to delete table from server:', e);
+    }
+  };
+
+  const handleSetTablesBatch = async (newTablesList: string[]) => {
+    const cleaned = Array.from(new Set(newTablesList.map((t) => String(t).trim()).filter(Boolean)));
+    if (cleaned.length === 0) return;
+    setTables(cleaned);
+    try {
+      localStorage.setItem('cafe_tables', JSON.stringify(cleaned));
+    } catch {}
+    try {
+      await fetch('/api/tables/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tables: cleaned }),
+      });
+      syncWithServer();
+    } catch (e) {
+      console.error('Failed to save tables batch to server:', e);
+    }
+  };
+
   // Filtered Food Items logic
   const filteredFoodItems = useMemo(() => {
     return foodItems.filter((food) => {
@@ -640,6 +733,10 @@ export default function App() {
             orders={orders}
             waiterCalls={waiterCalls}
             settings={settings}
+            tables={tables}
+            onAddTable={handleAddTable}
+            onDeleteTable={handleDeleteTable}
+            onSetTablesBatch={handleSetTablesBatch}
             adminPassword={adminPassword}
             onUpdatePassword={setAdminPassword}
             onUpdateSettings={handleUpdateSettings}

@@ -12,6 +12,7 @@ const sql = neon(connectionString);
 let cachedFoods: FoodItem[] = [...initialFoodItems];
 let cachedOrders: Order[] = [];
 let cachedCalls: WaiterCall[] = [];
+let cachedTables: string[] = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 let cachedSettings: AppSettings = {
   telegramUsername: 'sifaddinov',
   instagramUsername: 'sifaddinovv',
@@ -244,6 +245,108 @@ export async function deleteWaiterCall(id: string): Promise<boolean> {
 }
 
 // ==========================================
+// TABLES (CAFE TABLES IN NEON DB)
+// ==========================================
+export async function getTables(): Promise<string[]> {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS cafe_tables (
+        table_number TEXT PRIMARY KEY,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    const rows = await sql`
+      SELECT table_number 
+      FROM cafe_tables 
+      ORDER BY sort_order ASC, created_at ASC;
+    `;
+    if (rows && rows.length > 0) {
+      cachedTables = rows.map((r: any) => String(r.table_number));
+    } else {
+      const defaults = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+      for (let i = 0; i < defaults.length; i++) {
+        await sql`
+          INSERT INTO cafe_tables (table_number, sort_order)
+          VALUES (${defaults[i]}, ${i + 1})
+          ON CONFLICT (table_number) DO NOTHING;
+        `;
+      }
+      cachedTables = defaults;
+    }
+    return cachedTables;
+  } catch (err) {
+    console.error('[NEON DB] Failed to fetch tables, using cache:', err);
+    return cachedTables;
+  }
+}
+
+export async function addTable(tableNumber: string): Promise<string[]> {
+  const trimmed = tableNumber.trim();
+  if (!trimmed) return cachedTables;
+  try {
+    const num = parseInt(trimmed);
+    const sortOrder = !isNaN(num) ? num : 999;
+    await sql`
+      INSERT INTO cafe_tables (table_number, sort_order)
+      VALUES (${trimmed}, ${sortOrder})
+      ON CONFLICT (table_number) DO NOTHING;
+    `;
+    return await getTables();
+  } catch (err) {
+    console.error('[NEON DB] Failed to add table:', err);
+    if (!cachedTables.includes(trimmed)) {
+      cachedTables.push(trimmed);
+    }
+    return cachedTables;
+  }
+}
+
+export async function deleteTable(tableNumber: string): Promise<string[]> {
+  const trimmed = tableNumber.trim();
+  try {
+    await sql`DELETE FROM cafe_tables WHERE table_number = ${trimmed};`;
+    cachedTables = cachedTables.filter((t) => t !== trimmed);
+    return cachedTables;
+  } catch (err) {
+    console.error('[NEON DB] Failed to delete table:', err);
+    cachedTables = cachedTables.filter((t) => t !== trimmed);
+    return cachedTables;
+  }
+}
+
+export async function setTablesBatch(tablesList: string[]): Promise<string[]> {
+  const cleaned = Array.from(new Set(tablesList.map((t) => String(t).trim()).filter(Boolean)));
+  if (cleaned.length === 0) return cachedTables;
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS cafe_tables (
+        table_number TEXT PRIMARY KEY,
+        sort_order INTEGER DEFAULT 0,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    await sql`DELETE FROM cafe_tables;`;
+    for (let i = 0; i < cleaned.length; i++) {
+      const tbl = cleaned[i];
+      const num = parseInt(tbl);
+      const sortOrder = !isNaN(num) ? num : i + 1;
+      await sql`
+        INSERT INTO cafe_tables (table_number, sort_order)
+        VALUES (${tbl}, ${sortOrder})
+        ON CONFLICT (table_number) DO NOTHING;
+      `;
+    }
+    cachedTables = cleaned;
+    return cachedTables;
+  } catch (err) {
+    console.error('[NEON DB] Failed to save tables batch:', err);
+    cachedTables = cleaned;
+    return cachedTables;
+  }
+}
+
+// ==========================================
 // SETTINGS (TELEGRAM & INSTAGRAM LINKS)
 // ==========================================
 export async function getSettings(): Promise<AppSettings> {
@@ -319,11 +422,12 @@ export async function updateSettings(settings: Partial<AppSettings>): Promise<Ap
 // ==========================================
 export async function getSyncData() {
   try {
-    const [ordersRows, callsRows, foodsRows, settingsRows] = await Promise.all([
+    const [ordersRows, callsRows, foodsRows, settingsRows, tablesRows] = await Promise.all([
       sql`SELECT data FROM orders ORDER BY created_at DESC;`,
       sql`SELECT data FROM waiter_calls ORDER BY created_at DESC;`,
       sql`SELECT data FROM foods ORDER BY created_at ASC;`,
       sql`SELECT key, value FROM settings;`.catch(() => []),
+      sql`SELECT table_number FROM cafe_tables ORDER BY sort_order ASC, created_at ASC;`.catch(() => []),
     ]);
 
     const orders = ordersRows.map((r: any) => r.data as Order);
@@ -340,6 +444,10 @@ export async function getSyncData() {
       });
     }
 
+    if (tablesRows && tablesRows.length > 0) {
+      cachedTables = tablesRows.map((r: any) => String(r.table_number));
+    }
+
     cachedOrders = orders;
     cachedCalls = waiterCalls;
     cachedFoods = foods;
@@ -349,6 +457,7 @@ export async function getSyncData() {
       waiterCalls,
       foods,
       settings: cachedSettings,
+      tables: cachedTables,
       serverTime: Date.now(),
     };
   } catch (err) {
@@ -358,6 +467,7 @@ export async function getSyncData() {
       waiterCalls: cachedCalls,
       foods: cachedFoods,
       settings: cachedSettings,
+      tables: cachedTables,
       serverTime: Date.now(),
     };
   }

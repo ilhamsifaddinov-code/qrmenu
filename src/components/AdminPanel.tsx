@@ -38,6 +38,10 @@ interface AdminPanelProps {
   orders: Order[];
   waiterCalls: WaiterCall[];
   settings?: AppSettings;
+  tables?: string[];
+  onAddTable?: (tableNumber: string) => void;
+  onDeleteTable?: (tableNumber: string) => void;
+  onSetTablesBatch?: (tables: string[]) => void;
   onAddFoodItem: (newItem: FoodItem) => void;
   onUpdateFoodItem: (updatedItem: FoodItem) => void;
   onDeleteFoodItem: (id: string) => void;
@@ -56,6 +60,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   orders,
   waiterCalls,
   settings,
+  tables = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+  onAddTable,
+  onDeleteTable,
+  onSetTablesBatch,
   onAddFoodItem,
   onUpdateFoodItem,
   onDeleteFoodItem,
@@ -73,15 +81,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   const [viewingReceiptOrder, setViewingReceiptOrder] = useState<Order | null>(null);
   const [statsPeriod, setStatsPeriod] = useState<'daily' | 'weekly' | 'monthly'>('daily');
 
-  // QR Codes State
-  const [managedTables, setManagedTables] = useState<string[]>([
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-  ]);
+  // QR Codes State - Synced with Neon PostgreSQL & localStorage
+  const [managedTables, setManagedTables] = useState<string[]>(tables);
   const [qrMode, setQrMode] = useState<'auto' | 'custom'>('auto');
-  const [autoTableCount, setAutoTableCount] = useState<number>(10);
+  const [autoTableCount, setAutoTableCount] = useState<number>(() => Math.max(10, tables.length));
   const [customTablesInput, setCustomTablesInput] = useState<string>('1, 6, 9');
   const [newSingleTable, setNewSingleTable] = useState<string>('');
   const [copiedTable, setCopiedTable] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (tables && Array.isArray(tables) && tables.length > 0) {
+      setManagedTables(tables);
+      setAutoTableCount(Math.max(10, tables.length));
+    }
+  }, [tables]);
 
   const [newPassword, setNewPassword] = useState('');
   const [passwordSaved, setPasswordSaved] = useState(false);
@@ -107,6 +120,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     const count = Math.min(100, Math.max(1, autoTableCount));
     const newList = Array.from({ length: count }, (_, i) => String(i + 1));
     setManagedTables(newList);
+    if (onSetTablesBatch) {
+      onSetTablesBatch(newList);
+    }
   };
 
   const handleApplyCustomTables = () => {
@@ -117,6 +133,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     if (items.length > 0) {
       const uniqueItems = Array.from(new Set(items));
       setManagedTables(uniqueItems);
+      if (onSetTablesBatch) {
+        onSetTablesBatch(uniqueItems);
+      }
     }
   };
 
@@ -125,12 +144,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
     if (!trimmed) return;
     if (!managedTables.includes(trimmed)) {
       setManagedTables((prev) => [...prev, trimmed]);
+      if (onAddTable) {
+        onAddTable(trimmed);
+      }
     }
     setNewSingleTable('');
   };
 
   const handleDeleteTable = (tblToDelete: string) => {
     setManagedTables((prev) => prev.filter((tbl) => tbl !== tblToDelete));
+    if (onDeleteTable) {
+      onDeleteTable(tblToDelete);
+    }
   };
 
   // New Food Item Form State
