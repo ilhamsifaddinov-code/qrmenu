@@ -65,8 +65,9 @@ export interface WaiterCall {
   id: string;
   tableNumber: string;
   timestamp: string;
-  type: 'waiter' | 'bill' | 'water';
-  status: 'active' | 'resolved';
+  type: 'waiter' | 'bill' | 'water' | 'call_waiter';
+  status: 'active' | 'resolved' | 'pending' | 'answered';
+  createdAt?: string;
 }
 
 export interface User {

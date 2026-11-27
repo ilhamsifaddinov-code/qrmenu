@@ -138,9 +138,9 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
                 <span className="text-[#C0684C] font-extrabold text-sm">{order.id}</span>
               </div>
               <div className="flex justify-between items-center text-[#8D6B58]">
-                <span>{t.tableNumber || (lang === 'qr' ? 'Ústel nomeri' : 'Stol raqami')}:</span>
+                <span>{t.tableNumber || (lang === 'qr' ? 'Stol nomeri' : 'Stol raqami')}:</span>
                 <span className="font-bold text-[#2E1E17] bg-[#F1EAE0] px-2 py-0.5 rounded border border-[#E6DDD2]">
-                  {t.tableNumber || (lang === 'qr' ? 'Ústel №' : 'Stol №')} {order.tableNumber}
+                  {t.tableNumber || 'Stol №'} {order.tableNumber}
                 </span>
               </div>
               <div className="flex justify-between items-center text-[#8D6B58] text-[11px]">

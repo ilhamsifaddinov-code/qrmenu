@@ -117,7 +117,7 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
                 <div className="flex-1 min-w-0 space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="bg-[#2E1E17] text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
-                      {t.tableNumber || (lang === 'qr' ? 'Ústel №' : 'Stol №')} {rec.tableNumber}
+                      {t.tableNumber || 'Stol №'} {rec.tableNumber}
                     </span>
                     <span className="font-mono text-xs font-bold text-[#C0684C]">
                       {rec.id}

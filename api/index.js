@@ -701,6 +701,45 @@ async function resolveWaiterCall(id) {
     throw err;
   }
 }
+async function resolveWaiterCallsByTable(tableNumber, callType = "waiter") {
+  try {
+    const isWaiterType = callType === "waiter" || callType === "call_waiter";
+    const rows = await sql`
+      SELECT id, data FROM waiter_calls
+      WHERE table_number = ${String(tableNumber)}
+        AND (status = 'active' OR status = 'pending')
+        AND (
+          (${isWaiterType} = TRUE AND (type = 'waiter' OR type = 'call_waiter'))
+          OR type = ${callType}
+        );
+    `;
+    const resolvedList = [];
+    if (rows && rows.length > 0) {
+      for (const r of rows) {
+        const item = typeof r.data === "string" ? JSON.parse(r.data) : r.data;
+        item.status = "resolved";
+        resolvedList.push(item);
+        await sql`
+          UPDATE waiter_calls
+          SET status = 'resolved',
+              data = ${JSON.stringify(item)},
+              updated_at = NOW()
+          WHERE id = ${r.id};
+        `;
+      }
+    }
+    cachedCalls = cachedCalls.map((c) => {
+      if (String(c.tableNumber) === String(tableNumber) && (c.status === "active" || c.status === "pending") && (isWaiterType && (c.type === "waiter" || c.type === "call_waiter") || c.type === callType)) {
+        return { ...c, status: "resolved" };
+      }
+      return c;
+    });
+    return resolvedList;
+  } catch (err) {
+    console.error("[NEON DB] Failed to batch resolve waiter calls by table:", err);
+    throw err;
+  }
+}
 async function deleteWaiterCall(id) {
   try {
     await sql`DELETE FROM waiter_calls WHERE id = ${id};`;
@@ -1063,6 +1102,21 @@ app.post("/api/waiter-calls", async (req, res) => {
   } catch (err) {
     console.error("Failed to create waiter call:", err);
     res.status(500).json({ error: "Failed to save waiter call" });
+  }
+});
+app.patch("/api/waiter-calls/table/:tableNumber/resolve", async (req, res) => {
+  const { tableNumber } = req.params;
+  const { type } = req.query;
+  try {
+    const resolvedCalls = await resolveWaiterCallsByTable(
+      tableNumber,
+      type || "waiter"
+    );
+    console.log(`[WAITER BATCH RESOLVED] Table ${tableNumber} - ${resolvedCalls.length} calls resolved`);
+    res.json({ success: true, count: resolvedCalls.length, calls: resolvedCalls });
+  } catch (err) {
+    console.error("Failed to batch resolve waiter calls:", err);
+    res.status(500).json({ error: "Failed to batch resolve waiter calls" });
   }
 });
 app.patch("/api/waiter-calls/:id/resolve", async (req, res) => {

@@ -320,6 +320,68 @@ export default function App() {
 
   const t = translations[lang] || translations.uz;
 
+  // Waiter Call protection, countdown cooldown and live sync
+  const [waiterCooldown, setWaiterCooldown] = useState<number>(() => {
+    try {
+      const savedTime = localStorage.getItem('cafe_user_waiter_call_time');
+      if (savedTime) {
+        const elapsed = Math.floor((Date.now() - Number(savedTime)) / 1000);
+        if (elapsed < 45) return 45 - elapsed;
+      }
+    } catch {}
+    return 0;
+  });
+
+  const [userHasActiveWaiterCall, setUserHasActiveWaiterCall] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('cafe_user_waiter_call_active') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [waiterOnTheWayMessage, setWaiterOnTheWayMessage] = useState<string | null>(null);
+
+  // Countdown timer for 45-second cooldown
+  useEffect(() => {
+    if (waiterCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setWaiterCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [waiterCooldown]);
+
+  // Watch for Admin answering/resolving waiter calls for this table
+  useEffect(() => {
+    if (!userHasActiveWaiterCall) return;
+    const activeCalls = (waiterCalls || []).filter(
+      (c) =>
+        String(c.tableNumber) === String(tableNumber) &&
+        (c.type === 'waiter' || (c as any).type === 'call_waiter') &&
+        (c.status === 'active' || (c as any).status === 'pending')
+    );
+    // When all active waiter calls for this table are resolved by admin
+    if (activeCalls.length === 0) {
+      setUserHasActiveWaiterCall(false);
+      try {
+        localStorage.removeItem('cafe_user_waiter_call_active');
+        localStorage.removeItem('cafe_user_waiter_call_time');
+      } catch {}
+      setWaiterCooldown(0);
+      setWaiterOnTheWayMessage(t.waiterOnTheWay || "Ofitsiant yo'lda!");
+      const timer = setTimeout(() => {
+        setWaiterOnTheWayMessage(null);
+      }, 6000);
+      return () => clearTimeout(timer);
+    }
+  }, [waiterCalls, userHasActiveWaiterCall, tableNumber, t.waiterOnTheWay]);
+
   // Active confirmed orders belonging to this user
   const activeUserOrders = useMemo(() => {
     return orders.filter((o) => userActiveOrderIds.includes(o.id));
@@ -406,6 +468,15 @@ export default function App() {
     };
     setWaiterCalls((prev) => [call, ...(prev || [])]);
 
+    if (type === 'waiter') {
+      setWaiterCooldown(45);
+      setUserHasActiveWaiterCall(true);
+      try {
+        localStorage.setItem('cafe_user_waiter_call_active', 'true');
+        localStorage.setItem('cafe_user_waiter_call_time', String(Date.now()));
+      } catch {}
+    }
+
     try {
       await fetch('/api/waiter-calls', {
         method: 'POST',
@@ -427,6 +498,31 @@ export default function App() {
       syncWithServer();
     } catch (e) {
       console.error('Failed to resolve waiter call:', e);
+    }
+  };
+
+  // Batch resolve all active/pending waiter calls for a specific table
+  const handleResolveWaiterCallsByTable = async (tblNum: string, type: string = 'waiter') => {
+    setWaiterCalls((prev) =>
+      (prev || []).map((c) => {
+        if (
+          String(c.tableNumber) === String(tblNum) &&
+          (c.type === type || (type === 'waiter' && (c as any).type === 'call_waiter')) &&
+          (c.status === 'active' || (c as any).status === 'pending')
+        ) {
+          return { ...c, status: 'resolved' };
+        }
+        return c;
+      })
+    );
+    try {
+      await fetch(
+        `/api/waiter-calls/table/${encodeURIComponent(tblNum)}/resolve?type=${encodeURIComponent(type)}`,
+        { method: 'PATCH' }
+      );
+      syncWithServer();
+    } catch (e) {
+      console.error('Failed to batch resolve waiter calls:', e);
     }
   };
 
@@ -728,6 +824,9 @@ export default function App() {
         onCallWaiter={handleCallWaiter}
         activeOrdersCount={activeUserOrders.length}
         totalActiveAmount={totalActiveBillAmount}
+        waiterCooldown={waiterCooldown}
+        onStartWaiterCooldown={(sec) => setWaiterCooldown(sec)}
+        waiterOnTheWayMessage={waiterOnTheWayMessage}
       />
 
       {/* 3. Main Body */}
@@ -751,6 +850,7 @@ export default function App() {
             onUpdateFoodItem={handleUpdateFoodItem}
             onDeleteFoodItem={handleDeleteFoodItem}
             onResolveWaiterCall={handleResolveWaiterCall}
+            onResolveWaiterCallsByTable={handleResolveWaiterCallsByTable}
             onUpdateOrderStatus={handleUpdateOrderStatus}
             onDeleteOrder={handleDeleteOrder}
             onCloseAdmin={() => setIsAdminView(false)}

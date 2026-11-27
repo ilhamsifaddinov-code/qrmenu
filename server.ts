@@ -143,6 +143,22 @@ app.post('/api/waiter-calls', async (req, res) => {
   }
 });
 
+app.patch('/api/waiter-calls/table/:tableNumber/resolve', async (req, res) => {
+  const { tableNumber } = req.params;
+  const { type } = req.query;
+  try {
+    const resolvedCalls = await db.resolveWaiterCallsByTable(
+      tableNumber,
+      (type as string) || 'waiter'
+    );
+    console.log(`[WAITER BATCH RESOLVED] Table ${tableNumber} - ${resolvedCalls.length} calls resolved`);
+    res.json({ success: true, count: resolvedCalls.length, calls: resolvedCalls });
+  } catch (err: any) {
+    console.error('Failed to batch resolve waiter calls:', err);
+    res.status(500).json({ error: 'Failed to batch resolve waiter calls' });
+  }
+});
+
 app.patch('/api/waiter-calls/:id/resolve', async (req, res) => {
   const { id } = req.params;
   try {

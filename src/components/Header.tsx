@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, FileText, ShoppingBag, Shield, CheckCircle, QrCode, AlertTriangle, X } from 'lucide-react';
+import { Bell, FileText, ShoppingBag, Shield, CheckCircle, QrCode, AlertTriangle } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../i18n/translations';
 import { formatPrice } from '../utils/formatters';
@@ -19,6 +19,9 @@ interface HeaderProps {
   onCallWaiter: (type: 'waiter' | 'bill') => void;
   activeOrdersCount?: number;
   totalActiveAmount?: number;
+  waiterCooldown?: number;
+  onStartWaiterCooldown?: (sec: number) => void;
+  waiterOnTheWayMessage?: string | null;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -35,24 +38,31 @@ export const Header: React.FC<HeaderProps> = ({
   onCallWaiter,
   activeOrdersCount = 0,
   totalActiveAmount = 0,
+  waiterCooldown: externalWaiterCooldown,
+  onStartWaiterCooldown,
+  waiterOnTheWayMessage,
 }) => {
   const [notification, setNotification] = useState<string | null>(null);
   const [isConfirmWaiterOpen, setIsConfirmWaiterOpen] = useState(false);
   const [isConfirmBillOpen, setIsConfirmBillOpen] = useState(false);
   const [isNoOrdersAlertOpen, setIsNoOrdersAlertOpen] = useState(false);
-  const [waiterCooldown, setWaiterCooldown] = useState(0);
+  const [localWaiterCooldown, setLocalWaiterCooldown] = useState(0);
   const [billCooldown, setBillCooldown] = useState(0);
 
   const t = translations[lang] || translations.uz;
 
-  // Countdown timer for waiter call
+  const currentWaiterCooldown =
+    externalWaiterCooldown !== undefined ? externalWaiterCooldown : localWaiterCooldown;
+
+  // Local Countdown timer for waiter call (if not controlled externally)
   useEffect(() => {
-    if (waiterCooldown <= 0) return;
+    if (externalWaiterCooldown !== undefined) return;
+    if (localWaiterCooldown <= 0) return;
     const interval = setInterval(() => {
-      setWaiterCooldown((prev) => Math.max(0, prev - 1));
+      setLocalWaiterCooldown((prev) => Math.max(0, prev - 1));
     }, 1000);
     return () => clearInterval(interval);
-  }, [waiterCooldown]);
+  }, [localWaiterCooldown, externalWaiterCooldown]);
 
   // Countdown timer for bill request
   useEffect(() => {
@@ -64,8 +74,9 @@ export const Header: React.FC<HeaderProps> = ({
   }, [billCooldown]);
 
   const handleWaiterBtnClick = () => {
-    if (waiterCooldown > 0) {
-      setNotification(`${t.cooldownWait} ${waiterCooldown}s`);
+    if (currentWaiterCooldown > 0) {
+      const formatted = `0:${currentWaiterCooldown < 10 ? '0' + currentWaiterCooldown : currentWaiterCooldown}`;
+      setNotification(`${t.callSentCooldown || 'Chaqiruv yuborildi'} (${formatted})`);
       setTimeout(() => setNotification(null), 3000);
       return;
     }
@@ -75,7 +86,11 @@ export const Header: React.FC<HeaderProps> = ({
   const handleConfirmWaiter = () => {
     setIsConfirmWaiterOpen(false);
     onCallWaiter('waiter');
-    setWaiterCooldown(45);
+    if (onStartWaiterCooldown) {
+      onStartWaiterCooldown(45);
+    } else {
+      setLocalWaiterCooldown(45);
+    }
     setNotification(t.waiterCalledMsg);
     setTimeout(() => setNotification(null), 4000);
   };
@@ -100,6 +115,10 @@ export const Header: React.FC<HeaderProps> = ({
     setNotification(t.billRequestedMsg);
     setTimeout(() => setNotification(null), 4000);
   };
+
+  const formattedWaiterTimer = `0:${
+    currentWaiterCooldown < 10 ? '0' + currentWaiterCooldown : currentWaiterCooldown
+  }`;
 
   return (
     <header className="sticky top-0 z-40 bg-[#FAF5EF]/95 backdrop-blur-md text-[#2E1E17] border-b border-[#EAE0D4] shadow-[0_2px_15px_rgba(46,30,23,0.04)]">
@@ -126,7 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Table Badge & QR Button */}
         <div className="hidden sm:flex items-center gap-2 bg-[#F1EAE0] px-3 py-1.5 rounded-xl border border-[#E6DDD2] text-xs shadow-sm">
-          <span className="font-semibold text-[#8D6B58]">{t.tableNumber}</span>
+          <span className="font-semibold text-[#8D6B58]">{t.tableNumber || 'Stol №'}</span>
           <span className="font-bold text-sm text-[#2E1E17]">{tableNumber}</span>
           <button
             type="button"
@@ -199,21 +218,31 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Service Action Bar: Call Waiter, Request Bill, My Receipts, Cart */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-2 bg-[#FAF5EF]/90">
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-0.5 scrollbar-none">
-          {/* Call Waiter with Protection & Cooldown */}
+          {/* Call Waiter with Protection, Cooldown & Real-time Live Timer */}
           <button
             type="button"
             onClick={handleWaiterBtnClick}
             aria-label={t.callWaiter}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold text-xs border transition active:scale-95 shadow-2xs whitespace-nowrap ${
-              waiterCooldown > 0
-                ? 'bg-[#EAE0D4] text-[#8D6B58] border-[#D8C7B5] cursor-not-allowed opacity-80'
+              currentWaiterCooldown > 0
+                ? 'bg-[#EAE0D4] text-[#8D6B58] border-[#D8C7B5] cursor-not-allowed opacity-90'
                 : 'bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] border-[#E6DDD2]'
             }`}
           >
-            <Bell className={`w-3.5 h-3.5 ${waiterCooldown > 0 ? 'text-[#8D6B58]' : 'text-[#C0684C]'}`} aria-hidden="true" />
+            <Bell
+              className={`w-3.5 h-3.5 ${
+                currentWaiterCooldown > 0 ? 'text-[#8D6B58] animate-pulse' : 'text-[#C0684C]'
+              }`}
+              aria-hidden="true"
+            />
             <span>
-              {t.callWaiter}
-              {waiterCooldown > 0 && <span className="ml-1 text-[10px] font-bold text-[#C0684C]">({waiterCooldown}s)</span>}
+              {currentWaiterCooldown > 0 ? (
+                <span>
+                  {t.callSentCooldown || 'Chaqiruv yuborildi'} ({formattedWaiterTimer})
+                </span>
+              ) : (
+                t.callWaiter
+              )}
             </span>
           </button>
 
@@ -228,14 +257,19 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] border-[#E6DDD2]'
             }`}
           >
-            <FileText className={`w-3.5 h-3.5 ${billCooldown > 0 ? 'text-[#8D6B58]' : 'text-[#C0684C]'}`} aria-hidden="true" />
+            <FileText
+              className={`w-3.5 h-3.5 ${billCooldown > 0 ? 'text-[#8D6B58]' : 'text-[#C0684C]'}`}
+              aria-hidden="true"
+            />
             <span>
               {t.requestBill}
-              {billCooldown > 0 && <span className="ml-1 text-[10px] font-bold text-[#C0684C]">({billCooldown}s)</span>}
+              {billCooldown > 0 && (
+                <span className="ml-1 text-[10px] font-bold text-[#C0684C]">({billCooldown}s)</span>
+              )}
             </span>
           </button>
 
-          {/* My Receipts - Pure Karakalpak 'Meniń sheklerim' / 'Shekler' */}
+          {/* My Receipts */}
           {onOpenReceipts && (
             <button
               type="button"
@@ -245,7 +279,9 @@ export const Header: React.FC<HeaderProps> = ({
               title={t.myReceipts || 'Mening cheklarim'}
             >
               <FileText className="w-3.5 h-3.5 text-[#C0684C]" aria-hidden="true" />
-              <span className="hidden sm:inline">{t.myReceipts || (lang === 'qr' ? 'Meniń sheklerim' : 'Mening cheklarim')}</span>
+              <span className="hidden sm:inline">
+                {t.myReceipts || (lang === 'qr' ? 'Meniń sheklerim' : 'Mening cheklarim')}
+              </span>
               <span className="sm:hidden">{lang === 'qr' ? 'Shekler' : 'Cheklar'}</span>
               {receiptsCount > 0 && (
                 <span className="bg-[#C0684C] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
@@ -273,8 +309,20 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
       </div>
 
+      {/* Prominent Live "Ofitsiant yo'lda!" Notification Banner from Admin */}
+      {waiterOnTheWayMessage && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="bg-emerald-600 text-white text-xs sm:text-sm font-black px-4 py-2.5 text-center flex items-center justify-center gap-2 shadow-md animate-fadeIn"
+        >
+          <CheckCircle className="w-5 h-5 text-white animate-bounce" />
+          <span>{waiterOnTheWayMessage}</span>
+        </div>
+      )}
+
       {/* Instant Notification Banner */}
-      {notification && (
+      {notification && !waiterOnTheWayMessage && (
         <div
           role="status"
           aria-live="polite"
@@ -299,20 +347,21 @@ export const Header: React.FC<HeaderProps> = ({
               </p>
             </div>
             <div className="bg-[#F1EAE0] py-2 px-4 rounded-xl font-bold text-[#2E1E17] text-xs sm:text-sm border border-[#E6DDD2]">
-              {t.tableNumber}: <span className="text-[#C0684C] font-extrabold">{tableNumber}</span>
+              {t.tableNumber || 'Stol №'}:{' '}
+              <span className="text-[#C0684C] font-extrabold">{tableNumber}</span>
             </div>
             <div className="flex items-center gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setIsConfirmWaiterOpen(false)}
-                className="flex-1 py-2.5 px-4 rounded-2xl border border-[#EAE0D4] text-[#8D6B58] hover:bg-[#F1EAE0] font-bold text-xs transition"
+                className="flex-1 py-2.5 px-4 rounded-2xl border border-[#EAE0D4] text-[#8D6B58] hover:bg-[#F1EAE0] font-bold text-xs transition cursor-pointer"
               >
                 {t.cancelBtn}
               </button>
               <button
                 type="button"
                 onClick={handleConfirmWaiter}
-                className="flex-1 py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95"
+                className="flex-1 py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95 cursor-pointer"
               >
                 {t.confirmYes}
               </button>
@@ -340,21 +389,22 @@ export const Header: React.FC<HeaderProps> = ({
                 {formatPrice(totalActiveAmount)} UZS
               </div>
               <div className="text-[11px] text-[#8D6B58]">
-                {t.tableNumber}: <span className="font-bold text-[#2E1E17]">{tableNumber}</span>
+                {t.tableNumber || 'Stol №'}:{' '}
+                <span className="font-bold text-[#2E1E17]">{tableNumber}</span>
               </div>
             </div>
             <div className="flex items-center gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setIsConfirmBillOpen(false)}
-                className="flex-1 py-2.5 px-4 rounded-2xl border border-[#EAE0D4] text-[#8D6B58] hover:bg-[#F1EAE0] font-bold text-xs transition"
+                className="flex-1 py-2.5 px-4 rounded-2xl border border-[#EAE0D4] text-[#8D6B58] hover:bg-[#F1EAE0] font-bold text-xs transition cursor-pointer"
               >
                 {t.cancelBtn}
               </button>
               <button
                 type="button"
                 onClick={handleConfirmBill}
-                className="flex-1 py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95"
+                className="flex-1 py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95 cursor-pointer"
               >
                 {t.confirmYesBill}
               </button>
@@ -380,7 +430,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setIsNoOrdersAlertOpen(false)}
-                className="w-full py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95"
+                className="w-full py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95 cursor-pointer"
               >
                 {t.close || 'Yopish'}
               </button>

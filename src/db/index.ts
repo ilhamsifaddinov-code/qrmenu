@@ -233,6 +233,56 @@ export async function resolveWaiterCall(id: string): Promise<WaiterCall | null> 
   }
 }
 
+export async function resolveWaiterCallsByTable(
+  tableNumber: string,
+  callType: string = 'waiter'
+): Promise<WaiterCall[]> {
+  try {
+    const isWaiterType = callType === 'waiter' || callType === 'call_waiter';
+    const rows = await sql`
+      SELECT id, data FROM waiter_calls
+      WHERE table_number = ${String(tableNumber)}
+        AND (status = 'active' OR status = 'pending')
+        AND (
+          (${isWaiterType} = TRUE AND (type = 'waiter' OR type = 'call_waiter'))
+          OR type = ${callType}
+        );
+    `;
+
+    const resolvedList: WaiterCall[] = [];
+    if (rows && rows.length > 0) {
+      for (const r of rows) {
+        const item = (typeof r.data === 'string' ? JSON.parse(r.data) : r.data) as WaiterCall;
+        item.status = 'resolved';
+        resolvedList.push(item);
+        await sql`
+          UPDATE waiter_calls
+          SET status = 'resolved',
+              data = ${JSON.stringify(item)},
+              updated_at = NOW()
+          WHERE id = ${r.id};
+        `;
+      }
+    }
+
+    cachedCalls = cachedCalls.map((c) => {
+      if (
+        String(c.tableNumber) === String(tableNumber) &&
+        (c.status === 'active' || (c as any).status === 'pending') &&
+        ((isWaiterType && (c.type === 'waiter' || (c as any).type === 'call_waiter')) || c.type === callType)
+      ) {
+        return { ...c, status: 'resolved' as const };
+      }
+      return c;
+    });
+
+    return resolvedList;
+  } catch (err) {
+    console.error('[NEON DB] Failed to batch resolve waiter calls by table:', err);
+    throw err;
+  }
+}
+
 export async function deleteWaiterCall(id: string): Promise<boolean> {
   try {
     await sql`DELETE FROM waiter_calls WHERE id = ${id};`;
