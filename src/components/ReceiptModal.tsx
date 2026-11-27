@@ -75,7 +75,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
 
     setSavedNotification(
       lang === 'qr'
-        ? 'Çek nusxalandı hám "Meniń çeklerim" bólimine saqlandı!'
+        ? 'Shek nusxalandı hám "Meniń sheklerim" bólimine saqlandı!'
         : 'Chek nusxalandi va "Mening cheklarim" bo\'limiga saqlandi!'
     );
     setTimeout(() => setSavedNotification(null), 3500);
@@ -132,15 +132,15 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
                 <div className="flex items-center gap-1.5">
                   <img src="/logo.png" alt="Cake Bumer" className="w-5 h-5 object-contain" />
                   <span className="font-bold text-[#2E1E17] font-sans">
-                    {lang === 'qr' ? 'CAKE BUMER ÇEKI' : 'CAKE BUMER CHEKI'}
+                    {lang === 'qr' ? 'CAKE BUMER SHEKI' : 'CAKE BUMER CHEKI'}
                   </span>
                 </div>
                 <span className="text-[#C0684C] font-extrabold text-sm">{order.id}</span>
               </div>
               <div className="flex justify-between items-center text-[#8D6B58]">
-                <span>{t.tableNumber || (lang === 'qr' ? 'Stol nomeri' : 'Stol raqami')}:</span>
+                <span>{t.tableNumber || (lang === 'qr' ? 'Ústel nomeri' : 'Stol raqami')}:</span>
                 <span className="font-bold text-[#2E1E17] bg-[#F1EAE0] px-2 py-0.5 rounded border border-[#E6DDD2]">
-                  Stol №{order.tableNumber}
+                  {t.tableNumber || (lang === 'qr' ? 'Ústel №' : 'Stol №')} {order.tableNumber}
                 </span>
               </div>
               <div className="flex justify-between items-center text-[#8D6B58] text-[11px]">
@@ -177,7 +177,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
             <p className="text-[11px] text-[#8D6B58] bg-white p-2.5 rounded-xl border border-[#EAE0D4]">
               {t.receiptAutoSavedHint ||
                 (lang === 'qr'
-                  ? '💡 Bul çek avtomat túrde "Meniń çeklerim" bóliminde saqlandı.'
+                  ? '💡 Bul shek avtomat túrde "Meniń sheklerim" bóliminde saqlandı.'
                   : '💡 Ushbu chek avtomatik ravishda "Mening cheklarim" bo\'limida saqlandi.')}
             </p>
 

@@ -465,7 +465,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           }`}
         >
           <QrCode className="w-4 h-4" />
-          <span>{lang === 'qr' ? 'Stollar QR-kodları' : (t.tableQrManager || 'Stollar QR-kodlari')}</span>
+          <span>{lang === 'qr' ? 'Ústeller QR-kodları' : (t.tableQrManager || 'Stollar QR-kodlari')}</span>
         </button>
 
         <button
@@ -804,12 +804,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     >
                       <div>
                         <span className="font-serif font-extrabold text-base text-[#2E1E17] block">
-                          Stol №{call.tableNumber}
+                          {lang === 'qr' ? 'Ústel №' : 'Stol №'}{call.tableNumber}
                         </span>
                         <span className="text-xs text-[#C0684C] font-semibold">
                           {call.type === 'waiter' 
-                            ? (lang === 'qr' ? '🔔 Oficiant shaqırdı' : '🔔 Ofitsiant chaqirdi')
-                            : (lang === 'qr' ? '🧾 Schet soradı' : '🧾 Hisob so\'radi')}
+                            ? (lang === 'qr' ? '🔔 Ofitsiant shaqırdı' : '🔔 Ofitsiant chaqirdi')
+                            : (lang === 'qr' ? '🧾 Esap soradı' : '🧾 Hisob so\'radi')}
                         </span>
                       </div>
 
@@ -847,7 +847,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       : 'bg-white text-[#2E1E17] border border-[#EAE0D4] hover:bg-[#FAF5EF]'
                   }`}
                 >
-                  {lang === 'qr' ? 'Barlıq stollar' : 'Barcha stollar'} ({orders.length})
+                  {lang === 'qr' ? 'Barlıq ústeller' : 'Barcha stollar'} ({orders.length})
                 </button>
                 {Array.from(new Set(orders.map((o) => String(o.tableNumber))))
                   .sort((a, b) => Number(a) - Number(b))
@@ -862,7 +862,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                           : 'bg-white text-[#2E1E17] border border-[#EAE0D4] hover:bg-[#FAF5EF]'
                       }`}
                     >
-                      Stol №{tbl} ({orders.filter((o) => String(o.tableNumber) === tbl).length})
+                      {lang === 'qr' ? 'Ústel №' : 'Stol №'}{tbl} ({orders.filter((o) => String(o.tableNumber) === tbl).length})
                     </button>
                   ))}
               </div>
@@ -879,7 +879,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   <p className="text-xs text-[#8D6B58] italic bg-white p-3.5 rounded-xl border border-[#EAE0D4]">
                     {selectedTableFilter === 'all'
                       ? (lang === 'qr' ? 'Taza buyırtpalar házirshe joq.' : 'Yangi buyurtmalar hozircha yo\'q.')
-                      : (lang === 'qr' ? `Stol №${selectedTableFilter} ushın buyırtpalar joq.` : `Stol №${selectedTableFilter} uchun buyurtmalar yo'q.`)}
+                      : (lang === 'qr' ? `Ústel №${selectedTableFilter} ushın buyırtpalar joq.` : `Stol №${selectedTableFilter} uchun buyurtmalar yo'q.`)}
                   </p>
                 );
               }
@@ -891,7 +891,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       <div className="flex items-center justify-between border-b border-[#EAE0D4] pb-2.5">
                         <div className="flex items-center gap-2">
                           <span className="bg-[#FAF5EF] text-[#2E1E17] border border-[#EAE0D4] px-2.5 py-1 rounded-lg font-serif font-bold text-xs">
-                            Stol №{ord.tableNumber}
+                            {lang === 'qr' ? 'Ústel №' : 'Stol №'}{ord.tableNumber}
                           </span>
                           <span className="font-mono text-[#8D6B58] text-[11px] font-bold">
                             {ord.id}
@@ -903,10 +903,10 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                             type="button"
                             onClick={() => setViewingReceiptOrder(ord)}
                             className="px-2.5 py-1 rounded-xl text-[11px] font-bold bg-[#FAF5EF] hover:bg-[#EAE0D4] text-[#2E1E17] border border-[#EAE0D4] flex items-center gap-1.5 transition active:scale-95 shadow-2xs cursor-pointer"
-                            title={lang === 'qr' ? 'Çekti kóriw hám baspadan shıǵarıw' : 'Chekni ko\'rish va chop etish'}
+                            title={lang === 'qr' ? 'Shekti kóriw hám baspadan shıǵarıw' : 'Chekni ko\'rish va chop etish'}
                           >
                             <FileText className="w-3.5 h-3.5 text-[#C0684C]" />
-                            <span>🧾 {lang === 'qr' ? 'Çekti kóriw' : (t.viewReceipt || 'Chekni ko\'rish')}</span>
+                            <span>🧾 {lang === 'qr' ? 'Shekti kóriw' : (t.viewReceipt || 'Chekni ko\'rish')}</span>
                           </button>
 
                           <span className={`px-2.5 py-0.5 rounded-full font-bold text-[11px] border ${
@@ -1096,16 +1096,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               {/* Card 3: Delivered Revenue */}
               <div className="bg-white p-4 rounded-2xl border border-blue-200 shadow-xs relative overflow-hidden group">
                 <div className="flex items-center justify-between text-[#8D6B58] text-xs">
-                  <span className="font-semibold">{lang === 'qr' ? 'Jetkerilgen taǵamlar' : 'Yetkazilgan taomlar'}</span>
+                  <span className="font-semibold">{lang === 'qr' ? 'Jetkerilgen shiyrinlikler' : 'Yetkazilgan shirinliklar'}</span>
                   <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 font-bold text-[10px] border border-blue-200">
-                    🚀 {liveStats.deliveredOrdersCount} stol
+                    🚀 {liveStats.deliveredOrdersCount} {lang === 'qr' ? 'ústel' : 'stol'}
                   </span>
                 </div>
                 <div className="text-xl sm:text-2xl font-extrabold text-blue-700 mt-2 font-mono">
                   {formatPrice(liveStats.deliveredRevenue)}
                 </div>
                 <div className="text-[11px] text-[#8D6B58] mt-1 flex items-center gap-1">
-                  <span>{lang === 'qr' ? 'Stollarǵa jetkerip berilgen' : 'Stollarga yetkazib berilgan'}</span>
+                  <span>{lang === 'qr' ? 'Ústellerge jetkerip berilgen' : 'Stollarga yetkazib berilgan'}</span>
                 </div>
               </div>
 
@@ -1171,7 +1171,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               </div>
 
               <div className="bg-[#FAF5EF] p-4 rounded-xl border border-[#EAE0D4]">
-                <span className="text-xs text-[#8D6B58] block">{lang === 'qr' ? 'Ortasha çek miqdarı' : 'O\'rtacha chek miqdori'}:</span>
+                <span className="text-xs text-[#8D6B58] block">{lang === 'qr' ? 'Ortasha shek muǵdarı' : 'O\'rtacha chek miqdori'}:</span>
                 <span className="text-2xl font-black text-[#2E1E17] mt-1 block font-mono">
                   {formatPrice(liveStats.averageCheck)}
                 </span>
@@ -1240,7 +1240,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <h4 className="font-serif font-bold text-sm text-[#2E1E17] flex items-center justify-between">
                 <span className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-[#C0684C]" />
-                  <span>{lang === 'qr' ? 'Stollar boyınsha túsim' : 'Stollar bo\'yicha tushum'}</span>
+                  <span>{lang === 'qr' ? 'Ústeller boyınsha túsim' : 'Stollar bo\'yicha tushum'}</span>
                 </span>
                 <span className="text-xs text-[#8D6B58] font-normal">{lang === 'qr' ? 'Aylanma boyınsha' : 'Aylanma bo\'yicha'}</span>
               </h4>
@@ -1248,14 +1248,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
               <div className="space-y-2.5 max-h-[320px] overflow-y-auto custom-scrollbar">
                 {liveStats.tableStatsList.length === 0 ? (
                   <p className="text-xs text-[#8D6B58] italic py-4 text-center">
-                    {lang === 'qr' ? 'Stollarda buyırtpa joq' : 'Stollarda buyurtma yo\'q'}
+                    {lang === 'qr' ? 'Ústellerde buyırtpa joq' : 'Stollarda buyurtma yo\'q'}
                   </p>
                 ) : (
                   liveStats.tableStatsList.map((tbl) => (
                     <div key={tbl.tableNumber} className="bg-[#FAF5EF] p-3 rounded-xl border border-[#EAE0D4] flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2.5">
                         <span className="bg-[#2E1E17] text-white font-bold text-xs px-2 py-0.5 rounded font-mono">
-                          Stol №{tbl.tableNumber}
+                          {lang === 'qr' ? 'Ústel №' : 'Stol №'}{tbl.tableNumber}
                         </span>
                         <span className="text-[#8D6B58] text-[11px]">
                           {tbl.orderCount} {lang === 'qr' ? 'buyırtpa' : 'buyurtma'}
@@ -1293,11 +1293,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             <div>
               <h3 className="font-serif font-bold text-base sm:text-lg text-[#2E1E17] flex items-center gap-2">
                 <QrCode className="w-5 h-5 text-[#C0684C]" />
-                <span>{lang === 'qr' ? 'Stollar QR-kodları' : (t.tableQrManager || 'Stollar QR-kodlari')}</span>
+                <span>{lang === 'qr' ? 'Ústeller QR-kodları' : (t.tableQrManager || 'Stollar QR-kodlari')}</span>
               </h3>
               <p className="text-xs text-[#8D6B58] mt-1">
                 {lang === 'qr'
-                  ? 'Stollar ushın bólek-bólek QR-kodlar jaratıw, óshiriw yamasa barlıq stollardı avtomatizaciyalanǵan tárizde sanaw.'
+                  ? 'Ústeller ushın bólek-bólek QR-kodlar jaratıw, óshiriw yamasa barlıq ústellerdi avtomatizaciyalanǵan tárizde sanaw.'
                   : 'Stollar uchun alohida QR-kodlar yaratish, o\'chirish yoki barcha stollarni avtomatlashtirilgan tarzda sanash.'}
               </p>
             </div>
@@ -1316,7 +1316,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             <div className="flex items-center gap-2 flex-1 min-w-[260px]">
               <Plus className="w-5 h-5 text-[#C0684C] shrink-0" />
               <label className="text-xs font-bold text-[#2E1E17] whitespace-nowrap">
-                {lang === 'qr' ? 'Taza stol qosıw' : (t.addSingleTable || 'Yangi stol qo\'shish')}:
+                {lang === 'qr' ? 'Taza ústel qosıw' : (t.addSingleTable || 'Yangi stol qo\'shish')}:
               </label>
               <input
                 type="text"
@@ -1363,7 +1363,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     : 'bg-[#FAF5EF] text-[#2E1E17] hover:bg-[#EAE0D4] border border-[#EAE0D4]'
                 }`}
               >
-                <span>2-Usıl: {lang === 'qr' ? 'Bólek stollar (Mıs: 1, 6, 9)' : 'Alohida stollar (Mas: 1, 6, 9)'}</span>
+                <span>2-Usıl: {lang === 'qr' ? 'Bólek ústeller (Mıs: 1, 6, 9)' : 'Alohida stollar (Mas: 1, 6, 9)'}</span>
               </button>
             </div>
 
@@ -1371,7 +1371,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
             {qrMode === 'auto' ? (
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <label className="text-xs font-bold text-[#2E1E17]">
-                  {lang === 'qr' ? 'Stollar sanı' : 'Stollar soni'}:
+                  {lang === 'qr' ? 'Ústeller sanı' : 'Stollar soni'}:
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -1389,14 +1389,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     {lang === 'qr' ? 'QR-kodlardı jaratıw' : 'QR-kodlarni yaratish'}
                   </button>
                   <span className="text-xs text-[#8D6B58]">
-                    (1-den {autoTableCount}-ge shekem avtomat sanalǵan stollar)
+                    (1-den {autoTableCount}-ge shekem avtomat sanalǵan ústeller)
                   </span>
                 </div>
               </div>
             ) : (
               <div className="space-y-2 pt-2">
                 <label className="block text-xs font-bold text-[#2E1E17]">
-                  {lang === 'qr' ? 'Stol nomerlerin kiritiń (mıs: 1, 6, 9, 12)' : 'Stol raqamlarini kiriting (mas: 1, 6, 9, 12)'}:
+                  {lang === 'qr' ? 'Ústel nomerlerin kiritiń (mıs: 1, 6, 9, 12)' : 'Stol raqamlarini kiriting (mas: 1, 6, 9, 12)'}:
                 </label>
                 <div className="flex flex-wrap items-center gap-2">
                   <input
@@ -1414,7 +1414,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                   </button>
                 </div>
                 <p className="text-[11px] text-[#8D6B58]">
-                  💡 {lang === 'qr' ? 'Útir (,) arqalı qálegen stollarıńızdı jazıń.' : 'Vergul (,) orqali istalgan stollaringizni yozing.'}
+                  💡 {lang === 'qr' ? 'Útir (,) arqalı qálegen ústellerińizdi jazıń.' : 'Vergul (,) orqali istalgan stollaringizni yozing.'}
                 </p>
               </div>
             )}
@@ -1497,7 +1497,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                       target="_blank"
                       rel="noreferrer"
                       className="p-2 rounded-lg bg-[#C0684C] hover:bg-[#A8553A] text-white font-bold transition"
-                      title="Stol Menyusun Ashıw"
+                      title={lang === 'qr' ? 'Ústel menyusun ashıw' : 'Stol menyusini ochish'}
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>

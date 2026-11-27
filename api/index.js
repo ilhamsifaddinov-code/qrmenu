@@ -18,7 +18,7 @@ var initialFoodItems = [
       en: "Red Velvet Cake"
     },
     description: {
-      qr: "Yumsaq q\u0131z\u0131l biskvit, may\u0131n qaymaql\u0131 pishloq kremi h\xE1m kofe menen ajoyib \xFAylesim.",
+      qr: "Jumsaq q\u0131z\u0131l biskvit, may\u0131n qaymaql\u0131 pishloq kremi h\xE1m may\u0131n shiyrinlik \xFAylesimi.",
       uz: "Yumshoq qizil biskvit, nozik qaymoqli pishloq kremi va mayin shirinlik uyg'unligi.",
       ru: "\u041D\u0435\u0436\u043D\u0435\u0439\u0448\u0438\u0439 \u0431\u0430\u0440\u0445\u0430\u0442\u043D\u044B\u0439 \u0431\u0438\u0441\u043A\u0432\u0438\u0442 \u0441 \u0442\u0430\u044E\u0449\u0438\u043C \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E-\u0441\u044B\u0440\u043D\u044B\u043C \u043A\u0440\u0435\u043C\u043E\u043C \u0427\u0438\u0437.",
       en: "Tender red velvet sponge layered with silky cream cheese frosting."
@@ -35,7 +35,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Kakao", "Qaymaql\u0131 pishloq", "Vanil", "Biskvit qam\u0131r"],
+      qr: ["Kakao", "Qaymaql\u0131 pishloq", "Vanil", "Biskvit qam\u0131r\u0131"],
       uz: ["Kakao", "Qaymoqli pishloq", "Vanil", "Biskvit xamiri"],
       ru: ["\u041A\u0430\u043A\u0430\u043E", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u0441\u044B\u0440", "\u0412\u0430\u043D\u0438\u043B\u044C", "\u0411\u0438\u0441\u043A\u0432\u0438\u0442"],
       en: ["Cocoa", "Cream Cheese", "Vanilla", "Sponge Flour"]
@@ -63,7 +63,7 @@ var initialFoodItems = [
       en: "Pistachio Cheesecake"
     },
     description: {
-      qr: "Qars\u0131ldaq pista bolekleri, tabiiy pista pastas\u0131 h\xE1m may\u0131n Filadelfiya pishlog'\u0131.",
+      qr: "Qars\u0131ldaq pista b\xF3lekleri, t\xE1biyiy pista pastas\u0131 h\xE1m may\u0131n Filadelfiya pishlog'\u0131.",
       uz: "Qarsildoq pista bo'laklari, tabiiy pista pastasi va nozik Filadelfiya pishlog'i.",
       ru: "\u0418\u0437\u044B\u0441\u043A\u0430\u043D\u043D\u044B\u0439 \u0447\u0438\u0437\u043A\u0435\u0439\u043A \u0441 \u043D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u043E\u0439 \u0444\u0438\u0441\u0442\u0430\u0448\u043A\u043E\u0432\u043E\u0439 \u043F\u0430\u0441\u0442\u043E\u0439 \u0438 \u043E\u0442\u0431\u043E\u0440\u043D\u044B\u043C\u0438 \u0444\u0438\u0441\u0442\u0430\u0448\u043A\u0430\u043C\u0438.",
       en: "Creamy cheesecake infused with natural Sicilian pistachio paste and crunchy toppings."
@@ -80,7 +80,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Taza pista", "Qaymoq", "Filadelfiya pishloq", "Pechenye qumi"],
+      qr: ["Taza pista", "Qaymaq", "Filadelfiya pishloq", "Pechenye tiykar\u0131"],
       uz: ["Yangi pista", "Qaymoq", "Filadelfiya pishloq", "Pechenye asosi"],
       ru: ["\u0424\u0438\u0441\u0442\u0430\u0448\u043A\u0438", "\u0421\u043B\u0438\u0432\u043A\u0438", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u0441\u044B\u0440", "\u041F\u0435\u0441\u043E\u0447\u043D\u0430\u044F \u043E\u0441\u043D\u043E\u0432\u0430"],
       en: ["Pistachios", "Cream", "Cream Cheese", "Cookie Crust"]
@@ -100,7 +100,7 @@ var initialFoodItems = [
       en: "San Sebastian Cheesecake"
     },
     description: {
-      qr: "Ispancha kuydirilgan karamel qobiqli, o'rtasi kremdek oqib turuvchi nozik cheesecake.",
+      qr: "\u0130spansha k\xFAydirilgen karamel qab\u0131ql\u0131, ortas\u0131 kremdey a\u01F5\u0131p turatu\u01F5\u0131n may\u0131n cheesecake.",
       uz: "Ispancha kuydirilgan karamel qobiqli, o'rtasi kremdek oqib turuvchi nozik cheesecake.",
       ru: "\u0418\u0441\u043F\u0430\u043D\u0441\u043A\u0438\u0439 \u0436\u0436\u0451\u043D\u044B\u0439 \u0447\u0438\u0437\u043A\u0435\u0439\u043A \u0441 \u043A\u0430\u0440\u0430\u043C\u0435\u043B\u044C\u043D\u043E\u0439 \u043A\u043E\u0440\u043E\u0447\u043A\u043E\u0439 \u0438 \u043D\u0435\u0436\u043D\u043E\u0439 \u043A\u0440\u0435\u043C\u043E\u0432\u043E\u0439 \u0441\u0435\u0440\u0434\u0446\u0435\u0432\u0438\u043D\u043E\u0439.",
       en: "Famous Basque burnt cheesecake with a caramelized crust and gooey molten center."
@@ -117,7 +117,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Smitana", "Pishloq", "Karamel", "Vanil"],
+      qr: ["Smetana", "Qaymaql\u0131 pishloq", "Karamel", "Vanil"],
       uz: ["Smetana", "Pishloq", "Karamel", "Vanil"],
       ru: ["\u0421\u043C\u0435\u0442\u0430\u043D\u0430", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u0441\u044B\u0440", "\u041A\u0430\u0440\u0430\u043C\u0435\u043B\u044C", "\u0412\u0430\u043D\u0438\u043B\u044C"],
       en: ["Sour Cream", "Cream Cheese", "Caramel", "Vanilla"]
@@ -131,13 +131,13 @@ var initialFoodItems = [
   {
     id: "cake-medovik",
     title: {
-      qr: "Asall\u0131 Tort (Medovik)",
+      qr: "Palli Tort (Medovik)",
       uz: "Asalli Tort (Medovik)",
       ru: "\u041C\u0435\u0434\u043E\u0432\u0438\u043A \u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439",
       en: "Honey Cake (Medovik)"
     },
     description: {
-      qr: "8 qatlamli xushbo'y asal korjlari va yengil smetana-qaymoqli nozik krem.",
+      qr: "8 qatlaml\u0131 xosh iyisli pal korjlar\u0131 h\xE1m je\u0144il smetana-qaymaql\u0131 may\u0131n krem.",
       uz: "8 qatlamli xushbo'y asal korjlari va yengil smetana-qaymoqli nozik krem.",
       ru: "\u0412\u043E\u0441\u0435\u043C\u044C \u0442\u043E\u043D\u043A\u0438\u0445 \u043C\u0435\u0434\u043E\u0432\u044B\u0445 \u043A\u043E\u0440\u0436\u0435\u0439 \u0441 \u0432\u043E\u0437\u0434\u0443\u0448\u043D\u044B\u043C \u0441\u043C\u0435\u0442\u0430\u043D\u043D\u043E-\u0437\u0430\u0432\u0430\u0440\u043D\u044B\u043C \u043A\u0440\u0435\u043C\u043E\u043C.",
       en: "Traditional 8-layer golden honey cake layered with light sour cream frosting."
@@ -154,7 +154,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Tabiiy asal", "Smetana", "Qaymoq", "Un"],
+      qr: ["T\xE1biyiy pal", "Smetana", "Qaymaq", "Un"],
       uz: ["Tabiiy asal", "Smetana", "Qaymoq", "Un"],
       ru: ["\u041D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u044B\u0439 \u043C\u0435\u0434", "\u0421\u043C\u0435\u0442\u0430\u043D\u0430", "\u0421\u043B\u0438\u0432\u043A\u0438", "\u041C\u0443\u043A\u0430"],
       en: ["Natural Honey", "Sour Cream", "Fresh Cream", "Flour"]
@@ -168,15 +168,15 @@ var initialFoodItems = [
   {
     id: "cake-tiramisu",
     title: {
-      qr: "Klassik Tiramisu",
-      uz: "Klassik Tiramisu",
-      ru: "\u0422\u0438\u0440\u0430\u043C\u0438\u0441\u0443 \u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439",
-      en: "Classic Tiramisu"
+      qr: "\u0130talyansha Tiramisu",
+      uz: "Italyancha Tiramisu",
+      ru: "\u0418\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0438\u0439 \u0422\u0438\u0440\u0430\u043C\u0438\u0441\u0443",
+      en: "Italian Tiramisu"
     },
     description: {
-      qr: "Savoyardi pechenyelari, espresso qahvasi va haqiqiy Maskarpone italyan kremi.",
+      qr: "Savoyardi pechenyeleri, espresso kofesi h\xE1m haq\u0131yq\u0131y Maskarpone italyan kremi.",
       uz: "Savoyardi pechenyelari, espresso qahvasi va haqiqiy Maskarpone italyan kremi.",
-      ru: "\u0418\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0438\u0439 \u0434\u0435\u0441\u0435\u0440\u0442 \u0441 \u043F\u0435\u0447\u0435\u043D\u044C\u0435\u043C \u0421\u0430\u0432\u043E\u044F\u0440\u0434\u0438, \u043F\u0440\u043E\u043F\u0438\u0442\u0430\u043D\u043D\u044B\u043C \u043A\u0440\u0435\u043F\u043A\u0438\u043C \u043A\u043E\u0444\u0435, \u0438 \u0441\u044B\u0440\u043E\u043C \u041C\u0430\u0441\u043A\u0430\u0440\u043F\u043E\u043D\u0435.",
+      ru: "\u0418\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0438\u0439 \u0434\u0435\u0441\u0435\u0440\u0442 \u0441 \u043F\u0435\u0447\u0435\u043D\u044C\u0435\u043C \u0421\u0430\u0432\u043E\u044F\u0440\u0434\u0438, \u043A\u043E\u0444\u0435 \u044D\u0441\u043F\u0440\u0435\u0441\u0441\u043E \u0438 \u0441\u044B\u0440\u043E\u043C \u041C\u0430\u0441\u043A\u0430\u0440\u043F\u043E\u043D\u0435.",
       en: "Authentic Italian dessert with espresso-dipped ladyfingers and whipped mascarpone cream."
     },
     price: 4e4,
@@ -202,17 +202,17 @@ var initialFoodItems = [
     reviews: [],
     nutrition: { protein: 6, fat: 18, carbs: 36 }
   },
-  // --- PISHIRIQLAR & KRUASSANLAR (BAKERY & CROISSANTS) ---
+  // --- PISIRMALAR & KRUASSANLAR (BAKERY & CROISSANTS) ---
   {
     id: "bakery-chocolate-croissant",
     title: {
-      qr: "Shokoladli Kruassan",
+      qr: "Shokoladl\u0131 Kruassan",
       uz: "Shokoladli Kruassan",
       ru: "\u0428\u043E\u043A\u043E\u043B\u0430\u0434\u043D\u044B\u0439 \u041A\u0440\u0443\u0430\u0441\u0441\u0430\u043D",
       en: "Chocolate Croissant"
     },
     description: {
-      qr: "Qat-qat qarsildoq fransuz xamiri, ichida qaynoq Belgiya shokoladi.",
+      qr: "Qat-qat qars\u0131ldaq francuz qam\u0131r\u0131, ishinde qaynaq Belgiya shokolad\u0131.",
       uz: "Qat-qat qarsildoq fransuz xamiri, ichida qaynoq Belgiya shokoladi.",
       ru: "\u0425\u0440\u0443\u0441\u0442\u044F\u0449\u0438\u0439 \u0441\u043B\u043E\u0451\u043D\u044B\u0439 \u043A\u0440\u0443\u0430\u0441\u0441\u0430\u043D \u043F\u043E-\u0444\u0440\u0430\u043D\u0446\u0443\u0437\u0441\u043A\u0438 \u0441 \u043D\u0430\u0447\u0438\u043D\u043A\u043E\u0439 \u0438\u0437 \u0442\u0435\u043C\u043D\u043E\u0433\u043E \u0431\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u043E\u0433\u043E \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u0430.",
       en: "Flaky, buttery French croissant filled with rich melted Belgian chocolate."
@@ -229,7 +229,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Sariyog'", "Belgiya shokoladi", "Un", "Sut"],
+      qr: ["Francuz sar\u0131 may\u0131", "Belgiya shokolad\u0131", "Un", "S\xFAt"],
       uz: ["Sariyog'", "Belgiya shokoladi", "Un", "Sut"],
       ru: ["\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0435 \u043C\u0430\u0441\u043B\u043E", "\u0411\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u0438\u0439 \u0448\u043E\u043A\u043E\u043B\u0430\u0434", "\u041C\u0443\u043A\u0430", "\u041C\u043E\u043B\u043E\u043A\u043E"],
       en: ["French Butter", "Belgian Chocolate", "Flour", "Milk"]
@@ -243,13 +243,13 @@ var initialFoodItems = [
   {
     id: "bakery-classic-croissant",
     title: {
-      qr: "Klassik Kruassan",
-      uz: "Klassik Kruassan",
-      ru: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u041A\u0440\u0443\u0430\u0441\u0441\u0430\u043D",
-      en: "Classic French Croissant"
+      qr: "Klassik Parij Kruassan\u0131",
+      uz: "Klassik Parij Kruassani",
+      ru: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u041F\u0430\u0440\u0438\u0436\u0441\u043A\u0438\u0439 \u041A\u0440\u0443\u0430\u0441\u0441\u0430\u043D",
+      en: "Classic Parisian Croissant"
     },
     description: {
-      qr: "82% tabiiy sariyog'dan tayyorlangan, yengil va havodor original fransuz kruassani.",
+      qr: "82% t\xE1biyiy sar\u0131 maydan tayarlan\u01F5an, je\u0144il h\xE1m hawal\u0131 original francuz kruassan\u0131.",
       uz: "82% tabiiy sariyog'dan tayyorlangan, yengil va havodor original fransuz kruassani.",
       ru: "\u0412\u043E\u0437\u0434\u0443\u0448\u043D\u044B\u0439 \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u044B\u0439 \u043A\u0440\u0443\u0430\u0441\u0441\u0430\u043D \u0438\u0437 \u043D\u0430\u0442\u0443\u0440\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0433\u043E \u043C\u0430\u0441\u043B\u0430 82%.",
       en: "Golden, crispy, all-butter croissant baked fresh daily."
@@ -266,7 +266,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Fransuz sariyog'i", "Un", "Sut"],
+      qr: ["Francuz sar\u0131 may\u0131", "Un", "S\xFAt"],
       uz: ["Fransuz sariyog'i", "Un", "Sut"],
       ru: ["\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0435 \u043C\u0430\u0441\u043B\u043E 82%", "\u041C\u0443\u043A\u0430", "\u041C\u043E\u043B\u043E\u043A\u043E"],
       en: ["French Butter", "Flour", "Milk"]
@@ -280,13 +280,13 @@ var initialFoodItems = [
   {
     id: "bakery-cinnabon",
     title: {
-      qr: "Sinabon (Dolchinli Pishiriq)",
-      uz: "Sinabon (Dolchinli Pishiriq)",
+      qr: "D\xE1rshindi Sinnabon",
+      uz: "Dolchinli Sinnabon",
       ru: "\u0421\u0438\u043D\u043D\u0430\u0431\u043E\u043D \u0441 \u043A\u043E\u0440\u0438\u0446\u0435\u0439",
       en: "Cinnamon Roll (Cinnabon)"
     },
     description: {
-      qr: "Issiq va xushbo'y seylon dolchini hamda erigan qaymoqli krem bilan yopilgan bulochka.",
+      qr: "Iss\u0131 h\xE1m xosh iyisli seylon d\xE1rshini sonday-aq erigen qaymaql\u0131 krem menen oral\u01F5an b\xF3lke.",
       uz: "Issiq va xushbo'y seylon dolchini hamda erigan qaymoqli krem bilan yopilgan bulochka.",
       ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u0430\u044F \u0431\u0443\u043B\u043E\u0447\u043A\u0430 \u0441 \u0446\u0435\u0439\u043B\u043E\u043D\u0441\u043A\u043E\u0439 \u043A\u043E\u0440\u0438\u0446\u0435\u0439 \u0438 \u0433\u043B\u0430\u0437\u0443\u0440\u044C\u044E \u0438\u0437 \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u0433\u043E \u0441\u044B\u0440\u0430.",
       en: "Warm cinnamon roll topped with rich signature cream cheese icing."
@@ -303,7 +303,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Seylon dolchini", "Qaymoqli glazur", "Sariyog'", "Xamir"],
+      qr: ["Seylon d\xE1rshini", "Qaymaql\u0131 glazur", "Sar\u0131 may", "Qam\u0131r"],
       uz: ["Seylon dolchini", "Qaymoqli glazur", "Sariyog'", "Xamir"],
       ru: ["\u041A\u043E\u0440\u0438\u0446\u0430", "\u0421\u043B\u0438\u0432\u043E\u0447\u043D\u0430\u044F \u0433\u043B\u0430\u0437\u0443\u0440\u044C", "\u041C\u0430\u0441\u043B\u043E", "\u0421\u0434\u043E\u0431\u043D\u043E\u0435 \u0442\u0435\u0441\u0442\u043E"],
       en: ["Ceylon Cinnamon", "Cream Cheese Glaze", "Butter", "Dough"]
@@ -316,15 +316,15 @@ var initialFoodItems = [
   },
   // --- PIROJNIYLAR (PASTRIES) ---
   {
-    id: "pastry-eclair",
+    id: "pastry-ekler",
     title: {
-      qr: "Shokoladli Ekler",
-      uz: "Shokoladli Ekler",
-      ru: "\u0428\u043E\u043A\u043E\u043B\u0430\u0434\u043D\u044B\u0439 \u042D\u043A\u043B\u0435\u0440",
-      en: "Chocolate Eclair"
+      qr: "Francuz Ekleri",
+      uz: "Ekler (Fransuzcha)",
+      ru: "\u0424\u0440\u0430\u043D\u0446\u0443\u0437\u0441\u043A\u0438\u0439 \u042D\u043A\u043B\u0435\u0440",
+      en: "French Eclair"
     },
     description: {
-      qr: "Yengil choux xamiri, ichida vanilli nozik zavarnoy krem va qora shokoladli glazur.",
+      qr: "Je\u0144il choux qam\u0131r\u0131, ishinde vanilli may\u0131n qaynatpa krem h\xE1m qara shokoladl\u0131 glazur.",
       uz: "Yengil choux xamiri, ichida vanilli nozik zavarnoy krem va qora shokoladli glazur.",
       ru: "\u0424\u0440\u0430\u043D\u0446\u0443\u0437\u0441\u043A\u0438\u0439 \u0437\u0430\u0432\u0430\u0440\u043D\u043E\u0439 \u044D\u043A\u043B\u0435\u0440 \u0441 \u043D\u0435\u0436\u043D\u044B\u043C \u0432\u0430\u043D\u0438\u043B\u044C\u043D\u044B\u043C \u043A\u0440\u0435\u043C\u043E\u043C \u0438 \u0431\u0435\u043B\u044C\u0433\u0438\u0439\u0441\u043A\u0438\u043C \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u043E\u043C.",
       en: "Crisp choux pastry filled with vanilla custard and dipped in chocolate ganache."
@@ -341,7 +341,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Zavarnoy xamir", "Zavarnoy krem", "Qora shokolad"],
+      qr: ["Qaynatpa qam\u0131r", "Qaynatpa krem", "Qara shokolad"],
       uz: ["Zavarnoy xamir", "Zavarnoy krem", "Qora shokolad"],
       ru: ["\u0417\u0430\u0432\u0430\u0440\u043D\u043E\u0435 \u0442\u0435\u0441\u0442\u043E", "\u0417\u0430\u0432\u0430\u0440\u043D\u043E\u0439 \u043A\u0440\u0435\u043C \u041F\u0430\u0442\u0438\u0441\u044C\u0435\u0440", "\u0422\u0435\u043C\u043D\u044B\u0439 \u0448\u043E\u043A\u043E\u043B\u0430\u0434"],
       en: ["Choux Pastry", "Pastry Cream", "Dark Chocolate"]
@@ -355,15 +355,15 @@ var initialFoodItems = [
   {
     id: "pastry-strawberry-tart",
     title: {
-      qr: "Qulupnayli Tartaletka",
-      uz: "Qulupnayli Tartaletka",
-      ru: "\u041A\u043B\u0443\u0431\u043D\u0438\u0447\u043D\u0430\u044F \u0422\u0430\u0440\u0442\u0430\u043B\u0435\u0442\u043A\u0430",
+      qr: "Qulp\u0131nayl\u0131 Tart",
+      uz: "Qulupnayli Tart",
+      ru: "\u041A\u043B\u0443\u0431\u043D\u0438\u0447\u043D\u044B\u0439 \u0422\u0430\u0440\u0442",
       en: "Strawberry Tart"
     },
     description: {
-      qr: "Qarsildoq qum xamiri, sitrusli krem Patisser va yangi terilgan shirin qulupnaylar.",
+      qr: "Qars\u0131ldaq qum qam\u0131r\u0131, sitrusl\u0131 krem Patisser h\xE1m taza \xFAzilgen shiyrin qulp\u0131naylar.",
       uz: "Qarsildoq qum xamiri, sitrusli krem Patisser va yangi terilgan shirin qulupnaylar.",
-      ru: "\u0425\u0440\u0443\u0441\u0442\u044F\u0449\u0430\u044F \u043F\u0435\u0441\u043E\u0447\u043D\u0430\u044F \u0442\u0430\u0440\u0442\u0430\u043B\u0435\u0442\u043A\u0430 \u0441 \u043A\u0440\u0435\u043C\u043E\u043C \u041F\u0430\u0442\u0438\u0441\u044C\u0435\u0440 \u0438 \u0441\u0432\u0435\u0436\u0435\u0439 \u0441\u043E\u0447\u043D\u043E\u0439 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439.",
+      ru: "\u0425\u0440\u0443\u0441\u0442\u044F\u0449\u0430\u044F \u043F\u0435\u0441\u043E\u0447\u043D\u0430\u044F \u0442\u0430\u0440\u0442\u0430\u043B\u0435\u0442\u043A\u0430 \u0441 \u043A\u0440\u0435\u043C\u043E\u043C \u041F\u0430\u0442\u0438\u0441\u044C\u0435\u0440 \u0438 \u0441\u043E\u0447\u043D\u043E\u0439 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439.",
       en: "Crisp shortbread tart crust with silky custard and fresh sweet strawberries."
     },
     price: 28e3,
@@ -378,7 +378,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Yangi qulupnay", "Krem Patisser", "Qum xamir"],
+      qr: ["Taza qulp\u0131nay", "Krem Patisser", "Qum qam\u0131r"],
       uz: ["Yangi qulupnay", "Krem Patisser", "Qum xamir"],
       ru: ["\u0421\u0432\u0435\u0436\u0430\u044F \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u0430", "\u041A\u0440\u0435\u043C \u041F\u0430\u0442\u0438\u0441\u044C\u0435\u0440", "\u041F\u0435\u0441\u043E\u0447\u043D\u043E\u0435 \u0442\u0435\u0441\u0442\u043E"],
       en: ["Fresh Strawberries", "Pastry Cream", "Shortcrust Pastry"]
@@ -389,55 +389,18 @@ var initialFoodItems = [
     reviews: [],
     nutrition: { protein: 4, fat: 11, carbs: 35 }
   },
-  {
-    id: "pastry-macarons-set",
-    title: {
-      qr: "Fransuz Makaronlari (3 dona)",
-      uz: "Fransuz Makaronlari (3 dona)",
-      ru: "\u0424\u0440\u0430\u043D\u0446\u0443\u0437\u0441\u043A\u0438\u0435 \u041C\u0430\u043A\u0430\u0440\u0443\u043D\u044B (3 \u0448\u0442)",
-      en: "French Macarons (Set of 3)"
-    },
-    description: {
-      qr: "Bodom unidan tayyorlangan 3 xil lazzat: Pista, Malina va Shokolad.",
-      uz: "Bodom unidan tayyorlangan 3 xil lazzat: Pista, Malina va Shokolad.",
-      ru: "\u041D\u0435\u0436\u043D\u044B\u0435 \u043F\u0438\u0440\u043E\u0436\u043D\u044B\u0435 \u0438\u0437 \u043C\u0438\u043D\u0434\u0430\u043B\u044C\u043D\u043E\u0439 \u043C\u0443\u043A\u0438: \u0444\u0438\u0441\u0442\u0430\u0448\u043A\u0430, \u043C\u0430\u043B\u0438\u043D\u0430 \u0438 \u0448\u043E\u043A\u043E\u043B\u0430\u0434 \u0433\u0430\u043D\u0430\u0448.",
-      en: "Delicate almond meringue cookies with pistachio, raspberry, and chocolate fillings."
-    },
-    price: 3e4,
-    category: "pastries",
-    imageUrl: "https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80",
-    calories: 210,
-    prepTime: 2,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Bodom uni", "Oqsil", "Shokolad ganash", "Malina"],
-      uz: ["Bodom uni", "Oqsil", "Shokolad ganash", "Malina"],
-      ru: ["\u041C\u0438\u043D\u0434\u0430\u043B\u044C\u043D\u0430\u044F \u043C\u0443\u043A\u0430", "\u0411\u0435\u043B\u043A\u0438", "\u0413\u0430\u043D\u0430\u0448", "\u041C\u0430\u043B\u0438\u043D\u0430"],
-      en: ["Almond Flour", "Egg Whites", "Ganache", "Raspberry"]
-    },
-    allergens: ["nuts", "dairy", "eggs"],
-    rating: 4.9,
-    ratingCount: 210,
-    reviews: [],
-    nutrition: { protein: 4, fat: 9, carbs: 29 }
-  },
-  // --- QAHVA & ICHIMLIKLAR (COFFEE & BEVERAGES) ---
+  // --- KOFE & ISHIMLIKLER (COFFEE & BEVERAGES) ---
   {
     id: "coffee-spanish-latte",
     title: {
-      qr: "Ispan Latte (Spanish Latte)",
-      uz: "Ispan Latte (Spanish Latte)",
-      ru: "\u0418\u0441\u043F\u0430\u043D\u0441\u043A\u0438\u0439 \u041B\u0430\u0442\u0442\u0435 \u0441\u043E \u0441\u0433\u0443\u0449\u0435\u043D\u043D\u044B\u043C \u043C\u043E\u043B\u043E\u043A\u043E\u043C",
-      en: "Spanish Iced / Hot Latte"
+      qr: "Spanish Latte (Muzday / Iss\u0131)",
+      uz: "Spanish Latte (Muzli / Issiq)",
+      ru: "\u0418\u0441\u043F\u0430\u043D\u0441\u043A\u0438\u0439 \u041B\u0430\u0442\u0442\u0435 (\u0425\u043E\u043B\u043E\u0434\u043D\u044B\u0439 / \u0413\u043E\u0440\u044F\u0447\u0438\u0439)",
+      en: "Spanish Latte (Iced / Hot)"
     },
     description: {
-      qr: "Arabika espresso, quyiltirilgan sut (sgushonka) va mayin sut ko'pigi bilan xushbo'y qahva.",
-      uz: "Arabika espresso, quyiltirilgan sut (sgushonka) va mayin sut ko'pigi bilan xushbo'y qahva.",
+      qr: "Arabika espresso, qoy\u0131lt\u0131r\u0131l\u01F5an s\xFAt h\xE1m may\u0131n s\xFAt k\xF3bigi menen xosh iyisli kofe.",
+      uz: "Arabika espresso, quyiltirilgan sut va mayin sut ko'pigi bilan xushbo'y qahva.",
       ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u044B\u0439 \u044D\u0441\u043F\u0440\u0435\u0441\u0441\u043E \u0438\u0437 100% \u0430\u0440\u0430\u0431\u0438\u043A\u0438 \u0441\u043E \u0441\u0433\u0443\u0449\u0435\u043D\u043D\u044B\u043C \u043C\u043E\u043B\u043E\u043A\u043E\u043C \u0438 \u0432\u043E\u0437\u0434\u0443\u0448\u043D\u043E\u0439 \u043C\u043E\u043B\u043E\u0447\u043D\u043E\u0439 \u043F\u0435\u043D\u043A\u043E\u0439.",
       en: "Rich espresso poured over sweet condensed milk and steamed creamy milk."
     },
@@ -453,7 +416,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Arabika espresso", "Sut", "Quyiltirilgan sut"],
+      qr: ["Arabika espresso", "Taza s\xFAt", "Qoy\u0131lt\u0131r\u0131l\u01F5an s\xFAt"],
       uz: ["Arabika espresso", "Sut", "Quyiltirilgan sut"],
       ru: ["\u042D\u0441\u043F\u0440\u0435\u0441\u0441\u043E \u0410\u0440\u0430\u0431\u0438\u043A\u0430", "\u041C\u043E\u043B\u043E\u043A\u043E", "\u0421\u0433\u0443\u0449\u0435\u043D\u043D\u043E\u0435 \u043C\u043E\u043B\u043E\u043A\u043E"],
       en: ["Arabica Espresso", "Fresh Milk", "Condensed Milk"]
@@ -467,13 +430,13 @@ var initialFoodItems = [
   {
     id: "coffee-cappuccino",
     title: {
-      qr: "Klassik Kapuchino",
-      uz: "Klassik Kapuchino",
-      ru: "\u041A\u0430\u043F\u0443\u0447\u0438\u043D\u043E \u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439",
-      en: "Classic Cappuccino"
+      qr: "Klassik Kapuchino (\xDAlken)",
+      uz: "Klassik Kapuchino (Katta)",
+      ru: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u041A\u0430\u043F\u0443\u0447\u0438\u043D\u043E (\u0411\u043E\u043B\u044C\u0448\u043E\u0439)",
+      en: "Classic Cappuccino (Large)"
     },
     description: {
-      qr: "Klassik Italiya retsepti bo'yicha boy espresso va qalin ipakdek sut ko'pigi.",
+      qr: "Klassik \u0130taliya recepti boy\u0131nsha qoy\u0131w espresso h\xE1m qal\u0131\u0144 jipekdey s\xFAt k\xF3bigi.",
       uz: "Klassik Italiya retsepti bo'yicha boy espresso va qalin ipakdek sut ko'pigi.",
       ru: "\u041A\u043B\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043A\u0438\u0439 \u0438\u0442\u0430\u043B\u044C\u044F\u043D\u0441\u043A\u0438\u0439 \u043A\u043E\u0444\u0435 \u0441 \u0433\u0443\u0441\u0442\u043E\u0439 \u0431\u0430\u0440\u0445\u0430\u0442\u0438\u0441\u0442\u043E\u0439 \u043F\u0435\u043D\u043A\u043E\u0439.",
       en: "Traditional Italian espresso balanced with silky steamed and frothed milk."
@@ -490,7 +453,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Espresso", "Sut", "Dolchin"],
+      qr: ["Espresso", "S\xFAt", "D\xE1rshin"],
       uz: ["Espresso", "Sut", "Dolchin"],
       ru: ["\u042D\u0441\u043F\u0440\u0435\u0441\u0441\u043E", "\u0412\u0437\u0431\u0438\u0442\u043E\u0435 \u043C\u043E\u043B\u043E\u043A\u043E", "\u041A\u043E\u0440\u0438\u0446\u0430"],
       en: ["Espresso", "Steamed Milk", "Cinnamon Dust"]
@@ -502,54 +465,17 @@ var initialFoodItems = [
     nutrition: { protein: 5, fat: 4, carbs: 12 }
   },
   {
-    id: "coffee-mojito-fresh",
-    title: {
-      qr: "Muzdek Moxito (Limon & Yalpiz)",
-      uz: "Muzdek Moxito (Limon & Yalpiz)",
-      ru: "\u041E\u0441\u0432\u0435\u0436\u0430\u044E\u0449\u0438\u0439 \u041C\u043E\u0445\u0438\u0442\u043E \u0441 \u043C\u044F\u0442\u043E\u0439",
-      en: "Fresh Mint & Lime Mojito"
-    },
-    description: {
-      qr: "Yangi yalpiz barglari, laym sharbati, shirin sirop va muzdek gazlangan suv.",
-      uz: "Yangi yalpiz barglari, laym sharbati, shirin sirop va muzdek gazlangan suv.",
-      ru: "\u041F\u0440\u043E\u0445\u043B\u0430\u0434\u043D\u044B\u0439 \u043B\u0438\u043C\u043E\u043D\u0430\u0434 \u0441\u043E \u0441\u0432\u0435\u0436\u0435\u0439 \u043C\u044F\u0442\u043E\u0439, \u043B\u0430\u0439\u043C\u043E\u043C \u0438 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u044C\u043D\u044B\u043C \u043B\u044C\u0434\u043E\u043C.",
-      en: "Crisp and refreshing cooler with fresh mint leaves, lime juice, and sparkling water."
-    },
-    price: 24e3,
-    category: "coffee",
-    imageUrl: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80",
-    calories: 85,
-    prepTime: 3,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ["Yalpiz", "Laym", "Gazlangan suv", "Muz"],
-      uz: ["Yalpiz", "Laym", "Gazlangan suv", "Muz"],
-      ru: ["\u041C\u044F\u0442\u0430", "\u041B\u0430\u0439\u043C", "\u0413\u0430\u0437\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u0432\u043E\u0434\u0430", "\u041B\u0435\u0434"],
-      en: ["Fresh Mint", "Lime Juice", "Soda", "Ice"]
-    },
-    allergens: [],
-    rating: 4.9,
-    ratingCount: 195,
-    reviews: [],
-    nutrition: { protein: 0, fat: 0, carbs: 21 }
-  },
-  {
     id: "coffee-berry-tea",
     title: {
-      qr: "Mevali Choy (Yalpiz & Qulupnay)",
-      uz: "Mevali Choy (Yalpiz & Qulupnay)",
-      ru: "\u042F\u0433\u043E\u0434\u043D\u044B\u0439 \u0427\u0430\u0439 \u0441 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439 \u0438 \u043C\u044F\u0442\u043E\u0439",
-      en: "Strawberry & Mint Berry Tea"
+      qr: "Miyweli Avtorl\u0131q Shay",
+      uz: "Rezavor Mevali Mualliflik Choyi",
+      ru: "\u0410\u0432\u0442\u043E\u0440\u0441\u043A\u0438\u0439 \u042F\u0433\u043E\u0434\u043D\u044B\u0439 \u0427\u0430\u0439",
+      en: "Signature Berry Tea"
     },
     description: {
-      qr: "Tabiiy mevalar, qulupnay va yangi yalpiz bilan damlangan iliq choy.",
+      qr: "T\xE1biyiy miyweler, qulp\u0131nay h\xE1m taza jalp\u0131z benen arnawl\u0131 sh\xE1nekte demlengen j\u0131ll\u0131 shay.",
       uz: "Tabiiy mevalar, qulupnay va yangi yalpiz bilan damlangan iliq choy.",
-      ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u044B\u0439 \u0447\u0430\u0439 \u0441\u043E \u0441\u0432\u0435\u0436\u0435\u0439 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439, \u044F\u0433\u043E\u0434\u0430\u043C\u0438 \u0438 \u043C\u044F\u0442\u043E\u0439 \u0432 \u0441\u0442\u0435\u043A\u043B\u044F\u043D\u043D\u043E\u043C \u0447\u0430\u0439\u043D\u0438\u0447\u043A\u0435.",
+      ru: "\u0410\u0440\u043E\u043C\u0430\u0442\u043D\u044B\u0439 \u0447\u0430\u0439 \u0441\u043E \u0441\u0432\u0435\u0436\u0435\u0439 \u043A\u043B\u0443\u0431\u043D\u0438\u043A\u043E\u0439, \u044F\u0433\u043E\u0434\u0430\u043C\u0438 \u0438 \u043C\u044F\u0442\u043E\u0439 \u0432 \u0447\u0430\u0439\u043D\u0438\u0447\u043A\u0435.",
       en: "Warm soothing pot of tea infused with sweet strawberries, berry syrup, and mint."
     },
     price: 2e4,
@@ -564,7 +490,7 @@ var initialFoodItems = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ["Qora/ko'k choy", "Qulupnay", "Yalpiz", "Asal"],
+      qr: ["Qara/k\xF3k shay", "Qulp\u0131nay", "Jalp\u0131z", "T\xE1biyiy pal"],
       uz: ["Qora/ko'k choy", "Qulupnay", "Yalpiz", "Asal"],
       ru: ["\u0427\u0435\u0440\u043D\u044B\u0439/\u0437\u0435\u043B\u0435\u043D\u044B\u0439 \u0447\u0430\u0439", "\u041A\u043B\u0443\u0431\u043D\u0438\u043A\u0430", "\u041C\u044F\u0442\u0430", "\u041C\u0435\u0434"],
       en: ["Black/Green Tea", "Strawberries", "Mint", "Honey"]

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { Language } from '../types';
+import { translations } from '../i18n/translations';
 
 interface LoadingScreenProps {
   isLoading: boolean;
+  lang?: Language;
   onFinish?: () => void;
 }
 
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading, onFinish }) => {
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading, lang = 'uz', onFinish }) => {
   const [progress, setProgress] = useState(15);
   const [shouldRender, setShouldRender] = useState(true);
+  const t = translations[lang] || translations.uz;
 
   useEffect(() => {
     // Progress bar animation
@@ -54,13 +58,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading, onFinis
           />
         </div>
 
-        {/* Loading status & Subtitle */}
+        {/* Loading status & Subtitle - Clean localized text without mixed English */}
         <div className="w-full flex flex-col items-center mt-2">
-          <span className="text-[10px] font-mono font-bold tracking-[0.3em] text-[#8D6B58] uppercase mb-1">
-            LOADING...
-          </span>
-          <span className="text-xs text-[#A88B77] mb-4 font-sans">
-            Menyu yuklanmoqda...
+          <span className="text-xs font-semibold tracking-wider text-[#8D6B58] mb-4 font-sans">
+            {t.loadingMenu || 'Menyu yuklanmoqda...'}
           </span>
 
           {/* Smooth Terracotta Progress Bar */}

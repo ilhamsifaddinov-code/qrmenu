@@ -45,7 +45,7 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
     if (
       window.confirm(
         lang === 'qr'
-          ? 'Barlıq saqlanǵan çeklerdi óshiresiz be?'
+          ? 'Barlıq saqlanǵan sheklerdi óshiresiz be?'
           : "Barcha saqlangan cheklarni o'chirishni xohlaysizmi?"
       )
     ) {
@@ -103,7 +103,7 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
               <p className="text-xs text-[#8D6B58] max-w-xs mx-auto">
                 {t.noSavedReceiptsSub ||
                   (lang === 'qr'
-                    ? 'Buyırtpa berip tastıyıqlaǵanıńızdan keyin, barlıq çeklerińiz usı jerde avtomat saqlanıp baradı.'
+                    ? 'Buyırtpa berip tastıyıqlaǵanıńızdan keyin, barlıq sheklerińiz usı jerde avtomat saqlanıp baradı.'
                     : 'Buyurtma tasdiqlangandan so\'ng, barcha cheklaringiz avtomatik tarzda shu yerda saqlanadi.')}
               </p>
             </div>
@@ -117,7 +117,7 @@ export const CustomerReceiptsModal: React.FC<CustomerReceiptsModalProps> = ({
                 <div className="flex-1 min-w-0 space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="bg-[#2E1E17] text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
-                      Stol №{rec.tableNumber}
+                      {t.tableNumber || (lang === 'qr' ? 'Ústel №' : 'Stol №')} {rec.tableNumber}
                     </span>
                     <span className="font-mono text-xs font-bold text-[#C0684C]">
                       {rec.id}

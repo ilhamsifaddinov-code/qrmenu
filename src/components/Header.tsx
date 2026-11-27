@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Bell, FileText, ShoppingBag, Shield, CheckCircle, QrCode } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Bell, FileText, ShoppingBag, Shield, CheckCircle, QrCode, AlertTriangle, X } from 'lucide-react';
 import { Language } from '../types';
 import { translations } from '../i18n/translations';
+import { formatPrice } from '../utils/formatters';
 
 interface HeaderProps {
   lang: Language;
@@ -16,6 +17,8 @@ interface HeaderProps {
   isAdminView: boolean;
   onToggleAdminView: () => void;
   onCallWaiter: (type: 'waiter' | 'bill') => void;
+  activeOrdersCount?: number;
+  totalActiveAmount?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -30,14 +33,71 @@ export const Header: React.FC<HeaderProps> = ({
   isAdminView,
   onToggleAdminView,
   onCallWaiter,
+  activeOrdersCount = 0,
+  totalActiveAmount = 0,
 }) => {
   const [notification, setNotification] = useState<string | null>(null);
-  const t = translations[lang] || translations.qr;
+  const [isConfirmWaiterOpen, setIsConfirmWaiterOpen] = useState(false);
+  const [isConfirmBillOpen, setIsConfirmBillOpen] = useState(false);
+  const [isNoOrdersAlertOpen, setIsNoOrdersAlertOpen] = useState(false);
+  const [waiterCooldown, setWaiterCooldown] = useState(0);
+  const [billCooldown, setBillCooldown] = useState(0);
 
-  const triggerCall = (type: 'waiter' | 'bill') => {
-    onCallWaiter(type);
-    const msg = type === 'waiter' ? t.waiterCalledMsg : t.billRequestedMsg;
-    setNotification(msg);
+  const t = translations[lang] || translations.uz;
+
+  // Countdown timer for waiter call
+  useEffect(() => {
+    if (waiterCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setWaiterCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [waiterCooldown]);
+
+  // Countdown timer for bill request
+  useEffect(() => {
+    if (billCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setBillCooldown((prev) => Math.max(0, prev - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [billCooldown]);
+
+  const handleWaiterBtnClick = () => {
+    if (waiterCooldown > 0) {
+      setNotification(`${t.cooldownWait} ${waiterCooldown}s`);
+      setTimeout(() => setNotification(null), 3000);
+      return;
+    }
+    setIsConfirmWaiterOpen(true);
+  };
+
+  const handleConfirmWaiter = () => {
+    setIsConfirmWaiterOpen(false);
+    onCallWaiter('waiter');
+    setWaiterCooldown(45);
+    setNotification(t.waiterCalledMsg);
+    setTimeout(() => setNotification(null), 4000);
+  };
+
+  const handleBillBtnClick = () => {
+    if (billCooldown > 0) {
+      setNotification(`${t.cooldownWait} ${billCooldown}s`);
+      setTimeout(() => setNotification(null), 3000);
+      return;
+    }
+    if (activeOrdersCount === 0) {
+      setIsNoOrdersAlertOpen(true);
+      return;
+    }
+    setIsConfirmBillOpen(true);
+  };
+
+  const handleConfirmBill = () => {
+    setIsConfirmBillOpen(false);
+    onCallWaiter('bill');
+    setBillCooldown(45);
+    setNotification(t.billRequestedMsg);
     setTimeout(() => setNotification(null), 4000);
   };
 
@@ -80,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </div>
 
-        {/* Right Section: Language Switcher (matching Image 2) + Admin */}
+        {/* Right Section: Language Switcher + Admin */}
         <div className="flex items-center gap-2">
           {/* Mobile Table Badge */}
           <div className="sm:hidden flex items-center gap-1 bg-[#F1EAE0] px-2 py-1 rounded-xl border border-[#E6DDD2] text-[11px]">
@@ -95,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </div>
 
-          {/* Language Selector Pill (matching Image 2: rounded pill with dark active indicator) */}
+          {/* Language Selector Pill */}
           <div
             className="flex items-center bg-[#F1EAE0] rounded-full p-0.5 border border-[#E6DDD2]"
             role="group"
@@ -139,29 +199,43 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Service Action Bar: Call Waiter, Request Bill, My Receipts, Cart */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2 flex items-center justify-between gap-2 bg-[#FAF5EF]/90">
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-0.5 scrollbar-none">
-          {/* Call Waiter */}
+          {/* Call Waiter with Protection & Cooldown */}
           <button
             type="button"
-            onClick={() => triggerCall('waiter')}
+            onClick={handleWaiterBtnClick}
             aria-label={t.callWaiter}
-            className="flex items-center gap-1.5 bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] px-3 py-1.5 rounded-xl font-semibold text-xs border border-[#E6DDD2] transition active:scale-95 shadow-2xs whitespace-nowrap"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold text-xs border transition active:scale-95 shadow-2xs whitespace-nowrap ${
+              waiterCooldown > 0
+                ? 'bg-[#EAE0D4] text-[#8D6B58] border-[#D8C7B5] cursor-not-allowed opacity-80'
+                : 'bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] border-[#E6DDD2]'
+            }`}
           >
-            <Bell className="w-3.5 h-3.5 text-[#C0684C]" aria-hidden="true" />
-            <span>{t.callWaiter}</span>
+            <Bell className={`w-3.5 h-3.5 ${waiterCooldown > 0 ? 'text-[#8D6B58]' : 'text-[#C0684C]'}`} aria-hidden="true" />
+            <span>
+              {t.callWaiter}
+              {waiterCooldown > 0 && <span className="ml-1 text-[10px] font-bold text-[#C0684C]">({waiterCooldown}s)</span>}
+            </span>
           </button>
 
-          {/* Request Bill */}
+          {/* Request Bill with Protection & Cooldown */}
           <button
             type="button"
-            onClick={() => triggerCall('bill')}
+            onClick={handleBillBtnClick}
             aria-label={t.requestBill}
-            className="flex items-center gap-1.5 bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] px-3 py-1.5 rounded-xl font-semibold text-xs border border-[#E6DDD2] transition active:scale-95 shadow-2xs whitespace-nowrap"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold text-xs border transition active:scale-95 shadow-2xs whitespace-nowrap ${
+              billCooldown > 0
+                ? 'bg-[#EAE0D4] text-[#8D6B58] border-[#D8C7B5] cursor-not-allowed opacity-80'
+                : 'bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] border-[#E6DDD2]'
+            }`}
           >
-            <FileText className="w-3.5 h-3.5 text-[#C0684C]" aria-hidden="true" />
-            <span>{t.requestBill}</span>
+            <FileText className={`w-3.5 h-3.5 ${billCooldown > 0 ? 'text-[#8D6B58]' : 'text-[#C0684C]'}`} aria-hidden="true" />
+            <span>
+              {t.requestBill}
+              {billCooldown > 0 && <span className="ml-1 text-[10px] font-bold text-[#C0684C]">({billCooldown}s)</span>}
+            </span>
           </button>
 
-          {/* My Receipts */}
+          {/* My Receipts - Pure Karakalpak 'Meniń sheklerim' / 'Shekler' */}
           {onOpenReceipts && (
             <button
               type="button"
@@ -171,8 +245,8 @@ export const Header: React.FC<HeaderProps> = ({
               title={t.myReceipts || 'Mening cheklarim'}
             >
               <FileText className="w-3.5 h-3.5 text-[#C0684C]" aria-hidden="true" />
-              <span className="hidden sm:inline">{t.myReceipts || (lang === 'qr' ? 'Meniń çeklerim' : 'Mening cheklarim')}</span>
-              <span className="sm:hidden">{lang === 'qr' ? 'Çekler' : 'Cheklar'}</span>
+              <span className="hidden sm:inline">{t.myReceipts || (lang === 'qr' ? 'Meniń sheklerim' : 'Mening cheklarim')}</span>
+              <span className="sm:hidden">{lang === 'qr' ? 'Shekler' : 'Cheklar'}</span>
               {receiptsCount > 0 && (
                 <span className="bg-[#C0684C] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                   {receiptsCount}
@@ -199,7 +273,7 @@ export const Header: React.FC<HeaderProps> = ({
         </button>
       </div>
 
-      {/* Instant Notification Banner for Waiter Call */}
+      {/* Instant Notification Banner */}
       {notification && (
         <div
           role="status"
@@ -208,6 +282,110 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <CheckCircle className="w-4 h-4 text-[#C0684C]" aria-hidden="true" />
           <span>{notification}</span>
+        </div>
+      )}
+
+      {/* Confirmation Modal: Waiter Call */}
+      {isConfirmWaiterOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#FAF5EF] border border-[#EAE0D4] rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+            <div className="w-14 h-14 mx-auto rounded-full bg-[#C0684C]/10 flex items-center justify-center text-[#C0684C]">
+              <Bell className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-[#2E1E17]">{t.confirmCallWaiterTitle}</h3>
+              <p className="text-xs sm:text-sm text-[#8D6B58] mt-1 leading-relaxed">
+                {t.confirmCallWaiterDesc}
+              </p>
+            </div>
+            <div className="bg-[#F1EAE0] py-2 px-4 rounded-xl font-bold text-[#2E1E17] text-xs sm:text-sm border border-[#E6DDD2]">
+              {t.tableNumber}: <span className="text-[#C0684C] font-extrabold">{tableNumber}</span>
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsConfirmWaiterOpen(false)}
+                className="flex-1 py-2.5 px-4 rounded-2xl border border-[#EAE0D4] text-[#8D6B58] hover:bg-[#F1EAE0] font-bold text-xs transition"
+              >
+                {t.cancelBtn}
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmWaiter}
+                className="flex-1 py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95"
+              >
+                {t.confirmYes}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal: Request Bill */}
+      {isConfirmBillOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#FAF5EF] border border-[#EAE0D4] rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+            <div className="w-14 h-14 mx-auto rounded-full bg-[#C0684C]/10 flex items-center justify-center text-[#C0684C]">
+              <FileText className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-[#2E1E17]">{t.confirmRequestBillTitle}</h3>
+              <p className="text-xs sm:text-sm text-[#8D6B58] mt-1 leading-relaxed">
+                {t.confirmRequestBillDesc}
+              </p>
+            </div>
+            <div className="bg-[#F1EAE0] py-2.5 px-4 rounded-xl border border-[#E6DDD2] text-center space-y-0.5">
+              <div className="text-[11px] text-[#8D6B58] font-semibold">{t.total}:</div>
+              <div className="text-base font-black text-[#C0684C]">
+                {formatPrice(totalActiveAmount)} UZS
+              </div>
+              <div className="text-[11px] text-[#8D6B58]">
+                {t.tableNumber}: <span className="font-bold text-[#2E1E17]">{tableNumber}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setIsConfirmBillOpen(false)}
+                className="flex-1 py-2.5 px-4 rounded-2xl border border-[#EAE0D4] text-[#8D6B58] hover:bg-[#F1EAE0] font-bold text-xs transition"
+              >
+                {t.cancelBtn}
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmBill}
+                className="flex-1 py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95"
+              >
+                {t.confirmYesBill}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Warning Modal: No Active Orders for Bill */}
+      {isNoOrdersAlertOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#FAF5EF] border border-[#EAE0D4] rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl space-y-4">
+            <div className="w-14 h-14 mx-auto rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+              <AlertTriangle className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg text-[#2E1E17]">{t.confirmRequestBillTitle}</h3>
+              <p className="text-xs sm:text-sm text-[#8D6B58] mt-2 leading-relaxed">
+                {t.noActiveOrdersForBill}
+              </p>
+            </div>
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsNoOrdersAlertOpen(false)}
+                className="w-full py-2.5 px-4 rounded-2xl bg-[#C0684C] hover:bg-[#B05B3F] text-white font-bold text-xs shadow-md transition active:scale-95"
+              >
+                {t.close || 'Yopish'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </header>

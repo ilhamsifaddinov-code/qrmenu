@@ -51,7 +51,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
           <div className="flex items-center gap-2">
             <QrCode className="w-5 h-5 text-[#C0684C]" />
             <h3 className="font-serif font-bold text-lg text-[#2E1E17]">
-              {t.qrModalTitle || (lang === 'qr' ? 'Stolıńızdıń QR-kodı' : 'Stolingizning QR-kodi')}
+              {t.qrModalTitle || (lang === 'qr' ? 'Ústelińizdiń QR-kodı' : 'Stolingizning QR-kodi')}
             </h3>
           </div>
           <button
@@ -79,7 +79,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
           <p className="text-xs text-[#8D6B58] leading-relaxed px-2">
             {t.qrModalSub ||
               (lang === 'qr' 
-                ? 'Dostlarıńız usı QR-kodtı skanerlew arqalı siz otırǵan stol menyusına tikeley kire aladı.'
+                ? 'Dostlarıńız usı QR-kodtı skanerlew arqalı siz otırǵan ústel menyusına tikeley kire aladı.'
                 : 'Do\'stlaringiz ushbu QR-kodni skanerlash orqali siz o\'tirgan stol menyusiga to\'g\'ridan-to\'g\'ri kira oladi.')}
           </p>
 

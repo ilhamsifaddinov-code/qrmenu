@@ -325,6 +325,10 @@ export default function App() {
     return orders.filter((o) => userActiveOrderIds.includes(o.id));
   }, [orders, userActiveOrderIds]);
 
+  const totalActiveBillAmount = useMemo(() => {
+    return activeUserOrders.reduce((sum, o) => sum + (o.totalAmount || 0), 0);
+  }, [activeUserOrders]);
+
   const handleDismissActiveOrder = (orderId: string) => {
     setUserActiveOrderIds((prev) => {
       const updated = prev.filter((id) => id !== orderId);
@@ -701,6 +705,7 @@ export default function App() {
       {/* 1. Animated Loading Screen matching Image 3 */}
       <LoadingScreen
         isLoading={isInitialLoading}
+        lang={lang}
         onFinish={() => setIsInitialLoading(false)}
       />
 
@@ -721,6 +726,8 @@ export default function App() {
         isAdminView={isAdminView}
         onToggleAdminView={handleToggleAdminView}
         onCallWaiter={handleCallWaiter}
+        activeOrdersCount={activeUserOrders.length}
+        totalActiveAmount={totalActiveBillAmount}
       />
 
       {/* 3. Main Body */}

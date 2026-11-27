@@ -11,7 +11,7 @@ export const initialFoodItems: FoodItem[] = [
       en: 'Red Velvet Cake',
     },
     description: {
-      qr: 'Yumsaq qızıl biskvit, mayın qaymaqlı pishloq kremi hám kofe menen ajoyib úylesim.',
+      qr: 'Jumsaq qızıl biskvit, mayın qaymaqlı pishloq kremi hám mayın shiyrinlik úylesimi.',
       uz: 'Yumshoq qizil biskvit, nozik qaymoqli pishloq kremi va mayin shirinlik uyg\'unligi.',
       ru: 'Нежнейший бархатный бисквит с тающим сливочно-сырным кремом Чиз.',
       en: 'Tender red velvet sponge layered with silky cream cheese frosting.',
@@ -28,7 +28,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Kakao', 'Qaymaqlı pishloq', 'Vanil', 'Biskvit qamır'],
+      qr: ['Kakao', 'Qaymaqlı pishloq', 'Vanil', 'Biskvit qamırı'],
       uz: ['Kakao', 'Qaymoqli pishloq', 'Vanil', 'Biskvit xamiri'],
       ru: ['Какао', 'Сливочный сыр', 'Ваниль', 'Бисквит'],
       en: ['Cocoa', 'Cream Cheese', 'Vanilla', 'Sponge Flour'],
@@ -56,7 +56,7 @@ export const initialFoodItems: FoodItem[] = [
       en: 'Pistachio Cheesecake',
     },
     description: {
-      qr: 'Qarsıldaq pista bolekleri, tabiiy pista pastası hám mayın Filadelfiya pishlog\'ı.',
+      qr: 'Qarsıldaq pista bólekleri, tábiyiy pista pastası hám mayın Filadelfiya pishlog\'ı.',
       uz: 'Qarsildoq pista bo\'laklari, tabiiy pista pastasi va nozik Filadelfiya pishlog\'i.',
       ru: 'Изысканный чизкейк с натуральной фисташковой пастой и отборными фисташками.',
       en: 'Creamy cheesecake infused with natural Sicilian pistachio paste and crunchy toppings.',
@@ -73,7 +73,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Taza pista', 'Qaymoq', 'Filadelfiya pishloq', 'Pechenye qumi'],
+      qr: ['Taza pista', 'Qaymaq', 'Filadelfiya pishloq', 'Pechenye tiykarı'],
       uz: ['Yangi pista', 'Qaymoq', 'Filadelfiya pishloq', 'Pechenye asosi'],
       ru: ['Фисташки', 'Сливки', 'Сливочный сыр', 'Песочная основа'],
       en: ['Pistachios', 'Cream', 'Cream Cheese', 'Cookie Crust'],
@@ -93,7 +93,7 @@ export const initialFoodItems: FoodItem[] = [
       en: 'San Sebastian Cheesecake',
     },
     description: {
-      qr: 'Ispancha kuydirilgan karamel qobiqli, o\'rtasi kremdek oqib turuvchi nozik cheesecake.',
+      qr: 'İspansha kúydirilgen karamel qabıqlı, ortası kremdey aǵıp turatuǵın mayın cheesecake.',
       uz: 'Ispancha kuydirilgan karamel qobiqli, o\'rtasi kremdek oqib turuvchi nozik cheesecake.',
       ru: 'Испанский жжёный чизкейк с карамельной корочкой и нежной кремовой сердцевиной.',
       en: 'Famous Basque burnt cheesecake with a caramelized crust and gooey molten center.',
@@ -110,7 +110,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Smitana', 'Pishloq', 'Karamel', 'Vanil'],
+      qr: ['Smetana', 'Qaymaqlı pishloq', 'Karamel', 'Vanil'],
       uz: ['Smetana', 'Pishloq', 'Karamel', 'Vanil'],
       ru: ['Сметана', 'Сливочный сыр', 'Карамель', 'Ваниль'],
       en: ['Sour Cream', 'Cream Cheese', 'Caramel', 'Vanilla'],
@@ -124,13 +124,13 @@ export const initialFoodItems: FoodItem[] = [
   {
     id: 'cake-medovik',
     title: {
-      qr: 'Asallı Tort (Medovik)',
+      qr: 'Palli Tort (Medovik)',
       uz: 'Asalli Tort (Medovik)',
       ru: 'Медовик Классический',
       en: 'Honey Cake (Medovik)',
     },
     description: {
-      qr: '8 qatlamli xushbo\'y asal korjlari va yengil smetana-qaymoqli nozik krem.',
+      qr: '8 qatlamlı xosh iyisli pal korjları hám jeńil smetana-qaymaqlı mayın krem.',
       uz: '8 qatlamli xushbo\'y asal korjlari va yengil smetana-qaymoqli nozik krem.',
       ru: 'Восемь тонких медовых коржей с воздушным сметанно-заварным кремом.',
       en: 'Traditional 8-layer golden honey cake layered with light sour cream frosting.',
@@ -147,7 +147,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Tabiiy asal', 'Smetana', 'Qaymoq', 'Un'],
+      qr: ['Tábiyiy pal', 'Smetana', 'Qaymaq', 'Un'],
       uz: ['Tabiiy asal', 'Smetana', 'Qaymoq', 'Un'],
       ru: ['Натуральный мед', 'Сметана', 'Сливки', 'Мука'],
       en: ['Natural Honey', 'Sour Cream', 'Fresh Cream', 'Flour'],
@@ -161,15 +161,15 @@ export const initialFoodItems: FoodItem[] = [
   {
     id: 'cake-tiramisu',
     title: {
-      qr: 'Klassik Tiramisu',
-      uz: 'Klassik Tiramisu',
-      ru: 'Тирамису Классический',
-      en: 'Classic Tiramisu',
+      qr: 'İtalyansha Tiramisu',
+      uz: 'Italyancha Tiramisu',
+      ru: 'Итальянский Тирамису',
+      en: 'Italian Tiramisu',
     },
     description: {
-      qr: 'Savoyardi pechenyelari, espresso qahvasi va haqiqiy Maskarpone italyan kremi.',
+      qr: 'Savoyardi pechenyeleri, espresso kofesi hám haqıyqıy Maskarpone italyan kremi.',
       uz: 'Savoyardi pechenyelari, espresso qahvasi va haqiqiy Maskarpone italyan kremi.',
-      ru: 'Итальянский десерт с печеньем Савоярди, пропитанным крепким кофе, и сыром Маскарпоне.',
+      ru: 'Итальянский десерт с печеньем Савоярди, кофе эспрессо и сыром Маскарпоне.',
       en: 'Authentic Italian dessert with espresso-dipped ladyfingers and whipped mascarpone cream.',
     },
     price: 40000,
@@ -196,17 +196,17 @@ export const initialFoodItems: FoodItem[] = [
     nutrition: { protein: 6, fat: 18, carbs: 36 },
   },
 
-  // --- PISHIRIQLAR & KRUASSANLAR (BAKERY & CROISSANTS) ---
+  // --- PISIRMALAR & KRUASSANLAR (BAKERY & CROISSANTS) ---
   {
     id: 'bakery-chocolate-croissant',
     title: {
-      qr: 'Shokoladli Kruassan',
+      qr: 'Shokoladlı Kruassan',
       uz: 'Shokoladli Kruassan',
       ru: 'Шоколадный Круассан',
       en: 'Chocolate Croissant',
     },
     description: {
-      qr: 'Qat-qat qarsildoq fransuz xamiri, ichida qaynoq Belgiya shokoladi.',
+      qr: 'Qat-qat qarsıldaq francuz qamırı, ishinde qaynaq Belgiya shokoladı.',
       uz: 'Qat-qat qarsildoq fransuz xamiri, ichida qaynoq Belgiya shokoladi.',
       ru: 'Хрустящий слоёный круассан по-французски с начинкой из темного бельгийского шоколада.',
       en: 'Flaky, buttery French croissant filled with rich melted Belgian chocolate.',
@@ -223,7 +223,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Sariyog\'', 'Belgiya shokoladi', 'Un', 'Sut'],
+      qr: ['Francuz sarı mayı', 'Belgiya shokoladı', 'Un', 'Sút'],
       uz: ['Sariyog\'', 'Belgiya shokoladi', 'Un', 'Sut'],
       ru: ['Сливочное масло', 'Бельгийский шоколад', 'Мука', 'Молоко'],
       en: ['French Butter', 'Belgian Chocolate', 'Flour', 'Milk'],
@@ -237,13 +237,13 @@ export const initialFoodItems: FoodItem[] = [
   {
     id: 'bakery-classic-croissant',
     title: {
-      qr: 'Klassik Kruassan',
-      uz: 'Klassik Kruassan',
-      ru: 'Классический Круассан',
-      en: 'Classic French Croissant',
+      qr: 'Klassik Parij Kruassanı',
+      uz: 'Klassik Parij Kruassani',
+      ru: 'Классический Парижский Круассан',
+      en: 'Classic Parisian Croissant',
     },
     description: {
-      qr: '82% tabiiy sariyog\'dan tayyorlangan, yengil va havodor original fransuz kruassani.',
+      qr: '82% tábiyiy sarı maydan tayarlanǵan, jeńil hám hawalı original francuz kruassanı.',
       uz: '82% tabiiy sariyog\'dan tayyorlangan, yengil va havodor original fransuz kruassani.',
       ru: 'Воздушный сливочный круассан из натурального сливочного масла 82%.',
       en: 'Golden, crispy, all-butter croissant baked fresh daily.',
@@ -260,7 +260,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Fransuz sariyog\'i', 'Un', 'Sut'],
+      qr: ['Francuz sarı mayı', 'Un', 'Sút'],
       uz: ['Fransuz sariyog\'i', 'Un', 'Sut'],
       ru: ['Сливочное масло 82%', 'Мука', 'Молоко'],
       en: ['French Butter', 'Flour', 'Milk'],
@@ -274,13 +274,13 @@ export const initialFoodItems: FoodItem[] = [
   {
     id: 'bakery-cinnabon',
     title: {
-      qr: 'Sinabon (Dolchinli Pishiriq)',
-      uz: 'Sinabon (Dolchinli Pishiriq)',
+      qr: 'Dárshindi Sinnabon',
+      uz: 'Dolchinli Sinnabon',
       ru: 'Синнабон с корицей',
       en: 'Cinnamon Roll (Cinnabon)',
     },
     description: {
-      qr: 'Issiq va xushbo\'y seylon dolchini hamda erigan qaymoqli krem bilan yopilgan bulochka.',
+      qr: 'Issı hám xosh iyisli seylon dárshini sonday-aq erigen qaymaqlı krem menen oralǵan bólke.',
       uz: 'Issiq va xushbo\'y seylon dolchini hamda erigan qaymoqli krem bilan yopilgan bulochka.',
       ru: 'Ароматная булочка с цейлонской корицей и глазурью из сливочного сыра.',
       en: 'Warm cinnamon roll topped with rich signature cream cheese icing.',
@@ -297,7 +297,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Seylon dolchini', 'Qaymoqli glazur', 'Sariyog\'', 'Xamir'],
+      qr: ['Seylon dárshini', 'Qaymaqlı glazur', 'Sarı may', 'Qamır'],
       uz: ['Seylon dolchini', 'Qaymoqli glazur', 'Sariyog\'', 'Xamir'],
       ru: ['Корица', 'Сливочная глазурь', 'Масло', 'Сдобное тесто'],
       en: ['Ceylon Cinnamon', 'Cream Cheese Glaze', 'Butter', 'Dough'],
@@ -311,15 +311,15 @@ export const initialFoodItems: FoodItem[] = [
 
   // --- PIROJNIYLAR (PASTRIES) ---
   {
-    id: 'pastry-eclair',
+    id: 'pastry-ekler',
     title: {
-      qr: 'Shokoladli Ekler',
-      uz: 'Shokoladli Ekler',
-      ru: 'Шоколадный Эклер',
-      en: 'Chocolate Eclair',
+      qr: 'Francuz Ekleri',
+      uz: 'Ekler (Fransuzcha)',
+      ru: 'Французский Эклер',
+      en: 'French Eclair',
     },
     description: {
-      qr: 'Yengil choux xamiri, ichida vanilli nozik zavarnoy krem va qora shokoladli glazur.',
+      qr: 'Jeńil choux qamırı, ishinde vanilli mayın qaynatpa krem hám qara shokoladlı glazur.',
       uz: 'Yengil choux xamiri, ichida vanilli nozik zavarnoy krem va qora shokoladli glazur.',
       ru: 'Французский заварной эклер с нежным ванильным кремом и бельгийским шоколадом.',
       en: 'Crisp choux pastry filled with vanilla custard and dipped in chocolate ganache.',
@@ -336,7 +336,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Zavarnoy xamir', 'Zavarnoy krem', 'Qora shokolad'],
+      qr: ['Qaynatpa qamır', 'Qaynatpa krem', 'Qara shokolad'],
       uz: ['Zavarnoy xamir', 'Zavarnoy krem', 'Qora shokolad'],
       ru: ['Заварное тесто', 'Заварной крем Патисьер', 'Темный шоколад'],
       en: ['Choux Pastry', 'Pastry Cream', 'Dark Chocolate'],
@@ -350,15 +350,15 @@ export const initialFoodItems: FoodItem[] = [
   {
     id: 'pastry-strawberry-tart',
     title: {
-      qr: 'Qulupnayli Tartaletka',
-      uz: 'Qulupnayli Tartaletka',
-      ru: 'Клубничная Тарталетка',
+      qr: 'Qulpınaylı Tart',
+      uz: 'Qulupnayli Tart',
+      ru: 'Клубничный Тарт',
       en: 'Strawberry Tart',
     },
     description: {
-      qr: 'Qarsildoq qum xamiri, sitrusli krem Patisser va yangi terilgan shirin qulupnaylar.',
+      qr: 'Qarsıldaq qum qamırı, sitruslı krem Patisser hám taza úzilgen shiyrin qulpınaylar.',
       uz: 'Qarsildoq qum xamiri, sitrusli krem Patisser va yangi terilgan shirin qulupnaylar.',
-      ru: 'Хрустящая песочная тарталетка с кремом Патисьер и свежей сочной клубникой.',
+      ru: 'Хрустящая песочная тарталетка с кремом Патисьер и сочной клубникой.',
       en: 'Crisp shortbread tart crust with silky custard and fresh sweet strawberries.',
     },
     price: 28000,
@@ -373,7 +373,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Yangi qulupnay', 'Krem Patisser', 'Qum xamir'],
+      qr: ['Taza qulpınay', 'Krem Patisser', 'Qum qamır'],
       uz: ['Yangi qulupnay', 'Krem Patisser', 'Qum xamir'],
       ru: ['Свежая клубника', 'Крем Патисьер', 'Песочное тесто'],
       en: ['Fresh Strawberries', 'Pastry Cream', 'Shortcrust Pastry'],
@@ -384,56 +384,19 @@ export const initialFoodItems: FoodItem[] = [
     reviews: [],
     nutrition: { protein: 4, fat: 11, carbs: 35 },
   },
-  {
-    id: 'pastry-macarons-set',
-    title: {
-      qr: 'Fransuz Makaronlari (3 dona)',
-      uz: 'Fransuz Makaronlari (3 dona)',
-      ru: 'Французские Макаруны (3 шт)',
-      en: 'French Macarons (Set of 3)',
-    },
-    description: {
-      qr: 'Bodom unidan tayyorlangan 3 xil lazzat: Pista, Malina va Shokolad.',
-      uz: 'Bodom unidan tayyorlangan 3 xil lazzat: Pista, Malina va Shokolad.',
-      ru: 'Нежные пирожные из миндальной муки: фисташка, малина и шоколад ганаш.',
-      en: 'Delicate almond meringue cookies with pistachio, raspberry, and chocolate fillings.',
-    },
-    price: 30000,
-    category: 'pastries',
-    imageUrl: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80',
-    calories: 210,
-    prepTime: 2,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ['Bodom uni', 'Oqsil', 'Shokolad ganash', 'Malina'],
-      uz: ['Bodom uni', 'Oqsil', 'Shokolad ganash', 'Malina'],
-      ru: ['Миндальная мука', 'Белки', 'Ганаш', 'Малина'],
-      en: ['Almond Flour', 'Egg Whites', 'Ganache', 'Raspberry'],
-    },
-    allergens: ['nuts', 'dairy', 'eggs'],
-    rating: 4.9,
-    ratingCount: 210,
-    reviews: [],
-    nutrition: { protein: 4, fat: 9, carbs: 29 },
-  },
 
-  // --- QAHVA & ICHIMLIKLAR (COFFEE & BEVERAGES) ---
+  // --- KOFE & ISHIMLIKLER (COFFEE & BEVERAGES) ---
   {
     id: 'coffee-spanish-latte',
     title: {
-      qr: 'Ispan Latte (Spanish Latte)',
-      uz: 'Ispan Latte (Spanish Latte)',
-      ru: 'Испанский Латте со сгущенным молоком',
-      en: 'Spanish Iced / Hot Latte',
+      qr: 'Spanish Latte (Muzday / Issı)',
+      uz: 'Spanish Latte (Muzli / Issiq)',
+      ru: 'Испанский Латте (Холодный / Горячий)',
+      en: 'Spanish Latte (Iced / Hot)',
     },
     description: {
-      qr: 'Arabika espresso, quyiltirilgan sut (sgushonka) va mayin sut ko\'pigi bilan xushbo\'y qahva.',
-      uz: 'Arabika espresso, quyiltirilgan sut (sgushonka) va mayin sut ko\'pigi bilan xushbo\'y qahva.',
+      qr: 'Arabika espresso, qoyıltırılǵan sút hám mayın sút kóbigi menen xosh iyisli kofe.',
+      uz: 'Arabika espresso, quyiltirilgan sut va mayin sut ko\'pigi bilan xushbo\'y qahva.',
       ru: 'Ароматный эспрессо из 100% арабики со сгущенным молоком и воздушной молочной пенкой.',
       en: 'Rich espresso poured over sweet condensed milk and steamed creamy milk.',
     },
@@ -449,7 +412,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Arabika espresso', 'Sut', 'Quyiltirilgan sut'],
+      qr: ['Arabika espresso', 'Taza sút', 'Qoyıltırılǵan sút'],
       uz: ['Arabika espresso', 'Sut', 'Quyiltirilgan sut'],
       ru: ['Эспрессо Арабика', 'Молоко', 'Сгущенное молоко'],
       en: ['Arabica Espresso', 'Fresh Milk', 'Condensed Milk'],
@@ -463,13 +426,13 @@ export const initialFoodItems: FoodItem[] = [
   {
     id: 'coffee-cappuccino',
     title: {
-      qr: 'Klassik Kapuchino',
-      uz: 'Klassik Kapuchino',
-      ru: 'Капучино Классический',
-      en: 'Classic Cappuccino',
+      qr: 'Klassik Kapuchino (Úlken)',
+      uz: 'Klassik Kapuchino (Katta)',
+      ru: 'Классический Капучино (Большой)',
+      en: 'Classic Cappuccino (Large)',
     },
     description: {
-      qr: 'Klassik Italiya retsepti bo\'yicha boy espresso va qalin ipakdek sut ko\'pigi.',
+      qr: 'Klassik İtaliya recepti boyınsha qoyıw espresso hám qalıń jipekdey sút kóbigi.',
       uz: 'Klassik Italiya retsepti bo\'yicha boy espresso va qalin ipakdek sut ko\'pigi.',
       ru: 'Классический итальянский кофе с густой бархатистой пенкой.',
       en: 'Traditional Italian espresso balanced with silky steamed and frothed milk.',
@@ -486,7 +449,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Espresso', 'Sut', 'Dolchin'],
+      qr: ['Espresso', 'Sút', 'Dárshin'],
       uz: ['Espresso', 'Sut', 'Dolchin'],
       ru: ['Эспрессо', 'Взбитое молоко', 'Корица'],
       en: ['Espresso', 'Steamed Milk', 'Cinnamon Dust'],
@@ -498,54 +461,17 @@ export const initialFoodItems: FoodItem[] = [
     nutrition: { protein: 5, fat: 4, carbs: 12 },
   },
   {
-    id: 'coffee-mojito-fresh',
-    title: {
-      qr: 'Muzdek Moxito (Limon & Yalpiz)',
-      uz: 'Muzdek Moxito (Limon & Yalpiz)',
-      ru: 'Освежающий Мохито с мятой',
-      en: 'Fresh Mint & Lime Mojito',
-    },
-    description: {
-      qr: 'Yangi yalpiz barglari, laym sharbati, shirin sirop va muzdek gazlangan suv.',
-      uz: 'Yangi yalpiz barglari, laym sharbati, shirin sirop va muzdek gazlangan suv.',
-      ru: 'Прохладный лимонад со свежей мятой, лаймом и кристальным льдом.',
-      en: 'Crisp and refreshing cooler with fresh mint leaves, lime juice, and sparkling water.',
-    },
-    price: 24000,
-    category: 'coffee',
-    imageUrl: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80',
-    calories: 85,
-    prepTime: 3,
-    spicyLevel: 0,
-    isVegetarian: true,
-    isGlutenFree: true,
-    isHalal: true,
-    isNationalSpecial: false,
-    isAvailable: true,
-    ingredients: {
-      qr: ['Yalpiz', 'Laym', 'Gazlangan suv', 'Muz'],
-      uz: ['Yalpiz', 'Laym', 'Gazlangan suv', 'Muz'],
-      ru: ['Мята', 'Лайм', 'Газированная вода', 'Лед'],
-      en: ['Fresh Mint', 'Lime Juice', 'Soda', 'Ice'],
-    },
-    allergens: [],
-    rating: 4.9,
-    ratingCount: 195,
-    reviews: [],
-    nutrition: { protein: 0, fat: 0, carbs: 21 },
-  },
-  {
     id: 'coffee-berry-tea',
     title: {
-      qr: 'Mevali Choy (Yalpiz & Qulupnay)',
-      uz: 'Mevali Choy (Yalpiz & Qulupnay)',
-      ru: 'Ягодный Чай с клубникой и мятой',
-      en: 'Strawberry & Mint Berry Tea',
+      qr: 'Miyweli Avtorlıq Shay',
+      uz: 'Rezavor Mevali Mualliflik Choyi',
+      ru: 'Авторский Ягодный Чай',
+      en: 'Signature Berry Tea',
     },
     description: {
-      qr: 'Tabiiy mevalar, qulupnay va yangi yalpiz bilan damlangan iliq choy.',
+      qr: 'Tábiyiy miyweler, qulpınay hám taza jalpız benen arnawlı shánekte demlengen jıllı shay.',
       uz: 'Tabiiy mevalar, qulupnay va yangi yalpiz bilan damlangan iliq choy.',
-      ru: 'Ароматный чай со свежей клубникой, ягодами и мятой в стеклянном чайничке.',
+      ru: 'Ароматный чай со свежей клубникой, ягодами и мятой в чайничке.',
       en: 'Warm soothing pot of tea infused with sweet strawberries, berry syrup, and mint.',
     },
     price: 20000,
@@ -560,7 +486,7 @@ export const initialFoodItems: FoodItem[] = [
     isNationalSpecial: false,
     isAvailable: true,
     ingredients: {
-      qr: ['Qora/ko\'k choy', 'Qulupnay', 'Yalpiz', 'Asal'],
+      qr: ['Qara/kók shay', 'Qulpınay', 'Jalpız', 'Tábiyiy pal'],
       uz: ['Qora/ko\'k choy', 'Qulupnay', 'Yalpiz', 'Asal'],
       ru: ['Черный/зеленый чай', 'Клубника', 'Мята', 'Мед'],
       en: ['Black/Green Tea', 'Strawberries', 'Mint', 'Honey'],
