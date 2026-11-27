@@ -197,21 +197,19 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
           </div>
 
-          {/* Admin Toggle Button */}
-          <button
-            type="button"
-            onClick={onToggleAdminView}
-            className={`p-1.5 sm:px-2.5 sm:py-1.5 rounded-full border text-xs flex items-center gap-1 transition ${
-              isAdminView
-                ? 'bg-[#C0684C] text-white border-[#C0684C] font-bold shadow-xs'
-                : 'bg-[#F1EAE0] text-[#6C5343] border-[#E6DDD2] hover:bg-[#EAE0D4]'
-            }`}
-            title={t.adminLogin}
-            aria-label={isAdminView ? 'Admin paneldan chiqish' : t.adminLogin || 'Admin'}
-          >
-            <Shield className="w-4 h-4 text-[#C0684C]" aria-hidden="true" />
-            <span className="hidden md:inline font-bold">Admin</span>
-          </button>
+          {/* Admin Toggle Button - only visible if already in Admin view, completely hidden from regular users */}
+          {isAdminView && (
+            <button
+              type="button"
+              onClick={onToggleAdminView}
+              className="p-1.5 sm:px-2.5 sm:py-1.5 rounded-full border text-xs flex items-center gap-1 transition bg-[#C0684C] text-white border-[#C0684C] font-bold shadow-xs"
+              title={lang === 'qr' ? 'Paneldan shıǵıw' : 'Paneldan chiqish'}
+              aria-label={lang === 'qr' ? 'Paneldan shıǵıw' : 'Admin paneldan chiqish'}
+            >
+              <Shield className="w-4 h-4 text-white" aria-hidden="true" />
+              <span className="hidden md:inline font-bold">Admin</span>
+            </button>
+          )}
         </div>
       </div>
 

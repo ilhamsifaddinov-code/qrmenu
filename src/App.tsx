@@ -43,7 +43,7 @@ export default function App() {
   // 1. Initial Loading Screen state
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  // 2. Language & Table Number State
+  // 2. Language & Table Number State (Default to Karakalpak 'qr' on first visit)
   const [lang, setLang] = useState<Language>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -52,7 +52,7 @@ export default function App() {
         return langParam as Language;
       }
     } catch {}
-    return 'uz';
+    return 'qr';
   });
   const [tableNumber, setTableNumber] = useState<string>(() => {
     try {
@@ -190,6 +190,17 @@ export default function App() {
     try {
       const params = new URLSearchParams(window.location.search);
       const isAdminParam = params.get('admin') === 'true' || window.location.pathname === '/admin';
+      const adminIdParam = params.get('admin_id');
+      const tgUserId = (window as any).Telegram?.WebApp?.initDataUnsafe?.user?.id;
+
+      // If launched from Telegram bot /admin by authorized Admin ID 5888097104
+      if (isAdminParam && (adminIdParam === '5888097104' || String(tgUserId) === '5888097104')) {
+        sessionStorage.setItem('cafe_admin_auth', 'true');
+        setIsAdminAuthenticated(true);
+        setIsAdminView(true);
+        return;
+      }
+
       if (isAdminParam) {
         if (sessionStorage.getItem('cafe_admin_auth') === 'true') {
           setIsAdminAuthenticated(true);

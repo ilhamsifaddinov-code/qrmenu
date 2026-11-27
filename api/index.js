@@ -1056,6 +1056,7 @@ async function getTelegramUser(id) {
 // src/bot/telegramBot.ts
 var TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "9138109226:AAHxZbqtWDlc8jrcT9VxJ7a6Wpl4IvpKaEE";
 var WEB_APP_URL = process.env.WEB_APP_URL || "https://qrmenu-sigma-gold.vercel.app";
+var ADMIN_ID = "5888097104";
 var TG_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
 async function callTelegramApi(method, body) {
   try {
@@ -1093,7 +1094,7 @@ async function answerCallbackQuery(callbackQueryId, text, showAlert = false) {
 async function setupTelegramWebhook(baseUrl) {
   const cleanBase = baseUrl.replace(/\/$/, "");
   const webhookUrl = `${cleanBase}/api/telegram-webhook`;
-  const webAppUrl = `${cleanBase}/`;
+  const webAppUrl = `${cleanBase}/?lang=qr`;
   console.log(`[Telegram Setup] Setting webhook to: ${webhookUrl}`);
   const setHookRes = await callTelegramApi("setWebhook", {
     url: webhookUrl,
@@ -1113,7 +1114,7 @@ async function setupTelegramWebhook(baseUrl) {
     commands: [
       { command: "start", description: "Botni ishga tushirish / Start" },
       { command: "help", description: "Yordam va qo'llanma / Help" },
-      { command: "lang", description: "Tilni tanlash / Til saylaw / Language" }
+      { command: "lang", description: "Tilni tanlash / Tildi saylaw / Language" }
     ]
   });
   return {
@@ -1124,17 +1125,17 @@ async function setupTelegramWebhook(baseUrl) {
     webAppUrl
   };
 }
-function getReplyKeyboard(lang = "uz") {
+function getReplyKeyboard(lang = "qr") {
   const webAppTarget = `${WEB_APP_URL}/?lang=${lang}`;
-  let openMenuLabel = "\u{1F370} Menyuni ochish";
-  let sendPhoneLabel = "\u{1F4F1} Raqamni yuborish";
-  let selectLangLabel = "\u{1F310} Tilni tanlash";
-  let helpLabel = "\u2139\uFE0F Yordam";
-  if (lang === "qr") {
-    openMenuLabel = "\u{1F370} Menyudi ash\u0131w";
-    sendPhoneLabel = "\u{1F4F1} Nomerdi jiberiw";
-    selectLangLabel = "\u{1F310} Tildi saylaw";
-    helpLabel = "\u2139\uFE0F J\xE1rdem";
+  let openMenuLabel = "\u{1F370} Menyudi ash\u0131w";
+  let sendPhoneLabel = "\u{1F4F1} Nomerdi jiberiw";
+  let selectLangLabel = "\u{1F310} Tildi saylaw";
+  let helpLabel = "\u2139\uFE0F J\xE1rdem";
+  if (lang === "uz") {
+    openMenuLabel = "\u{1F370} Menyuni ochish";
+    sendPhoneLabel = "\u{1F4F1} Raqamni yuborish";
+    selectLangLabel = "\u{1F310} Tilni tanlash";
+    helpLabel = "\u2139\uFE0F Yordam";
   } else if (lang === "ru") {
     openMenuLabel = "\u{1F370} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E";
     sendPhoneLabel = "\u{1F4F1} \u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043D\u043E\u043C\u0435\u0440";
@@ -1159,57 +1160,29 @@ function getReplyKeyboard(lang = "uz") {
     is_persistent: true
   };
 }
-function getInlineKeyboard(lang = "uz") {
-  const webAppTarget = `${WEB_APP_URL}/?lang=${lang}`;
-  let openMenuLabel = "\u{1F370} Menyuni ochish (Web App)";
-  let selectLangLabel = "\u{1F310} Tilni tanlash";
-  let helpLabel = "\u2139\uFE0F Yordam";
-  if (lang === "qr") {
-    openMenuLabel = "\u{1F370} Menyudi ash\u0131w (Web App)";
-    selectLangLabel = "\u{1F310} Tildi saylaw";
-    helpLabel = "\u2139\uFE0F J\xE1rdem";
-  } else if (lang === "ru") {
-    openMenuLabel = "\u{1F370} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E (Web App)";
-    selectLangLabel = "\u{1F310} \u0421\u043C\u0435\u043D\u0438\u0442\u044C \u044F\u0437\u044B\u043A";
-    helpLabel = "\u2139\uFE0F \u041F\u043E\u043C\u043E\u0449\u044C";
-  } else if (lang === "en") {
-    openMenuLabel = "\u{1F370} Open Menu (Web App)";
-    selectLangLabel = "\u{1F310} Select Language";
-    helpLabel = "\u2139\uFE0F Help";
-  }
-  return {
-    inline_keyboard: [
-      [{ text: openMenuLabel, web_app: { url: webAppTarget } }],
-      [
-        { text: selectLangLabel, callback_data: "open_lang_select" },
-        { text: helpLabel, callback_data: "open_help" }
-      ]
-    ]
-  };
-}
 function getLangSelectInlineKeyboard() {
   return {
     inline_keyboard: [
       [
-        { text: "\u{1F1FA}\u{1F1FF} O'zbekcha", callback_data: "set_lang_uz" },
-        { text: "\u{1F1F0}\u{1F1FF} Qaraqalpaqsha", callback_data: "set_lang_qr" }
+        { text: "Qaraqalpaqsha", callback_data: "set_lang_qr" },
+        { text: "O'zbekcha", callback_data: "set_lang_uz" }
       ],
       [
-        { text: "\u{1F1F7}\u{1F1FA} \u0420\u0443\u0441\u0441\u043A\u0438\u0439", callback_data: "set_lang_ru" },
-        { text: "\u{1F1EC}\u{1F1E7} English", callback_data: "set_lang_en" }
+        { text: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439", callback_data: "set_lang_ru" },
+        { text: "English", callback_data: "set_lang_en" }
       ]
     ]
   };
 }
-function getStartMessage(userName, lang = "uz") {
-  if (lang === "qr") {
-    return `S\xE1lem <b>${userName}</b>, siz Cake Bumer telegram bot\u0131na xosh keldi\u0144iz! \u{1F370}
+function getStartMessage(userName, lang = "qr") {
+  if (lang === "uz") {
+    return `Salom <b>${userName}</b>, siz Cake Bumer telegram botiga xush kelibsiz! \u{1F370}
 
-Bul jerde siz mazal\u0131 shiyrinliklerimiz, eksklyuziv tortlar\u0131m\u0131z h\xE1m ishimliklerimiz menyusi menen tan\u0131sa alas\u0131z h\xE1m buy\u0131rtpa bere alas\u0131z.
+Bu yerda siz mazali shirinliklarimiz, eksklyuziv tortlarimiz va ichimliklarimiz menyusi bilan tanishishingiz hamda buyurtma berishingiz mumkin.
 
-\u{1F447} Menyudi k\xF3riw ush\u0131n t\xF3mendegi <b>"\u{1F370} Menyudi ash\u0131w"</b> t\xFAymesin bas\u0131\u0144:`;
+\u{1F447} Menyuni ko'rish uchun pastdagi <b>"\u{1F370} Menyuni ochish"</b> tugmasini bosing:`;
   } else if (lang === "ru") {
-    return `\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435, <b>${userName}</b>! \u0412\u044B \u0434\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 \u0442\u0435\u043B\u0435\u0433\u0440\u0430\u043C \u0431\u043E\u0442 Cake Bumer! \u{1F370}
+    return `\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435 <b>${userName}</b>, \u0432\u044B \u0434\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 \u0442\u0435\u043B\u0435\u0433\u0440\u0430\u043C \u0431\u043E\u0442 Cake Bumer! \u{1F370}
 
 \u0417\u0434\u0435\u0441\u044C \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043E\u0437\u043D\u0430\u043A\u043E\u043C\u0438\u0442\u044C\u0441\u044F \u0441 \u043D\u0430\u0448\u0438\u043C \u043C\u0435\u043D\u044E \u0434\u0435\u0441\u0435\u0440\u0442\u043E\u0432, \u0444\u0438\u0440\u043C\u0435\u043D\u043D\u044B\u0445 \u0442\u043E\u0440\u0442\u043E\u0432 \u0438 \u043D\u0430\u043F\u0438\u0442\u043A\u043E\u0432, \u0430 \u0442\u0430\u043A\u0436\u0435 \u043E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437.
 
@@ -1221,21 +1194,21 @@ Here you can explore our menu of delicious desserts, premium cakes, and coffee, 
 
 \u{1F447} Tap the <b>"\u{1F370} Open Menu"</b> button below to open the online menu:`;
   }
-  return `Salom <b>${userName}</b>, siz Cake Bumer telegram botiga xush kelibsiz! \u{1F370}
+  return `S\xE1lem <b>${userName}</b>, siz Cake Bumer telegram bot\u0131na xosh keldi\u0144iz! \u{1F370}
 
-Bu yerda siz mazali shirinliklarimiz, eksklyuziv tortlarimiz va ichimliklarimiz menyusi bilan tanishishingiz hamda buyurtma berishingiz mumkin.
+Bul jerde siz mazal\u0131 shiyrinliklerimiz, eksklyuziv tortlar\u0131m\u0131z h\xE1m ishimliklerimiz menyusi menen tan\u0131sa alas\u0131z h\xE1m buy\u0131rtpa bere alas\u0131z.
 
-\u{1F447} Menyuni ko'rish uchun pastdagi <b>"\u{1F370} Menyuni ochish"</b> tugmasini bosing:`;
+\u{1F447} Menyudi k\xF3riw ush\u0131n t\xF3mendegi <b>"\u{1F370} Menyudi ash\u0131w"</b> t\xFAymesin bas\u0131\u0144:`;
 }
-function getHelpMessage(lang = "uz") {
-  if (lang === "qr") {
-    return `\u2139\uFE0F <b>Cake Bumer bot\u0131 boy\u0131nsha j\xE1rdem:</b>
+function getHelpMessage(lang = "qr") {
+  if (lang === "uz") {
+    return `\u2139\uFE0F <b>Cake Bumer boti bo'yicha yordam:</b>
 
-\u{1F370} <b>Menyudi ash\u0131w</b> \u2014 t\xF3mendegi t\xFAymeni bas\u0131\u0144 h\xE1m barl\u0131q shiyrinlikler, tortlar h\xE1m kofelerimizdi saylap buy\u0131rtpa beri\u0144.
-\u{1F4F1} <b>Nomerdi jiberiw</b> \u2014 telefon nomeri\u0144izdi jiberiw arqal\u0131 buy\u0131rtpa\u0144\u0131zd\u0131 tez tast\u0131y\u0131qla\u0144.
-\u{1F310} <b>Tildi saylaw</b> \u2014 bot h\xE1m menyu tilin \xF3zgertiw.
+\u{1F370} <b>Menyuni ochish</b> \u2014 pastdagi tugmani bosing va barcha shirinliklar, tortlar va qahvalarni ko'rib buyurtma bering.
+\u{1F4F1} <b>Raqamni yuborish</b> \u2014 telefon raqamingizni botga yuborish orqali buyurtmangizni tezroq rasmiylashtiring.
+\u{1F310} <b>Tilni tanlash</b> \u2014 bot va menyu tilini o'zingizga qulay qilib o'zgartiring.
 
-\u{1F4CD} M\xE1nzilimiz: N\xF3kis qalas\u0131, Cake Bumer Dessert Caf\xE9.`;
+\u{1F4CD} Bizning manzil: Nukus shahri, Cake Bumer Dessert Caf\xE9.`;
   } else if (lang === "ru") {
     return `\u2139\uFE0F <b>\u041F\u043E\u043C\u043E\u0449\u044C \u043F\u043E \u0431\u043E\u0442\u0443 Cake Bumer:</b>
 
@@ -1253,19 +1226,19 @@ function getHelpMessage(lang = "uz") {
 
 \u{1F4CD} Location: Nukus city, Cake Bumer Dessert Caf\xE9.`;
   }
-  return `\u2139\uFE0F <b>Cake Bumer boti bo'yicha yordam:</b>
+  return `\u2139\uFE0F <b>Cake Bumer bot\u0131 boy\u0131nsha j\xE1rdem:</b>
 
-\u{1F370} <b>Menyuni ochish</b> \u2014 pastdagi tugmani bosing va barcha shirinliklar, tortlar va qahvalarni ko'rib buyurtma bering.
-\u{1F4F1} <b>Raqamni yuborish</b> \u2014 telefon raqamingizni botga yuborish orqali buyurtmangizni tezroq rasmiylashtiring.
-\u{1F310} <b>Tilni tanlash</b> \u2014 bot va menyu tilini o'zingizga qulay qilib o'zgartiring.
+\u{1F370} <b>Menyudi ash\u0131w</b> \u2014 t\xF3mendegi t\xFAymeni bas\u0131\u0144 h\xE1m barl\u0131q shiyrinlikler, tortlar h\xE1m kofelerimizdi saylap buy\u0131rtpa beri\u0144.
+\u{1F4F1} <b>Nomerdi jiberiw</b> \u2014 telefon nomeri\u0144izdi jiberiw arqal\u0131 buy\u0131rtpa\u0144\u0131zd\u0131 tez tast\u0131y\u0131qla\u0144.
+\u{1F310} <b>Tildi saylaw</b> \u2014 bot h\xE1m menyu tilin \xF3zgertiw.
 
-\u{1F4CD} Bizning manzil: Nukus shahri, Cake Bumer Dessert Caf\xE9.`;
+\u{1F4CD} M\xE1nzilimiz: N\xF3kis qalas\u0131, Cake Bumer Dessert Caf\xE9.`;
 }
-function getContactSuccessMessage(userName, phone, lang = "uz") {
-  if (lang === "qr") {
-    return `\u2705 Raxmet <b>${userName}</b>, telefon nomeri\u0144iz tab\u0131sl\u0131 saqland\u0131: <b>${phone}</b> \u{1F4F1}
+function getContactSuccessMessage(userName, phone, lang = "qr") {
+  if (lang === "uz") {
+    return `\u2705 Rahmat <b>${userName}</b>, telefon raqamingiz muvaffaqiyatli saqlandi: <b>${phone}</b> \u{1F4F1}
 
-Endi t\xF3mendegi t\xFAyme arqal\u0131 menyudi ash\u0131p, sevimli shiyrinlikleri\u0144izge buy\u0131rtpa bere alas\u0131z!`;
+Endi bemalol quyidagi tugma orqali menyuni ochib, sevimli shirinliklaringizga buyurtma berishingiz mumkin!`;
   } else if (lang === "ru") {
     return `\u2705 \u0421\u043F\u0430\u0441\u0438\u0431\u043E <b>${userName}</b>, \u0432\u0430\u0448 \u043D\u043E\u043C\u0435\u0440 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D: <b>${phone}</b> \u{1F4F1}
 
@@ -1275,9 +1248,9 @@ Endi t\xF3mendegi t\xFAyme arqal\u0131 menyudi ash\u0131p, sevimli shiyrinlikler
 
 Now you can tap the button below to open the menu and place your order!`;
   }
-  return `\u2705 Rahmat <b>${userName}</b>, telefon raqamingiz muvaffaqiyatli saqlandi: <b>${phone}</b> \u{1F4F1}
+  return `\u2705 Raxmet <b>${userName}</b>, telefon nomeri\u0144iz tab\u0131sl\u0131 saqland\u0131: <b>${phone}</b> \u{1F4F1}
 
-Endi bemalol quyidagi tugma orqali menyuni ochib, sevimli shirinliklaringizga buyurtma berishingiz mumkin!`;
+Endi t\xF3mendegi t\xFAyme arqal\u0131 menyudi ash\u0131p, jaqs\u0131 k\xF3rgen shiyrinlikleri\u0144izge buy\u0131rtpa bere alas\u0131z!`;
 }
 async function handleTelegramUpdate(update) {
   if (!update) return;
@@ -1288,15 +1261,10 @@ async function handleTelegramUpdate(update) {
       const from = msg.from;
       if (!chatId || !from) return;
       const userId = from.id;
-      const rawName = from.username ? `@${from.username}` : [from.first_name, from.last_name].filter(Boolean).join(" ") || "Mijoz";
+      const rawName = from.username ? `@${from.username}` : [from.first_name, from.last_name].filter(Boolean).join(" ") || "Miyhman";
       const safeName = rawName.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
       const existingUser = await getTelegramUser(userId);
-      let userLang = existingUser?.lang || "uz";
-      if (!existingUser && from.language_code) {
-        const lc = from.language_code.toLowerCase();
-        if (lc.startsWith("ru")) userLang = "ru";
-        else if (lc.startsWith("en")) userLang = "en";
-      }
+      let userLang = existingUser?.lang || "qr";
       if (msg.contact && msg.contact.phone_number) {
         let phone = msg.contact.phone_number;
         if (!phone.startsWith("+")) phone = `+${phone}`;
@@ -1310,12 +1278,51 @@ async function handleTelegramUpdate(update) {
         });
         const replyText = getContactSuccessMessage(safeName, phone, userLang);
         await sendTelegramMessage(chatId, replyText, {
-          reply_markup: getInlineKeyboard(userLang)
+          reply_markup: getReplyKeyboard(userLang)
         });
         return;
       }
       const text = (msg.text || "").trim();
-      if (text.startsWith("/start")) {
+      if (text === "/admin" || text.startsWith("/admin ")) {
+        if (String(userId) === ADMIN_ID) {
+          const adminUrl = `${WEB_APP_URL}/?admin=true&admin_id=${ADMIN_ID}&lang=${userLang}`;
+          const adminText = userLang === "qr" ? `\u{1F451} <b>Admin Paneli \u2014 Cake Bumer</b>
+
+S\xE1lem <b>${safeName}</b>! Siz sistem administrator\u0131s\u0131z.
+T\xF3mendegi t\xFAyme arqal\u0131 Admin Panelge kirip, barl\u0131q buy\u0131rtpalar, ofitsiant shaq\u0131r\u0131wlar\u0131, stollar QR-kodlar\u0131, statistika h\xE1m menyudi basqara alas\u0131z.
+
+\u{1F447} Admin paneldi ash\u0131w ush\u0131n t\xF3mendegi t\xFAymeni bas\u0131\u0144:` : userLang === "ru" ? `\u{1F451} <b>\u041F\u0430\u043D\u0435\u043B\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430 \u2014 Cake Bumer</b>
+
+\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435, <b>${safeName}</b>! \u0412\u044B \u044F\u0432\u043B\u044F\u0435\u0442\u0435\u0441\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u043E\u043C \u0441\u0438\u0441\u0442\u0435\u043C\u044B.
+\u041F\u043E \u043A\u043D\u043E\u043F\u043A\u0435 \u043D\u0438\u0436\u0435 \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u0435\u0440\u0435\u0439\u0442\u0438 \u0432 \u043F\u0430\u043D\u0435\u043B\u044C \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u044F \u0438 \u0443\u043F\u0440\u0430\u0432\u043B\u044F\u0442\u044C \u0437\u0430\u043A\u0430\u0437\u0430\u043C\u0438, \u0432\u044B\u0437\u043E\u0432\u0430\u043C\u0438 \u043E\u0444\u0438\u0446\u0438\u0430\u043D\u0442\u0430, \u0441\u0442\u043E\u043B\u0430\u043C\u0438, \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u043E\u0439 \u0438 \u043C\u0435\u043D\u044E \u0434\u0435\u0441\u0435\u0440\u0442\u043E\u0432.
+
+\u{1F447} \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043F\u0430\u043D\u0435\u043B\u044C \u0430\u0434\u043C\u0438\u043D\u0438\u0441\u0442\u0440\u0430\u0442\u043E\u0440\u0430:` : userLang === "en" ? `\u{1F451} <b>Admin Panel \u2014 Cake Bumer</b>
+
+Hello <b>${safeName}</b>! You are a system administrator.
+Tap below to open the Admin Panel and manage orders, waiter calls, tables, statistics, and menu items.
+
+\u{1F447} Tap below to open Admin Panel:` : `\u{1F451} <b>Admin Paneli \u2014 Cake Bumer</b>
+
+Salom <b>${safeName}</b>! Siz tizim administratorisiz.
+Quyidagi tugma orqali Admin Panelga kirib, barcha buyurtmalar, ofitsiant chaqiruvlari, stollar QR-kodlari, statistika va menyuni boshqarishingiz mumkin.
+
+\u{1F447} Admin panelni ochish uchun quyidagi tugmani bosing:`;
+          await sendTelegramMessage(chatId, adminText, {
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: userLang === "qr" ? "\u{1F451} Admin Paneldi ash\u0131w" : userLang === "ru" ? "\u{1F451} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u0430\u0434\u043C\u0438\u043D-\u043F\u0430\u043D\u0435\u043B\u044C" : userLang === "en" ? "\u{1F451} Open Admin Panel" : "\u{1F451} Admin Panelni ochish",
+                    web_app: { url: adminUrl }
+                  }
+                ]
+              ]
+            }
+          });
+          return;
+        }
+      }
+      if (text.startsWith("/start") || text.startsWith("/admin")) {
         await saveTelegramUser({
           id: userId,
           first_name: from.first_name,
@@ -1327,35 +1334,28 @@ async function handleTelegramUpdate(update) {
         await sendTelegramMessage(chatId, welcomeText, {
           reply_markup: getReplyKeyboard(userLang)
         });
-        await sendTelegramMessage(
-          chatId,
-          `\u{1F447} <b>${userLang === "qr" ? "Menyudi ash\u0131w:" : userLang === "ru" ? "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E:" : userLang === "en" ? "Open menu:" : "Menyuni ochish:"}</b>`,
-          {
-            reply_markup: getInlineKeyboard(userLang)
-          }
-        );
         return;
       }
       if (text.startsWith("/help") || text.includes("Yordam") || text.includes("J\xE1rdem") || text.includes("\u041F\u043E\u043C\u043E\u0449\u044C") || text.includes("Help")) {
         const helpText = getHelpMessage(userLang);
         await sendTelegramMessage(chatId, helpText, {
-          reply_markup: getInlineKeyboard(userLang)
+          reply_markup: getReplyKeyboard(userLang)
         });
         return;
       }
       if (text.startsWith("/lang") || text.includes("Tilni tanlash") || text.includes("Tildi saylaw") || text.includes("\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u044F\u0437\u044B\u043A") || text.includes("Select Language") || text.includes("Til")) {
         await sendTelegramMessage(
           chatId,
-          `\u{1F310} <b>Tilni tanlang / Tildi sayla\u0144 / \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u044F\u0437\u044B\u043A / Select language:</b>`,
+          `\u{1F310} <b>Tildi sayla\u0144 / Tilni tanlang / \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u044F\u0437\u044B\u043A / Select language:</b>`,
           {
             reply_markup: getLangSelectInlineKeyboard()
           }
         );
         return;
       }
-      const fallbackPrompt = userLang === "qr" ? `S\xE1lem <b>${safeName}</b>! Cake Bumer shiyrinlikler menyusin k\xF3riw ush\u0131n t\xF3mendegi t\xFAymeni bas\u0131\u0144:` : userLang === "ru" ? `\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435, <b>${safeName}</b>! \u0427\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0434\u0435\u0441\u0435\u0440\u0442\u044B Cake Bumer, \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435:` : userLang === "en" ? `Hello <b>${safeName}</b>! To browse Cake Bumer desserts, tap the button below:` : `Salom <b>${safeName}</b>! Cake Bumer shirinliklar menyusini ko'rish uchun quyidagi tugmani bosing:`;
+      const fallbackPrompt = getStartMessage(safeName, userLang);
       await sendTelegramMessage(chatId, fallbackPrompt, {
-        reply_markup: getInlineKeyboard(userLang)
+        reply_markup: getReplyKeyboard(userLang)
       });
       return;
     }
@@ -1369,28 +1369,8 @@ async function handleTelegramUpdate(update) {
         await answerCallbackQuery(cbId);
         return;
       }
-      const rawName = from.username ? `@${from.username}` : [from.first_name, from.last_name].filter(Boolean).join(" ") || "Mijoz";
+      const rawName = from.username ? `@${from.username}` : [from.first_name, from.last_name].filter(Boolean).join(" ") || "Miyhman";
       const safeName = rawName.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      if (data === "open_lang_select") {
-        await answerCallbackQuery(cbId);
-        await sendTelegramMessage(
-          chatId,
-          `\u{1F310} <b>Tilni tanlang / Tildi sayla\u0144 / \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u044F\u0437\u044B\u043A / Select language:</b>`,
-          {
-            reply_markup: getLangSelectInlineKeyboard()
-          }
-        );
-        return;
-      }
-      if (data === "open_help") {
-        await answerCallbackQuery(cbId);
-        const existingUser = await getTelegramUser(from.id);
-        const lang = existingUser?.lang || "uz";
-        await sendTelegramMessage(chatId, getHelpMessage(lang), {
-          reply_markup: getInlineKeyboard(lang)
-        });
-        return;
-      }
       if (data.startsWith("set_lang_")) {
         const newLang = data.replace("set_lang_", "");
         await saveTelegramUser({
@@ -1400,17 +1380,16 @@ async function handleTelegramUpdate(update) {
           username: from.username,
           lang: newLang
         });
-        let ack = "Til muvaffaqiyatli o'zgartirildi!";
-        if (newLang === "qr") ack = "Til tab\u0131sl\u0131 \xF3zgertildi!";
+        let ack = "Til tab\u0131sl\u0131 \xF3zgertildi!";
+        if (newLang === "uz") ack = "Til muvaffaqiyatli o'zgartirildi!";
         else if (newLang === "ru") ack = "\u042F\u0437\u044B\u043A \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D!";
         else if (newLang === "en") ack = "Language changed successfully!";
         await answerCallbackQuery(cbId, ack, false);
-        await sendTelegramMessage(chatId, `\u2705 ${ack}`, {
-          reply_markup: getReplyKeyboard(newLang)
-        });
         const startMsg = getStartMessage(safeName, newLang);
-        await sendTelegramMessage(chatId, startMsg, {
-          reply_markup: getInlineKeyboard(newLang)
+        await sendTelegramMessage(chatId, `\u2705 ${ack}
+
+${startMsg}`, {
+          reply_markup: getReplyKeyboard(newLang)
         });
         return;
       }
