@@ -44,7 +44,16 @@ export default function App() {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   // 2. Language & Table Number State
-  const [lang, setLang] = useState<Language>('uz');
+  const [lang, setLang] = useState<Language>(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const langParam = params.get('lang');
+      if (langParam === 'uz' || langParam === 'qr' || langParam === 'ru' || langParam === 'en') {
+        return langParam as Language;
+      }
+    } catch {}
+    return 'uz';
+  });
   const [tableNumber, setTableNumber] = useState<string>(() => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -55,6 +64,32 @@ export default function App() {
     }
     return '1';
   });
+
+  // Telegram WebApp Native Ready & Expand
+  useEffect(() => {
+    if (typeof window !== 'undefined' && (window as any).Telegram?.WebApp) {
+      const tg = (window as any).Telegram.WebApp;
+      try {
+        tg.ready();
+        tg.expand();
+        tg.setHeaderColor('#FAF5EF');
+        tg.setBackgroundColor('#FAF5EF');
+      } catch (e) {
+        console.warn('Telegram WebApp init warning:', e);
+      }
+
+      // If lang not specified in URL query, use Telegram user language
+      try {
+        const params = new URLSearchParams(window.location.search);
+        if (!params.get('lang') && tg.initDataUnsafe?.user?.language_code) {
+          const lc = tg.initDataUnsafe.user.language_code.toLowerCase();
+          if (lc.startsWith('ru')) setLang('ru');
+          else if (lc.startsWith('en')) setLang('en');
+          else if (lc.startsWith('uz')) setLang('uz');
+        }
+      } catch {}
+    }
+  }, []);
 
   // Keep table param synced if URL changes
   useEffect(() => {

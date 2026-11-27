@@ -574,3 +574,85 @@ export async function getImage(id: string): Promise<{ mimeType: string; data: st
     return null;
   }
 }
+
+// --- TELEGRAM USERS API ---
+export interface TelegramUserRecord {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  phone_number?: string;
+  lang?: string;
+  last_interaction?: string;
+  created_at?: string;
+}
+
+export async function saveTelegramUser(user: {
+  id: number;
+  first_name?: string;
+  last_name?: string;
+  username?: string;
+  phone_number?: string;
+  lang?: string;
+}): Promise<void> {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS telegram_users (
+        id BIGINT PRIMARY KEY,
+        first_name TEXT,
+        last_name TEXT,
+        username TEXT,
+        phone_number TEXT,
+        lang TEXT DEFAULT 'uz',
+        last_interaction TIMESTAMPTZ DEFAULT NOW(),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    await sql`
+      INSERT INTO telegram_users (id, first_name, last_name, username, phone_number, lang, last_interaction)
+      VALUES (
+        ${user.id},
+        ${user.first_name || null},
+        ${user.last_name || null},
+        ${user.username || null},
+        ${user.phone_number || null},
+        ${user.lang || 'uz'},
+        NOW()
+      )
+      ON CONFLICT (id) DO UPDATE SET
+        first_name = COALESCE(EXCLUDED.first_name, telegram_users.first_name),
+        last_name = COALESCE(EXCLUDED.last_name, telegram_users.last_name),
+        username = COALESCE(EXCLUDED.username, telegram_users.username),
+        phone_number = COALESCE(EXCLUDED.phone_number, telegram_users.phone_number),
+        lang = COALESCE(EXCLUDED.lang, telegram_users.lang),
+        last_interaction = NOW();
+    `;
+  } catch (err) {
+    console.error('[NEON DB] Failed to save telegram user:', err);
+  }
+}
+
+export async function getTelegramUser(id: number): Promise<TelegramUserRecord | null> {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS telegram_users (
+        id BIGINT PRIMARY KEY,
+        first_name TEXT,
+        last_name TEXT,
+        username TEXT,
+        phone_number TEXT,
+        lang TEXT DEFAULT 'uz',
+        last_interaction TIMESTAMPTZ DEFAULT NOW(),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    const rows = await sql`SELECT * FROM telegram_users WHERE id = ${id} LIMIT 1;`;
+    if (rows && rows.length > 0) {
+      return rows[0] as TelegramUserRecord;
+    }
+    return null;
+  } catch (err) {
+    console.error('[NEON DB] Failed to get telegram user:', err);
+    return null;
+  }
+}

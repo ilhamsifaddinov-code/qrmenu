@@ -3,6 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import * as db from './src/db';
 import { initialFoodItems } from './src/data/mockData';
+import { handleTelegramUpdate, setupTelegramWebhook, WEB_APP_URL } from './src/bot/telegramBot';
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -407,6 +408,44 @@ app.delete('/api/tables/:tableNumber', async (req, res) => {
   } catch (err: any) {
     console.error('Failed to delete table:', err);
     res.status(500).json({ error: 'Failed to delete table' });
+  }
+});
+
+// ==========================================
+// TELEGRAM WEB APP & BOT WEBHOOK API
+// ==========================================
+app.post('/api/telegram-webhook', async (req, res) => {
+  try {
+    // Acknowledge Telegram immediately with 200 OK
+    res.status(200).json({ ok: true });
+    // Process update asynchronously
+    await handleTelegramUpdate(req.body);
+  } catch (err: any) {
+    console.error('[TELEGRAM WEBHOOK ERROR]:', err);
+  }
+});
+
+app.get('/api/telegram-webhook', (req, res) => {
+  res.json({
+    status: 'ok',
+    bot: '@QRmenu2026bot',
+    webAppUrl: WEB_APP_URL,
+    time: new Date().toISOString(),
+  });
+});
+
+app.get('/api/telegram/setup', async (req, res) => {
+  try {
+    const host = req.headers.host;
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    const baseUrl = host?.includes('vercel.app')
+      ? `https://${host}`
+      : WEB_APP_URL;
+
+    const result = await setupTelegramWebhook(baseUrl);
+    res.json({ success: true, result });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Failed to setup webhook', details: err?.message });
   }
 });
 

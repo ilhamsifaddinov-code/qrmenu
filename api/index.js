@@ -991,6 +991,435 @@ async function getImage(id) {
     return null;
   }
 }
+async function saveTelegramUser(user) {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS telegram_users (
+        id BIGINT PRIMARY KEY,
+        first_name TEXT,
+        last_name TEXT,
+        username TEXT,
+        phone_number TEXT,
+        lang TEXT DEFAULT 'uz',
+        last_interaction TIMESTAMPTZ DEFAULT NOW(),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    await sql`
+      INSERT INTO telegram_users (id, first_name, last_name, username, phone_number, lang, last_interaction)
+      VALUES (
+        ${user.id},
+        ${user.first_name || null},
+        ${user.last_name || null},
+        ${user.username || null},
+        ${user.phone_number || null},
+        ${user.lang || "uz"},
+        NOW()
+      )
+      ON CONFLICT (id) DO UPDATE SET
+        first_name = COALESCE(EXCLUDED.first_name, telegram_users.first_name),
+        last_name = COALESCE(EXCLUDED.last_name, telegram_users.last_name),
+        username = COALESCE(EXCLUDED.username, telegram_users.username),
+        phone_number = COALESCE(EXCLUDED.phone_number, telegram_users.phone_number),
+        lang = COALESCE(EXCLUDED.lang, telegram_users.lang),
+        last_interaction = NOW();
+    `;
+  } catch (err) {
+    console.error("[NEON DB] Failed to save telegram user:", err);
+  }
+}
+async function getTelegramUser(id) {
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS telegram_users (
+        id BIGINT PRIMARY KEY,
+        first_name TEXT,
+        last_name TEXT,
+        username TEXT,
+        phone_number TEXT,
+        lang TEXT DEFAULT 'uz',
+        last_interaction TIMESTAMPTZ DEFAULT NOW(),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `;
+    const rows = await sql`SELECT * FROM telegram_users WHERE id = ${id} LIMIT 1;`;
+    if (rows && rows.length > 0) {
+      return rows[0];
+    }
+    return null;
+  } catch (err) {
+    console.error("[NEON DB] Failed to get telegram user:", err);
+    return null;
+  }
+}
+
+// src/bot/telegramBot.ts
+var TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || "9138109226:AAHxZbqtWDlc8jrcT9VxJ7a6Wpl4IvpKaEE";
+var WEB_APP_URL = process.env.WEB_APP_URL || "https://qrmenu-sigma-gold.vercel.app";
+var TG_API = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}`;
+async function callTelegramApi(method, body) {
+  try {
+    const res = await fetch(`${TG_API}/${method}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      console.error(`[Telegram API Error] ${method}:`, data);
+    }
+    return data;
+  } catch (err) {
+    console.error(`[Telegram API Network Error] ${method}:`, err);
+    return null;
+  }
+}
+async function sendTelegramMessage(chatId, text, options = {}) {
+  return callTelegramApi("sendMessage", {
+    chat_id: chatId,
+    text,
+    parse_mode: options.parse_mode || "HTML",
+    reply_markup: options.reply_markup,
+    disable_web_page_preview: true
+  });
+}
+async function answerCallbackQuery(callbackQueryId, text, showAlert = false) {
+  return callTelegramApi("answerCallbackQuery", {
+    callback_query_id: callbackQueryId,
+    text,
+    show_alert: showAlert
+  });
+}
+async function setupTelegramWebhook(baseUrl) {
+  const cleanBase = baseUrl.replace(/\/$/, "");
+  const webhookUrl = `${cleanBase}/api/telegram-webhook`;
+  const webAppUrl = `${cleanBase}/`;
+  console.log(`[Telegram Setup] Setting webhook to: ${webhookUrl}`);
+  const setHookRes = await callTelegramApi("setWebhook", {
+    url: webhookUrl,
+    allowed_updates: ["message", "callback_query"],
+    drop_pending_updates: false
+  });
+  console.log(`[Telegram Setup] Setting Chat Menu Button with Web App: ${webAppUrl}`);
+  const setMenuRes = await callTelegramApi("setChatMenuButton", {
+    menu_button: {
+      type: "web_app",
+      text: "Menyu \u{1F370}",
+      web_app: { url: webAppUrl }
+    }
+  });
+  console.log(`[Telegram Setup] Setting Bot Commands`);
+  const setCommandsRes = await callTelegramApi("setMyCommands", {
+    commands: [
+      { command: "start", description: "Botni ishga tushirish / Start" },
+      { command: "help", description: "Yordam va qo'llanma / Help" },
+      { command: "lang", description: "Tilni tanlash / Til saylaw / Language" }
+    ]
+  });
+  return {
+    webhook: setHookRes,
+    menuButton: setMenuRes,
+    commands: setCommandsRes,
+    webhookUrl,
+    webAppUrl
+  };
+}
+function getReplyKeyboard(lang = "uz") {
+  const webAppTarget = `${WEB_APP_URL}/?lang=${lang}`;
+  let openMenuLabel = "\u{1F370} Menyuni ochish";
+  let sendPhoneLabel = "\u{1F4F1} Raqamni yuborish";
+  let selectLangLabel = "\u{1F310} Tilni tanlash";
+  let helpLabel = "\u2139\uFE0F Yordam";
+  if (lang === "qr") {
+    openMenuLabel = "\u{1F370} Menyudi ash\u0131w";
+    sendPhoneLabel = "\u{1F4F1} Nomerdi jiberiw";
+    selectLangLabel = "\u{1F310} Tildi saylaw";
+    helpLabel = "\u2139\uFE0F J\xE1rdem";
+  } else if (lang === "ru") {
+    openMenuLabel = "\u{1F370} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E";
+    sendPhoneLabel = "\u{1F4F1} \u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043D\u043E\u043C\u0435\u0440";
+    selectLangLabel = "\u{1F310} \u0421\u043C\u0435\u043D\u0438\u0442\u044C \u044F\u0437\u044B\u043A";
+    helpLabel = "\u2139\uFE0F \u041F\u043E\u043C\u043E\u0449\u044C";
+  } else if (lang === "en") {
+    openMenuLabel = "\u{1F370} Open Menu";
+    sendPhoneLabel = "\u{1F4F1} Send Phone";
+    selectLangLabel = "\u{1F310} Select Language";
+    helpLabel = "\u2139\uFE0F Help";
+  }
+  return {
+    keyboard: [
+      [{ text: openMenuLabel, web_app: { url: webAppTarget } }],
+      [
+        { text: sendPhoneLabel, request_contact: true },
+        { text: selectLangLabel }
+      ],
+      [{ text: helpLabel }]
+    ],
+    resize_keyboard: true,
+    is_persistent: true
+  };
+}
+function getInlineKeyboard(lang = "uz") {
+  const webAppTarget = `${WEB_APP_URL}/?lang=${lang}`;
+  let openMenuLabel = "\u{1F370} Menyuni ochish (Web App)";
+  let selectLangLabel = "\u{1F310} Tilni tanlash";
+  let helpLabel = "\u2139\uFE0F Yordam";
+  if (lang === "qr") {
+    openMenuLabel = "\u{1F370} Menyudi ash\u0131w (Web App)";
+    selectLangLabel = "\u{1F310} Tildi saylaw";
+    helpLabel = "\u2139\uFE0F J\xE1rdem";
+  } else if (lang === "ru") {
+    openMenuLabel = "\u{1F370} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E (Web App)";
+    selectLangLabel = "\u{1F310} \u0421\u043C\u0435\u043D\u0438\u0442\u044C \u044F\u0437\u044B\u043A";
+    helpLabel = "\u2139\uFE0F \u041F\u043E\u043C\u043E\u0449\u044C";
+  } else if (lang === "en") {
+    openMenuLabel = "\u{1F370} Open Menu (Web App)";
+    selectLangLabel = "\u{1F310} Select Language";
+    helpLabel = "\u2139\uFE0F Help";
+  }
+  return {
+    inline_keyboard: [
+      [{ text: openMenuLabel, web_app: { url: webAppTarget } }],
+      [
+        { text: selectLangLabel, callback_data: "open_lang_select" },
+        { text: helpLabel, callback_data: "open_help" }
+      ]
+    ]
+  };
+}
+function getLangSelectInlineKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: "\u{1F1FA}\u{1F1FF} O'zbekcha", callback_data: "set_lang_uz" },
+        { text: "\u{1F1F0}\u{1F1FF} Qaraqalpaqsha", callback_data: "set_lang_qr" }
+      ],
+      [
+        { text: "\u{1F1F7}\u{1F1FA} \u0420\u0443\u0441\u0441\u043A\u0438\u0439", callback_data: "set_lang_ru" },
+        { text: "\u{1F1EC}\u{1F1E7} English", callback_data: "set_lang_en" }
+      ]
+    ]
+  };
+}
+function getStartMessage(userName, lang = "uz") {
+  if (lang === "qr") {
+    return `S\xE1lem <b>${userName}</b>, siz Cake Bumer telegram bot\u0131na xosh keldi\u0144iz! \u{1F370}
+
+Bul jerde siz mazal\u0131 shiyrinliklerimiz, eksklyuziv tortlar\u0131m\u0131z h\xE1m ishimliklerimiz menyusi menen tan\u0131sa alas\u0131z h\xE1m buy\u0131rtpa bere alas\u0131z.
+
+\u{1F447} Menyudi k\xF3riw ush\u0131n t\xF3mendegi <b>"\u{1F370} Menyudi ash\u0131w"</b> t\xFAymesin bas\u0131\u0144:`;
+  } else if (lang === "ru") {
+    return `\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435, <b>${userName}</b>! \u0412\u044B \u0434\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C \u0432 \u0442\u0435\u043B\u0435\u0433\u0440\u0430\u043C \u0431\u043E\u0442 Cake Bumer! \u{1F370}
+
+\u0417\u0434\u0435\u0441\u044C \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043E\u0437\u043D\u0430\u043A\u043E\u043C\u0438\u0442\u044C\u0441\u044F \u0441 \u043D\u0430\u0448\u0438\u043C \u043C\u0435\u043D\u044E \u0434\u0435\u0441\u0435\u0440\u0442\u043E\u0432, \u0444\u0438\u0440\u043C\u0435\u043D\u043D\u044B\u0445 \u0442\u043E\u0440\u0442\u043E\u0432 \u0438 \u043D\u0430\u043F\u0438\u0442\u043A\u043E\u0432, \u0430 \u0442\u0430\u043A\u0436\u0435 \u043E\u0444\u043E\u0440\u043C\u0438\u0442\u044C \u0437\u0430\u043A\u0430\u0437.
+
+\u{1F447} \u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 <b>"\u{1F370} \u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E"</b> \u043D\u0438\u0436\u0435, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043E\u043D\u043B\u0430\u0439\u043D \u043C\u0435\u043D\u044E:`;
+  } else if (lang === "en") {
+    return `Hello <b>${userName}</b>, welcome to Cake Bumer telegram bot! \u{1F370}
+
+Here you can explore our menu of delicious desserts, premium cakes, and coffee, and place your order.
+
+\u{1F447} Tap the <b>"\u{1F370} Open Menu"</b> button below to open the online menu:`;
+  }
+  return `Salom <b>${userName}</b>, siz Cake Bumer telegram botiga xush kelibsiz! \u{1F370}
+
+Bu yerda siz mazali shirinliklarimiz, eksklyuziv tortlarimiz va ichimliklarimiz menyusi bilan tanishishingiz hamda buyurtma berishingiz mumkin.
+
+\u{1F447} Menyuni ko'rish uchun pastdagi <b>"\u{1F370} Menyuni ochish"</b> tugmasini bosing:`;
+}
+function getHelpMessage(lang = "uz") {
+  if (lang === "qr") {
+    return `\u2139\uFE0F <b>Cake Bumer bot\u0131 boy\u0131nsha j\xE1rdem:</b>
+
+\u{1F370} <b>Menyudi ash\u0131w</b> \u2014 t\xF3mendegi t\xFAymeni bas\u0131\u0144 h\xE1m barl\u0131q shiyrinlikler, tortlar h\xE1m kofelerimizdi saylap buy\u0131rtpa beri\u0144.
+\u{1F4F1} <b>Nomerdi jiberiw</b> \u2014 telefon nomeri\u0144izdi jiberiw arqal\u0131 buy\u0131rtpa\u0144\u0131zd\u0131 tez tast\u0131y\u0131qla\u0144.
+\u{1F310} <b>Tildi saylaw</b> \u2014 bot h\xE1m menyu tilin \xF3zgertiw.
+
+\u{1F4CD} M\xE1nzilimiz: N\xF3kis qalas\u0131, Cake Bumer Dessert Caf\xE9.`;
+  } else if (lang === "ru") {
+    return `\u2139\uFE0F <b>\u041F\u043E\u043C\u043E\u0449\u044C \u043F\u043E \u0431\u043E\u0442\u0443 Cake Bumer:</b>
+
+\u{1F370} <b>\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E</b> \u2014 \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u0438\u043D\u0442\u0435\u0440\u0430\u043A\u0442\u0438\u0432\u043D\u043E\u0435 \u043C\u0435\u043D\u044E \u0438 \u0437\u0430\u043A\u0430\u0437\u0430\u0442\u044C \u0434\u0435\u0441\u0435\u0440\u0442\u044B.
+\u{1F4F1} <b>\u041E\u0442\u043F\u0440\u0430\u0432\u0438\u0442\u044C \u043D\u043E\u043C\u0435\u0440</b> \u2014 \u043E\u0442\u043F\u0440\u0430\u0432\u044C\u0442\u0435 \u043D\u043E\u043C\u0435\u0440 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430 \u0434\u043B\u044F \u0431\u044B\u0441\u0442\u0440\u043E\u0439 \u0441\u0432\u044F\u0437\u0438 \u0438 \u043F\u043E\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043D\u0438\u044F \u0437\u0430\u043A\u0430\u0437\u0430.
+\u{1F310} <b>\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u044F\u0437\u044B\u043A</b> \u2014 \u0432\u044B\u0431\u043E\u0440 \u044F\u0437\u044B\u043A\u0430 \u0431\u043E\u0442\u0430 \u0438 \u043C\u0435\u043D\u044E.
+
+\u{1F4CD} \u041D\u0430\u0448 \u0430\u0434\u0440\u0435\u0441: \u0433. \u041D\u0443\u043A\u0443\u0441, Cake Bumer Dessert Caf\xE9.`;
+  } else if (lang === "en") {
+    return `\u2139\uFE0F <b>Cake Bumer Bot Help:</b>
+
+\u{1F370} <b>Open Menu</b> \u2014 click the button below to browse our desserts and place orders.
+\u{1F4F1} <b>Send Phone</b> \u2014 share your phone number for quick checkout and order updates.
+\u{1F310} <b>Select Language</b> \u2014 change language of the bot and menu.
+
+\u{1F4CD} Location: Nukus city, Cake Bumer Dessert Caf\xE9.`;
+  }
+  return `\u2139\uFE0F <b>Cake Bumer boti bo'yicha yordam:</b>
+
+\u{1F370} <b>Menyuni ochish</b> \u2014 pastdagi tugmani bosing va barcha shirinliklar, tortlar va qahvalarni ko'rib buyurtma bering.
+\u{1F4F1} <b>Raqamni yuborish</b> \u2014 telefon raqamingizni botga yuborish orqali buyurtmangizni tezroq rasmiylashtiring.
+\u{1F310} <b>Tilni tanlash</b> \u2014 bot va menyu tilini o'zingizga qulay qilib o'zgartiring.
+
+\u{1F4CD} Bizning manzil: Nukus shahri, Cake Bumer Dessert Caf\xE9.`;
+}
+function getContactSuccessMessage(userName, phone, lang = "uz") {
+  if (lang === "qr") {
+    return `\u2705 Raxmet <b>${userName}</b>, telefon nomeri\u0144iz tab\u0131sl\u0131 saqland\u0131: <b>${phone}</b> \u{1F4F1}
+
+Endi t\xF3mendegi t\xFAyme arqal\u0131 menyudi ash\u0131p, sevimli shiyrinlikleri\u0144izge buy\u0131rtpa bere alas\u0131z!`;
+  } else if (lang === "ru") {
+    return `\u2705 \u0421\u043F\u0430\u0441\u0438\u0431\u043E <b>${userName}</b>, \u0432\u0430\u0448 \u043D\u043E\u043C\u0435\u0440 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0430 \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D: <b>${phone}</b> \u{1F4F1}
+
+\u0422\u0435\u043F\u0435\u0440\u044C \u0432\u044B \u043C\u043E\u0436\u0435\u0442\u0435 \u043D\u0430\u0436\u0430\u0442\u044C \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435, \u043E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E \u0438 \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u0437\u0430\u043A\u0430\u0437!`;
+  } else if (lang === "en") {
+    return `\u2705 Thank you <b>${userName}</b>, your phone number has been saved: <b>${phone}</b> \u{1F4F1}
+
+Now you can tap the button below to open the menu and place your order!`;
+  }
+  return `\u2705 Rahmat <b>${userName}</b>, telefon raqamingiz muvaffaqiyatli saqlandi: <b>${phone}</b> \u{1F4F1}
+
+Endi bemalol quyidagi tugma orqali menyuni ochib, sevimli shirinliklaringizga buyurtma berishingiz mumkin!`;
+}
+async function handleTelegramUpdate(update) {
+  if (!update) return;
+  try {
+    if (update.message) {
+      const msg = update.message;
+      const chatId = msg.chat?.id;
+      const from = msg.from;
+      if (!chatId || !from) return;
+      const userId = from.id;
+      const rawName = from.username ? `@${from.username}` : [from.first_name, from.last_name].filter(Boolean).join(" ") || "Mijoz";
+      const safeName = rawName.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      const existingUser = await getTelegramUser(userId);
+      let userLang = existingUser?.lang || "uz";
+      if (!existingUser && from.language_code) {
+        const lc = from.language_code.toLowerCase();
+        if (lc.startsWith("ru")) userLang = "ru";
+        else if (lc.startsWith("en")) userLang = "en";
+      }
+      if (msg.contact && msg.contact.phone_number) {
+        let phone = msg.contact.phone_number;
+        if (!phone.startsWith("+")) phone = `+${phone}`;
+        await saveTelegramUser({
+          id: userId,
+          first_name: from.first_name,
+          last_name: from.last_name,
+          username: from.username,
+          phone_number: phone,
+          lang: userLang
+        });
+        const replyText = getContactSuccessMessage(safeName, phone, userLang);
+        await sendTelegramMessage(chatId, replyText, {
+          reply_markup: getInlineKeyboard(userLang)
+        });
+        return;
+      }
+      const text = (msg.text || "").trim();
+      if (text.startsWith("/start")) {
+        await saveTelegramUser({
+          id: userId,
+          first_name: from.first_name,
+          last_name: from.last_name,
+          username: from.username,
+          lang: userLang
+        });
+        const welcomeText = getStartMessage(safeName, userLang);
+        await sendTelegramMessage(chatId, welcomeText, {
+          reply_markup: getReplyKeyboard(userLang)
+        });
+        await sendTelegramMessage(
+          chatId,
+          `\u{1F447} <b>${userLang === "qr" ? "Menyudi ash\u0131w:" : userLang === "ru" ? "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043C\u0435\u043D\u044E:" : userLang === "en" ? "Open menu:" : "Menyuni ochish:"}</b>`,
+          {
+            reply_markup: getInlineKeyboard(userLang)
+          }
+        );
+        return;
+      }
+      if (text.startsWith("/help") || text.includes("Yordam") || text.includes("J\xE1rdem") || text.includes("\u041F\u043E\u043C\u043E\u0449\u044C") || text.includes("Help")) {
+        const helpText = getHelpMessage(userLang);
+        await sendTelegramMessage(chatId, helpText, {
+          reply_markup: getInlineKeyboard(userLang)
+        });
+        return;
+      }
+      if (text.startsWith("/lang") || text.includes("Tilni tanlash") || text.includes("Tildi saylaw") || text.includes("\u0421\u043C\u0435\u043D\u0438\u0442\u044C \u044F\u0437\u044B\u043A") || text.includes("Select Language") || text.includes("Til")) {
+        await sendTelegramMessage(
+          chatId,
+          `\u{1F310} <b>Tilni tanlang / Tildi sayla\u0144 / \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u044F\u0437\u044B\u043A / Select language:</b>`,
+          {
+            reply_markup: getLangSelectInlineKeyboard()
+          }
+        );
+        return;
+      }
+      const fallbackPrompt = userLang === "qr" ? `S\xE1lem <b>${safeName}</b>! Cake Bumer shiyrinlikler menyusin k\xF3riw ush\u0131n t\xF3mendegi t\xFAymeni bas\u0131\u0144:` : userLang === "ru" ? `\u0417\u0434\u0440\u0430\u0432\u0441\u0442\u0432\u0443\u0439\u0442\u0435, <b>${safeName}</b>! \u0427\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C \u0434\u0435\u0441\u0435\u0440\u0442\u044B Cake Bumer, \u043D\u0430\u0436\u043C\u0438\u0442\u0435 \u043A\u043D\u043E\u043F\u043A\u0443 \u043D\u0438\u0436\u0435:` : userLang === "en" ? `Hello <b>${safeName}</b>! To browse Cake Bumer desserts, tap the button below:` : `Salom <b>${safeName}</b>! Cake Bumer shirinliklar menyusini ko'rish uchun quyidagi tugmani bosing:`;
+      await sendTelegramMessage(chatId, fallbackPrompt, {
+        reply_markup: getInlineKeyboard(userLang)
+      });
+      return;
+    }
+    if (update.callback_query) {
+      const cb = update.callback_query;
+      const cbId = cb.id;
+      const data = cb.data;
+      const chatId = cb.message?.chat?.id;
+      const from = cb.from;
+      if (!chatId || !from) {
+        await answerCallbackQuery(cbId);
+        return;
+      }
+      const rawName = from.username ? `@${from.username}` : [from.first_name, from.last_name].filter(Boolean).join(" ") || "Mijoz";
+      const safeName = rawName.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      if (data === "open_lang_select") {
+        await answerCallbackQuery(cbId);
+        await sendTelegramMessage(
+          chatId,
+          `\u{1F310} <b>Tilni tanlang / Tildi sayla\u0144 / \u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u044F\u0437\u044B\u043A / Select language:</b>`,
+          {
+            reply_markup: getLangSelectInlineKeyboard()
+          }
+        );
+        return;
+      }
+      if (data === "open_help") {
+        await answerCallbackQuery(cbId);
+        const existingUser = await getTelegramUser(from.id);
+        const lang = existingUser?.lang || "uz";
+        await sendTelegramMessage(chatId, getHelpMessage(lang), {
+          reply_markup: getInlineKeyboard(lang)
+        });
+        return;
+      }
+      if (data.startsWith("set_lang_")) {
+        const newLang = data.replace("set_lang_", "");
+        await saveTelegramUser({
+          id: from.id,
+          first_name: from.first_name,
+          last_name: from.last_name,
+          username: from.username,
+          lang: newLang
+        });
+        let ack = "Til muvaffaqiyatli o'zgartirildi!";
+        if (newLang === "qr") ack = "Til tab\u0131sl\u0131 \xF3zgertildi!";
+        else if (newLang === "ru") ack = "\u042F\u0437\u044B\u043A \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0438\u0437\u043C\u0435\u043D\u0435\u043D!";
+        else if (newLang === "en") ack = "Language changed successfully!";
+        await answerCallbackQuery(cbId, ack, false);
+        await sendTelegramMessage(chatId, `\u2705 ${ack}`, {
+          reply_markup: getReplyKeyboard(newLang)
+        });
+        const startMsg = getStartMessage(safeName, newLang);
+        await sendTelegramMessage(chatId, startMsg, {
+          reply_markup: getInlineKeyboard(newLang)
+        });
+        return;
+      }
+      await answerCallbackQuery(cbId);
+    }
+  } catch (err) {
+    console.error("[Telegram Update Processing Error]:", err);
+  }
+}
 
 // server.ts
 var app = express();
@@ -1334,6 +1763,33 @@ app.delete("/api/tables/:tableNumber", async (req, res) => {
   } catch (err) {
     console.error("Failed to delete table:", err);
     res.status(500).json({ error: "Failed to delete table" });
+  }
+});
+app.post("/api/telegram-webhook", async (req, res) => {
+  try {
+    res.status(200).json({ ok: true });
+    await handleTelegramUpdate(req.body);
+  } catch (err) {
+    console.error("[TELEGRAM WEBHOOK ERROR]:", err);
+  }
+});
+app.get("/api/telegram-webhook", (req, res) => {
+  res.json({
+    status: "ok",
+    bot: "@QRmenu2026bot",
+    webAppUrl: WEB_APP_URL,
+    time: (/* @__PURE__ */ new Date()).toISOString()
+  });
+});
+app.get("/api/telegram/setup", async (req, res) => {
+  try {
+    const host = req.headers.host;
+    const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
+    const baseUrl = host?.includes("vercel.app") ? `https://${host}` : WEB_APP_URL;
+    const result = await setupTelegramWebhook(baseUrl);
+    res.json({ success: true, result });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to setup webhook", details: err?.message });
   }
 });
 async function start() {
