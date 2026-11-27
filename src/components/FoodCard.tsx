@@ -11,6 +11,7 @@ interface FoodCardProps {
   onAddToCart: (food: FoodItem) => void;
   onUpdateQuantity?: (foodId: string, quantity: number) => void;
   cartQuantity: number;
+  isPriority?: boolean;
 }
 
 export const FoodCard: React.FC<FoodCardProps> = ({
@@ -20,6 +21,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
   onAddToCart,
   onUpdateQuantity,
   cartQuantity,
+  isPriority = false,
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -68,7 +70,10 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             <img
               src={food.imageUrl}
               alt={title}
-              loading="lazy"
+              width="240"
+              height="240"
+              loading={isPriority ? 'eager' : 'lazy'}
+              {...(isPriority ? ({ fetchPriority: 'high' } as any) : {})}
               onLoad={() => setImageLoaded(true)}
               onError={() => {
                 setImageError(true);

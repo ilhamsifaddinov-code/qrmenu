@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense } from 'react';
 import { Search, Flame, RotateCcw, ShoppingBag, ArrowRight } from 'lucide-react';
 import {
   CategoryId,
@@ -15,15 +15,29 @@ import { translations } from './i18n/translations';
 import { getFoodTitle, getFoodIngredients, formatPrice } from './utils/formatters';
 import { Header } from './components/Header';
 import { FoodCard } from './components/FoodCard';
-import { FoodDetailModal } from './components/FoodDetailModal';
 import { CartDrawer } from './components/CartDrawer';
-import { ReceiptModal } from './components/ReceiptModal';
-import { CustomerReceiptsModal } from './components/CustomerReceiptsModal';
-import { QRCodeModal } from './components/QRCodeModal';
-import { AdminAuthModal } from './components/AdminAuthModal';
-import { AdminPanel } from './components/AdminPanel';
 import { Footer } from './components/Footer';
 import { LoadingScreen } from './components/LoadingScreen';
+
+// Code-split heavy modals and Admin Panel to minimize mobile initial JS bundle
+const FoodDetailModal = React.lazy(() =>
+  import('./components/FoodDetailModal').then((m) => ({ default: m.FoodDetailModal }))
+);
+const ReceiptModal = React.lazy(() =>
+  import('./components/ReceiptModal').then((m) => ({ default: m.ReceiptModal }))
+);
+const CustomerReceiptsModal = React.lazy(() =>
+  import('./components/CustomerReceiptsModal').then((m) => ({ default: m.CustomerReceiptsModal }))
+);
+const QRCodeModal = React.lazy(() =>
+  import('./components/QRCodeModal').then((m) => ({ default: m.QRCodeModal }))
+);
+const AdminAuthModal = React.lazy(() =>
+  import('./components/AdminAuthModal').then((m) => ({ default: m.AdminAuthModal }))
+);
+const AdminPanel = React.lazy(() =>
+  import('./components/AdminPanel').then((m) => ({ default: m.AdminPanel }))
+);
 
 export default function App() {
   // 1. Initial Loading Screen state
@@ -284,11 +298,11 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // Dismiss loading screen after initial render
+  // Quick, smooth dismiss of initial loading screen once ready
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
-    }, 1500);
+    }, 220);
     return () => clearTimeout(timer);
   }, []);
 
@@ -833,28 +847,39 @@ export default function App() {
       <main className="max-w-7xl mx-auto px-3 sm:px-6 py-4 w-full flex-1 space-y-5">
         {/* Admin Panel Toggle View */}
         {isAdminView ? (
-          <AdminPanel
-            lang={lang}
-            foodItems={foodItems}
-            orders={orders}
-            waiterCalls={waiterCalls}
-            settings={settings}
-            tables={tables}
-            onAddTable={handleAddTable}
-            onDeleteTable={handleDeleteTable}
-            onSetTablesBatch={handleSetTablesBatch}
-            adminPassword={adminPassword}
-            onUpdatePassword={setAdminPassword}
-            onUpdateSettings={handleUpdateSettings}
-            onAddFoodItem={handleAddFoodItem}
-            onUpdateFoodItem={handleUpdateFoodItem}
-            onDeleteFoodItem={handleDeleteFoodItem}
-            onResolveWaiterCall={handleResolveWaiterCall}
-            onResolveWaiterCallsByTable={handleResolveWaiterCallsByTable}
-            onUpdateOrderStatus={handleUpdateOrderStatus}
-            onDeleteOrder={handleDeleteOrder}
-            onCloseAdmin={() => setIsAdminView(false)}
-          />
+          <Suspense
+            fallback={
+              <div className="py-20 text-center flex flex-col items-center justify-center space-y-3">
+                <div className="w-8 h-8 border-3 border-[#C0684C]/30 border-t-[#C0684C] rounded-full animate-spin"></div>
+                <p className="text-sm font-semibold text-[#8D6B58]">
+                  {lang === 'qr' ? 'Admin panel júklenbekte...' : 'Admin panel yuklanmoqda...'}
+                </p>
+              </div>
+            }
+          >
+            <AdminPanel
+              lang={lang}
+              foodItems={foodItems}
+              orders={orders}
+              waiterCalls={waiterCalls}
+              settings={settings}
+              tables={tables}
+              onAddTable={handleAddTable}
+              onDeleteTable={handleDeleteTable}
+              onSetTablesBatch={handleSetTablesBatch}
+              adminPassword={adminPassword}
+              onUpdatePassword={setAdminPassword}
+              onUpdateSettings={handleUpdateSettings}
+              onAddFoodItem={handleAddFoodItem}
+              onUpdateFoodItem={handleUpdateFoodItem}
+              onDeleteFoodItem={handleDeleteFoodItem}
+              onResolveWaiterCall={handleResolveWaiterCall}
+              onResolveWaiterCallsByTable={handleResolveWaiterCallsByTable}
+              onUpdateOrderStatus={handleUpdateOrderStatus}
+              onDeleteOrder={handleDeleteOrder}
+              onCloseAdmin={() => setIsAdminView(false)}
+            />
+          </Suspense>
         ) : (
           <>
             {/* Search Bar matching Image 2 */}
@@ -875,7 +900,7 @@ export default function App() {
 
             {/* Categories Selector Tabs matching Image 2 */}
             <nav
-              className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none"
+              className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none touch-pan-x -mx-3 px-3 sm:mx-0 sm:px-0"
               aria-label="Kategoriyalar"
             >
               {[
@@ -891,7 +916,7 @@ export default function App() {
                   type="button"
                   onClick={() => setSelectedCategory(cat.id as CategoryId)}
                   aria-pressed={selectedCategory === cat.id}
-                  className={`px-4 py-2 rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all shadow-xs ${
+                  className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-2xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all shadow-xs ${
                     selectedCategory === cat.id
                       ? 'bg-[#C0684C] text-white shadow-sm'
                       : 'bg-[#F1EAE0] text-[#2E1E17] hover:bg-[#EAE0D4]'
@@ -903,11 +928,11 @@ export default function App() {
             </nav>
 
             {/* Sub-Filters: Calorie slider & Tags */}
-            <div className="bg-white p-3 rounded-2xl border border-[#EAE0D4] shadow-2xs space-y-2.5">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="bg-white p-2.5 sm:p-3 rounded-2xl border border-[#EAE0D4] shadow-2xs space-y-2">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-3">
                 {/* Calorie Filter */}
                 <div className="w-full sm:w-72 flex items-center justify-between gap-2 text-xs">
-                  <label htmlFor="calorie-slider" className="font-semibold text-[#8D6B58] shrink-0">
+                  <label htmlFor="calorie-slider" className="font-semibold text-[#8D6B58] shrink-0 text-[11px] sm:text-xs">
                     {t.filterByCalorie || 'Max Kaloriya'}:
                   </label>
                   <input
@@ -918,40 +943,42 @@ export default function App() {
                     step={50}
                     value={maxCalories}
                     onChange={(e) => setMaxCalories(parseInt(e.target.value))}
-                    className="accent-[#C0684C] flex-1 cursor-pointer"
+                    className="accent-[#C0684C] flex-1 cursor-pointer h-1.5"
                   />
-                  <span className="font-bold text-[#C0684C] text-xs shrink-0 w-16 text-right">
+                  <span className="font-bold text-[#C0684C] text-[11px] sm:text-xs shrink-0 w-14 text-right">
                     {maxCalories} kcal
                   </span>
                 </div>
 
                 {/* Dietary Tags & Reset */}
-                <div className="flex flex-wrap items-center gap-1.5 text-xs w-full sm:w-auto justify-end">
-                  <button
-                    type="button"
-                    onClick={() => setIsVegetarianOnly((p) => !p)}
-                    aria-pressed={isVegetarianOnly}
-                    className={`px-2.5 py-1 rounded-xl font-semibold border transition ${
-                      isVegetarianOnly
-                        ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                        : 'bg-[#FAF5EF] text-[#6C5343] border-[#EAE0D4]'
-                    }`}
-                  >
-                    🌱 {t.filterVegetarian}
-                  </button>
+                <div className="flex flex-wrap items-center gap-1.5 text-xs w-full sm:w-auto justify-between sm:justify-end">
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setIsVegetarianOnly((p) => !p)}
+                      aria-pressed={isVegetarianOnly}
+                      className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl font-semibold text-[11px] sm:text-xs border transition ${
+                        isVegetarianOnly
+                          ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                          : 'bg-[#FAF5EF] text-[#6C5343] border-[#EAE0D4]'
+                      }`}
+                    >
+                      🌱 {t.filterVegetarian}
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={() => setIsGlutenFreeOnly((p) => !p)}
-                    aria-pressed={isGlutenFreeOnly}
-                    className={`px-2.5 py-1 rounded-xl font-semibold border transition ${
-                      isGlutenFreeOnly
-                        ? 'bg-[#C0684C]/15 text-[#C0684C] border-[#C0684C]/40'
-                        : 'bg-[#FAF5EF] text-[#6C5343] border-[#EAE0D4]'
-                    }`}
-                  >
-                    🌾 {t.filterGlutenFree}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsGlutenFreeOnly((p) => !p)}
+                      aria-pressed={isGlutenFreeOnly}
+                      className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-xl font-semibold text-[11px] sm:text-xs border transition ${
+                        isGlutenFreeOnly
+                          ? 'bg-[#C0684C]/15 text-[#C0684C] border-[#C0684C]/40'
+                          : 'bg-[#FAF5EF] text-[#6C5343] border-[#EAE0D4]'
+                      }`}
+                    >
+                      🌾 {t.filterGlutenFree}
+                    </button>
+                  </div>
 
                   {(searchQuery || maxCalories < 1000 || isVegetarianOnly || isGlutenFreeOnly) && (
                     <button
@@ -962,9 +989,9 @@ export default function App() {
                         setIsVegetarianOnly(false);
                         setIsGlutenFreeOnly(false);
                       }}
-                      className="text-[#C0684C] hover:text-[#A9563C] font-semibold text-xs flex items-center gap-1 ml-1"
+                      className="text-[#C0684C] hover:text-[#A9563C] font-semibold text-[11px] sm:text-xs flex items-center gap-1"
                     >
-                      <RotateCcw className="w-3.5 h-3.5" />
+                      <RotateCcw className="w-3 h-3" />
                       <span>{t.resetFilters}</span>
                     </button>
                   )}
@@ -1005,7 +1032,7 @@ export default function App() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-                  {filteredFoodItems.map((food) => {
+                  {filteredFoodItems.map((food, index) => {
                     const cartQty =
                       (cartItems || []).find((i) => i?.food?.id === food?.id)?.quantity || 0;
 
@@ -1018,6 +1045,7 @@ export default function App() {
                         onAddToCart={(f) => handleAddToCart(f, 1)}
                         onUpdateQuantity={handleUpdateCartQuantity}
                         cartQuantity={cartQty}
+                        isPriority={index < 2}
                       />
                     );
                   })}
@@ -1030,7 +1058,7 @@ export default function App() {
 
       {/* 4. Floating Bottom Cart Bar (Image 2) */}
       {!isAdminView && (totalCartCount > 0 || activeUserOrders.length > 0) && (
-        <div className="fixed bottom-4 left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-40 animate-slideUp">
+        <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-40 animate-slideUp">
           <div
             onClick={() => setIsCartOpen(true)}
             role="button"
@@ -1038,7 +1066,7 @@ export default function App() {
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') setIsCartOpen(true);
             }}
-            className="w-full bg-[#C0684C] hover:bg-[#B05B3F] text-white p-3 sm:p-3.5 rounded-2xl sm:rounded-3xl shadow-[0_8px_25px_rgba(192,104,76,0.4)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
+            className="w-full bg-[#C0684C] hover:bg-[#B05B3F] text-white p-3 sm:p-3.5 rounded-2xl sm:rounded-3xl shadow-[0_8px_25px_rgba(192,104,76,0.4)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all touch-manipulation"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shrink-0">
@@ -1066,15 +1094,17 @@ export default function App() {
       )}
 
       {/* 5. Modals & Drawers */}
-      {selectedFood && (
-        <FoodDetailModal
-          food={selectedFood}
-          lang={lang}
-          onClose={() => setSelectedFood(null)}
-          onAddToCart={handleAddToCart}
-          onAddReview={handleAddReview}
-        />
-      )}
+      <Suspense fallback={null}>
+        {selectedFood && (
+          <FoodDetailModal
+            food={selectedFood}
+            lang={lang}
+            onClose={() => setSelectedFood(null)}
+            onAddToCart={handleAddToCart}
+            onAddReview={handleAddReview}
+          />
+        )}
+      </Suspense>
 
       <CartDrawer
         isOpen={isCartOpen}
@@ -1090,51 +1120,63 @@ export default function App() {
         onProceedPayment={handleConfirmOrder}
       />
 
-      <ReceiptModal
-        isOpen={isReceiptOpen}
-        lang={lang}
-        order={receiptOrder}
-        onClose={() => setIsReceiptOpen(false)}
-      />
+      <Suspense fallback={null}>
+        {isReceiptOpen && (
+          <ReceiptModal
+            isOpen={isReceiptOpen}
+            lang={lang}
+            order={receiptOrder}
+            onClose={() => setIsReceiptOpen(false)}
+          />
+        )}
+      </Suspense>
 
-      <CustomerReceiptsModal
-        isOpen={isCustomerReceiptsOpen}
-        lang={lang}
-        onClose={() => setIsCustomerReceiptsOpen(false)}
-        onSelectReceipt={(rec) => {
-          setReceiptOrder(rec);
-          setIsCustomerReceiptsOpen(false);
-          setIsReceiptOpen(true);
-        }}
-      />
+      <Suspense fallback={null}>
+        {isCustomerReceiptsOpen && (
+          <CustomerReceiptsModal
+            isOpen={isCustomerReceiptsOpen}
+            lang={lang}
+            onClose={() => setIsCustomerReceiptsOpen(false)}
+            onSelectReceipt={(rec) => {
+              setReceiptOrder(rec);
+              setIsCustomerReceiptsOpen(false);
+              setIsReceiptOpen(true);
+            }}
+          />
+        )}
+      </Suspense>
 
-      {isAdminAuthModalOpen && (
-        <AdminAuthModal
-          isOpen={isAdminAuthModalOpen}
-          lang={lang}
-          adminPassword={adminPassword}
-          onClose={() => setIsAdminAuthModalOpen(false)}
-          onSuccess={() => {
-            try {
-              sessionStorage.setItem('cafe_admin_auth', 'true');
-            } catch (e) {
-              console.error(e);
-            }
-            setIsAdminAuthenticated(true);
-            setIsAdminAuthModalOpen(false);
-            setIsAdminView(true);
-          }}
-        />
-      )}
+      <Suspense fallback={null}>
+        {isAdminAuthModalOpen && (
+          <AdminAuthModal
+            isOpen={isAdminAuthModalOpen}
+            lang={lang}
+            adminPassword={adminPassword}
+            onClose={() => setIsAdminAuthModalOpen(false)}
+            onSuccess={() => {
+              try {
+                sessionStorage.setItem('cafe_admin_auth', 'true');
+              } catch (e) {
+                console.error(e);
+              }
+              setIsAdminAuthenticated(true);
+              setIsAdminAuthModalOpen(false);
+              setIsAdminView(true);
+            }}
+          />
+        )}
+      </Suspense>
 
-      {isQrModalOpen && (
-        <QRCodeModal
-          isOpen={isQrModalOpen}
-          lang={lang}
-          tableNumber={tableNumber}
-          onClose={() => setIsQrModalOpen(false)}
-        />
-      )}
+      <Suspense fallback={null}>
+        {isQrModalOpen && (
+          <QRCodeModal
+            isOpen={isQrModalOpen}
+            lang={lang}
+            tableNumber={tableNumber}
+            onClose={() => setIsQrModalOpen(false)}
+          />
+        )}
+      </Suspense>
 
       {/* 6. Footer */}
       <Footer lang={lang} settings={settings} />

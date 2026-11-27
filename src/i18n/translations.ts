@@ -8,7 +8,10 @@ export const translations: Record<Language, Record<string, string>> = {
     tableDetected: 'QR-kod arqalı anıqlandı',
     changeTable: 'Stolıńız bekitilgen',
     callWaiter: 'Ofitsianttı shaqırıw',
+    callWaiterShort: 'Ofitsiant',
     requestBill: 'Esap soraw',
+    requestBillShort: 'Esap',
+    myReceiptsShort: 'Shekler',
     waiterCalledMsg: 'Ofitsiantqa xabar jiberildi! Jaqın arada stolińizge keledi.',
     billRequestedMsg: 'Esap tayarlaw haqqında xabar berildi.',
 
@@ -185,7 +188,10 @@ export const translations: Record<Language, Record<string, string>> = {
     tableDetected: 'QR-kod orqali aniqlandi',
     changeTable: 'Stolni o\'zgartirish',
     callWaiter: 'Ofitsiantni chaqirish',
+    callWaiterShort: 'Ofitsiant',
     requestBill: 'Hisobni so\'rash',
+    requestBillShort: 'Hisob',
+    myReceiptsShort: 'Cheklar',
     waiterCalledMsg: 'Ofitsiantga xabar yuborildi! Tez orada stolingizga keladi.',
     billRequestedMsg: 'Hisob tayyorlash haqida xabar berildi.',
 
@@ -362,7 +368,10 @@ export const translations: Record<Language, Record<string, string>> = {
     tableDetected: 'Определено по QR-коду',
     changeTable: 'Сменить стол',
     callWaiter: 'Вызвать официанта',
+    callWaiterShort: 'Официант',
     requestBill: 'Запросить счет',
+    requestBillShort: 'Счет',
+    myReceiptsShort: 'Чеки',
     waiterCalledMsg: 'Официант уведомлен! Скоро подойдет к вашему столу.',
     billRequestedMsg: 'Запрос на чек отправлен.',
 
@@ -529,7 +538,10 @@ export const translations: Record<Language, Record<string, string>> = {
     tableDetected: 'Detected via QR-Code',
     changeTable: 'Change Table',
     callWaiter: 'Call Waiter',
+    callWaiterShort: 'Waiter',
     requestBill: 'Request Bill',
+    requestBillShort: 'Bill',
+    myReceiptsShort: 'Receipts',
     waiterCalledMsg: 'Waiter alerted! They will arrive at your table shortly.',
     billRequestedMsg: 'Bill request sent.',
 

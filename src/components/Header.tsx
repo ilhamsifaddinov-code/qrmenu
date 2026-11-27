@@ -186,7 +186,7 @@ export const Header: React.FC<HeaderProps> = ({
                 type="button"
                 onClick={() => onLanguageChange(l)}
                 aria-label={`Til: ${l.toUpperCase()}`}
-                className={`px-2.5 py-1 text-[11px] sm:text-xs font-bold rounded-full transition-all duration-200 ${
+                className={`px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[10px] sm:text-xs font-bold rounded-full transition-all duration-200 ${
                   lang === l
                     ? 'bg-[#2E1E17] text-white shadow-xs'
                     : 'text-[#6C5343] hover:text-[#2E1E17]'
@@ -223,14 +223,14 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={handleWaiterBtnClick}
             aria-label={t.callWaiter}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold text-xs border transition active:scale-95 shadow-2xs whitespace-nowrap ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl font-semibold text-xs border transition active:scale-95 shadow-2xs whitespace-nowrap shrink-0 ${
               currentWaiterCooldown > 0
                 ? 'bg-[#EAE0D4] text-[#8D6B58] border-[#D8C7B5] cursor-not-allowed opacity-90'
                 : 'bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] border-[#E6DDD2]'
             }`}
           >
             <Bell
-              className={`w-3.5 h-3.5 ${
+              className={`w-3.5 h-3.5 shrink-0 ${
                 currentWaiterCooldown > 0 ? 'text-[#8D6B58] animate-pulse' : 'text-[#C0684C]'
               }`}
               aria-hidden="true"
@@ -238,10 +238,14 @@ export const Header: React.FC<HeaderProps> = ({
             <span>
               {currentWaiterCooldown > 0 ? (
                 <span>
-                  {t.callSentCooldown || 'Chaqiruv yuborildi'} ({formattedWaiterTimer})
+                  <span className="hidden sm:inline">{t.callSentCooldown || 'Chaqiruv yuborildi'} </span>
+                  <span>({formattedWaiterTimer})</span>
                 </span>
               ) : (
-                t.callWaiter
+                <>
+                  <span className="sm:hidden">{t.callWaiterShort || 'Ofitsiant'}</span>
+                  <span className="hidden sm:inline">{t.callWaiter}</span>
+                </>
               )}
             </span>
           </button>
@@ -251,21 +255,24 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={handleBillBtnClick}
             aria-label={t.requestBill}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-semibold text-xs border transition active:scale-95 shadow-2xs whitespace-nowrap ${
+            className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl font-semibold text-xs border transition active:scale-95 shadow-2xs whitespace-nowrap shrink-0 ${
               billCooldown > 0
                 ? 'bg-[#EAE0D4] text-[#8D6B58] border-[#D8C7B5] cursor-not-allowed opacity-80'
                 : 'bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] border-[#E6DDD2]'
             }`}
           >
             <FileText
-              className={`w-3.5 h-3.5 ${billCooldown > 0 ? 'text-[#8D6B58]' : 'text-[#C0684C]'}`}
+              className={`w-3.5 h-3.5 shrink-0 ${billCooldown > 0 ? 'text-[#8D6B58]' : 'text-[#C0684C]'}`}
               aria-hidden="true"
             />
             <span>
-              {t.requestBill}
-              {billCooldown > 0 && (
-                <span className="ml-1 text-[10px] font-bold text-[#C0684C]">({billCooldown}s)</span>
-              )}
+              <span className="sm:hidden">{billCooldown > 0 ? `${billCooldown}s` : (t.requestBillShort || 'Hisob')}</span>
+              <span className="hidden sm:inline">
+                {t.requestBill}
+                {billCooldown > 0 && (
+                  <span className="ml-1 text-[10px] font-bold text-[#C0684C]">({billCooldown}s)</span>
+                )}
+              </span>
             </span>
           </button>
 
@@ -275,14 +282,14 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={onOpenReceipts}
               aria-label={t.myReceipts || 'Mening cheklarim'}
-              className="flex items-center gap-1.5 bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] px-3 py-1.5 rounded-xl font-semibold text-xs border border-[#E6DDD2] transition active:scale-95 shadow-2xs whitespace-nowrap"
+              className="flex items-center gap-1 sm:gap-1.5 bg-[#F1EAE0] hover:bg-[#EAE0D4] text-[#2E1E17] px-2.5 sm:px-3 py-1.5 rounded-xl font-semibold text-xs border border-[#E6DDD2] transition active:scale-95 shadow-2xs whitespace-nowrap shrink-0"
               title={t.myReceipts || 'Mening cheklarim'}
             >
-              <FileText className="w-3.5 h-3.5 text-[#C0684C]" aria-hidden="true" />
+              <FileText className="w-3.5 h-3.5 text-[#C0684C] shrink-0" aria-hidden="true" />
               <span className="hidden sm:inline">
                 {t.myReceipts || (lang === 'qr' ? 'Meniń sheklerim' : 'Mening cheklarim')}
               </span>
-              <span className="sm:hidden">{lang === 'qr' ? 'Shekler' : 'Cheklar'}</span>
+              <span className="sm:hidden">{t.myReceiptsShort || (lang === 'qr' ? 'Shekler' : 'Cheklar')}</span>
               {receiptsCount > 0 && (
                 <span className="bg-[#C0684C] text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full">
                   {receiptsCount}
